@@ -1,0 +1,79 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Annotate from "../components/Annotate.astro";
+import { contactLinks, siteLinks, contactEmail } from "../data/portfolio";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact — Milind Kumar Mishra",
+  description: "Get in touch: email, GitHub, LinkedIn, or book a time.",
+  url: "https://milindmishra.com/contact",
+  mainEntity: {
+    "@type": "Person",
+    name: "Milind Kumar Mishra",
+    email: contactEmail,
+    url: "https://milindmishra.com",
+    sameAs: [
+      "https://github.com/thatbeautifuldream",
+      "https://www.linkedin.com/in/mishramilind/",
+      "https://x.com/milindmishra_",
+    ],
+  },
+};
+---
+
+<Layout
+  title="Contact"
+  description="Get in touch: email, GitHub, LinkedIn, or book a time."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <p class="text-sm text-muted-foreground">Contact</p>
+          <h1
+            class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+          >
+            If the work needs <Annotate type="underline"
+              >product judgment and implementation discipline</Annotate>, I'd
+            like to hear about it.
+          </h1>
+        </div>
+
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 200ms">
+          <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
+            The best way to reach me
+          </h2>
+          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+            I'm most responsive on email and LinkedIn. If you have something
+            interesting to discuss, I'd rather you send a detailed message than
+            <Annotate type="strike-through">a generic introduction</Annotate>.
+          </p>
+        </div>
+
+        <div class="grid gap-6">
+          {
+            contactLinks.map((link) => (
+              <div class="animate-fade-up grid gap-4">
+                <div class="grid gap-1">
+                  <p class="text-lg font-semibold">{link.label}</p>
+                  <p class="text-base text-muted-foreground">{link.copy}</p>
+                </div>
+                <a href={link.href} class="text-sm font-medium">Open profile</a>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <a href={siteLinks.primaryCta.href} class="font-medium">
+            {siteLinks.primaryCta.label}
+          </a>
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

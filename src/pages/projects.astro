@@ -1,0 +1,176 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Annotate from "../components/Annotate.astro";
+import { projects, hostname, screenshotUrl } from "../data/portfolio";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Projects — Milind Kumar Mishra",
+  description:
+    "Side projects born from curiosity. Built to understand technology, shipped to find clarity.",
+  url: "https://milindmishra.com/projects",
+  author: {
+    "@type": "Person",
+    name: "Milind Kumar Mishra",
+    url: "https://milindmishra.com",
+  },
+  hasPart: projects.map((project) => ({
+    "@type": "SoftwareApplication",
+    name: project.name,
+    description: project.description,
+    url: project.href,
+    applicationCategory: "DeveloperApplication",
+    programmingLanguage: "TypeScript",
+  })),
+};
+---
+
+<Layout
+  title="Projects"
+  description="Side projects born from curiosity. Built to understand technology, shipped to find clarity."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-16">
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <p class="text-sm text-muted-foreground">Side projects</p>
+          <h1
+            class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-4xl"
+          >
+            My experimental ground. Build something, break something, learn
+            everything.
+          </h1>
+          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+            Most of these started as a late-night question that I couldn't
+            shake. I build to understand, and I ship because finishing forces
+            clarity. Some got real users, most taught me something I didn't
+            expect.
+          </p>
+        </div>
+
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 200ms">
+          <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
+            Why I ship experiments publicly
+          </h2>
+          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+            Finishing something is harder than starting it. <Annotate
+              type="highlight">Shipping forces clarity.</Annotate> These projects
+            are my way of closing the loop on ideas that kept me up, and sharing
+            them because the best feedback is from people who actually use what
+            you build.
+          </p>
+        </div>
+
+        <dl class="grid divide-y divide-border/40">
+          {
+            projects.map((project, index) => (
+              <article class="animate-fade-up grid gap-8 py-12 first:pt-0 last:pb-0">
+                <a
+                  href={project.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${project.name}`}
+                  class="group relative block no-underline"
+                >
+                  <div class="relative aspect-[16/9] overflow-hidden rounded-[min(1.4vw,16px)] bg-muted/30 outline-1 -outline-offset-1 outline-white/10">
+                    <img
+                      src={screenshotUrl(project.href)}
+                      alt=""
+                      loading="lazy"
+                      class="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.015]"
+                    />
+                  </div>
+                  <span
+                    aria-hidden="true"
+                    class="absolute -top-2 -left-2 inline-flex items-center rounded-full bg-background px-2.5 py-1 font-mono text-[11px] font-medium text-foreground tabular-nums ring-1 ring-white/10"
+                  >
+                    #{String(index + 1).padStart(2, "0")}
+                  </span>
+                </a>
+
+                <div class="grid gap-6">
+                  <div class="grid gap-3">
+                    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                      <dt class="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+                        {project.name}
+                      </dt>
+                      <span class="font-mono text-xs tracking-wide text-muted-foreground/70 tabular-nums uppercase">
+                        {project.status}
+                      </span>
+                    </div>
+                    <dd class="max-w-[60ch] text-base text-pretty text-muted-foreground md:text-lg">
+                      {project.description}
+                    </dd>
+                  </div>
+
+                  {project.metrics.length > 0 && (
+                    <dl class="grid grid-cols-1 gap-x-8 gap-y-3 border-t border-border/40 pt-4 sm:grid-cols-2">
+                      {project.metrics.map((metric) => (
+                        <div class="flex items-baseline justify-between gap-3">
+                          <dt class="text-sm text-muted-foreground">
+                            {metric.label}
+                          </dt>
+                          <dd class="font-mono text-sm font-medium tabular-nums text-foreground">
+                            {metric.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
+
+                  <ul class="grid gap-2.5 border-t border-border/40 pt-4">
+                    {project.highlights.map((highlight) => (
+                      <li class="grid grid-cols-[auto_1fr] gap-3 text-base text-pretty text-muted-foreground">
+                        <span
+                          aria-hidden="true"
+                          class="mt-2.5 inline-block size-1 rounded-full bg-muted-foreground/50"
+                        />
+                        <span class="max-w-[60ch]">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-muted-foreground/70">
+                    {project.tags.map((tag, i) => (
+                      <span class="inline-flex items-center">
+                        {tag}
+                        {i < project.tags.length - 1 && (
+                          <span aria-hidden="true" class="ml-2 text-muted-foreground/30">
+                            ·
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 text-sm">
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="inline-flex items-center gap-1.5 font-medium text-foreground no-underline"
+                    >
+                      {hostname(project.href)} ↗
+                    </a>
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="inline-flex items-center gap-1.5 text-muted-foreground no-underline transition-colors hover:text-foreground"
+                      >
+                        Source
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+  </main>
+</Layout>

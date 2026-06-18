@@ -1,0 +1,121 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Annotate from "../../components/Annotate.astro";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const [featured, ...rest] = posts;
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Milind Mishra - Blog",
+  description:
+    "Notes on product engineering, AI interfaces, developer tools, and the journey of building products.",
+  url: "https://milindmishra.com/blog",
+  author: {
+    "@type": "Person",
+    name: "Milind Mishra",
+    url: "https://milindmishra.com",
+  },
+};
+---
+
+<Layout
+  title="Blog"
+  description="Notes on product engineering, AI interfaces, developer tools, and the journey of building products."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <p class="text-sm text-muted-foreground">Blog</p>
+          <h1
+            class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+          >
+            Notes on the <Annotate type="underline">journey of building</Annotate
+            > products.
+          </h1>
+        </div>
+
+        {
+          featured && (
+            <article class="animate-fade-up group grid gap-4" style="animation-delay: 200ms">
+              {featured.data.coverImage && (
+                <a
+                  href={`/blog/${featured.id}`}
+                  aria-label={featured.data.title}
+                  class="block w-full overflow-hidden rounded-3xl border border-border/60 bg-muted no-underline ring-1 ring-inset ring-white/5"
+                >
+                  <img
+                    src={featured.data.coverImage}
+                    alt=""
+                    class="block w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  />
+                </a>
+              )}
+              <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+                Latest · {featured.data.category} · {formatDate(featured.data.date)}
+              </p>
+              <h2 class="max-w-[28ch] text-3xl font-semibold tracking-tight text-pretty md:text-4xl">
+                <a href={`/blog/${featured.id}`}>{featured.data.title}</a>
+              </h2>
+              <p class="max-w-[60ch] text-base text-pretty text-muted-foreground">
+                {featured.data.description}
+              </p>
+            </article>
+          )
+        }
+
+        {
+          rest.length > 0 && (
+            <div class="grid gap-0 divide-y divide-border/40 border-t border-border/40">
+              {rest.map((post) => (
+                <article class="animate-fade-up group grid grid-cols-[88px_1fr] items-start gap-4 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+                  {post.data.coverImage ? (
+                    <a
+                      href={`/blog/${post.id}`}
+                      aria-label={post.data.title}
+                      class="block aspect-square overflow-hidden rounded-xl border border-border/60 bg-muted no-underline ring-1 ring-inset ring-white/5"
+                    >
+                      <img
+                        src={post.data.coverImage}
+                        alt=""
+                        loading="lazy"
+                        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+                      />
+                    </a>
+                  ) : (
+                    <div class="aspect-square rounded-xl bg-muted" />
+                  )}
+                  <div class="grid gap-1.5">
+                    <p class="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                      {post.data.category} · {formatDate(post.data.date)}
+                    </p>
+                    <h3 class="text-base font-semibold tracking-tight sm:text-lg">
+                      <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                    </h3>
+                    <p class="line-clamp-2 max-w-[56ch] text-sm text-pretty text-muted-foreground">
+                      {post.data.description}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.data.title,
+  description: post.data.description,
+  author: {
+    "@type": "Person",
+    name: "Milind Mishra",
+    url: "https://milindmishra.com",
+  },
+  datePublished: post.data.date.toISOString(),
+  dateModified: post.data.date.toISOString(),
+};
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  canonical={`https://milindmishra.com/blog/${post.id}`}
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid min-w-0 gap-12">
+        <article class="grid min-w-0 gap-8">
+          {
+            post.data.coverImage && (
+              <div class="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-muted ring-1 ring-inset ring-white/5" style="animation-delay: 80ms">
+                <img src={post.data.coverImage} alt="" class="block w-full" />
+              </div>
+            )
+          }
+          <header class="animate-fade-up grid gap-2" style="animation-delay: 160ms">
+            <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+              {post.data.category} · {formatDate(post.data.date)}
+            </p>
+            <h1 class="max-w-[24ch] text-3xl font-semibold tracking-tight text-pretty md:text-5xl">
+              {post.data.title}
+            </h1>
+            <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+              {post.data.description}
+            </p>
+          </header>
+
+          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="animation-delay: 240ms">
+            <Content />
+          </div>
+
+          <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">
+            ← Back to blog
+          </a>
+        </article>
+      </div>
+    </section>
+  </main>
+</Layout>

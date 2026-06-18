@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const gists = await getCollection("gists");
+  return gists.map((gist) => ({
+    params: { slug: gist.id },
+    props: { gist },
+  }));
+}
+
+const { gist } = Astro.props;
+const { Content } = await render(gist);
+
+const date = gist.data.datePublished ?? gist.data.date ?? new Date(0);
+const tag = gist.data.tags?.split(",")[0]?.trim() ?? "Gist";
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: gist.data.title,
+  description: gist.data.description ?? "",
+  author: {
+    "@type": "Person",
+    name: "Milind Mishra",
+    url: "https://milindmishra.com",
+  },
+  datePublished: date.toISOString(),
+  dateModified: date.toISOString(),
+};
+---
+
+<Layout
+  title={gist.data.title}
+  description={gist.data.description ?? "Code snippets and quick solutions."}
+  canonical={`https://milindmishra.com/gist/${gist.id}`}
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid min-w-0 gap-12">
+        <article class="grid min-w-0 gap-8">
+          <header class="animate-fade-up grid gap-2" style="animation-delay: 100ms">
+            <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+              {tag} · {formatDate(date)}
+            </p>
+            <h1 class="max-w-[24ch] text-3xl font-semibold tracking-tight text-pretty md:text-5xl">
+              {gist.data.title}
+            </h1>
+            {
+              gist.data.description && (
+                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                  {gist.data.description}
+                </p>
+              )
+            }
+            <a
+              href={gist.data.gistUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-2 inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              View on GitHub ↗
+            </a>
+          </header>
+
+          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="animation-delay: 200ms">
+            <Content />
+          </div>
+
+          <a href="/gist" class="text-sm text-muted-foreground hover:text-foreground">
+            ← Back to gists
+          </a>
+        </article>
+      </div>
+    </section>
+  </main>
+</Layout>

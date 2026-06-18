@@ -1,0 +1,103 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Annotate from "../components/Annotate.astro";
+import { talks, contributions } from "../data/portfolio";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Talks — Milind Kumar Mishra",
+  description:
+    "Talks on React, motion systems, interface architecture, and AI for frontend engineers.",
+  url: "https://milindmishra.com/talks",
+  author: {
+    "@type": "Person",
+    name: "Milind Kumar Mishra",
+    url: "https://milindmishra.com",
+  },
+  hasPart: talks.map((talk) => ({
+    "@type": "Event",
+    name: talk.title,
+    description: talk.description,
+    startDate: talk.date,
+    location: { "@type": "Place", name: talk.event },
+    url: talk.href,
+    performer: { "@type": "Person", name: "Milind Kumar Mishra" },
+  })),
+};
+---
+
+<Layout
+  title="Talks"
+  description="Talks on React, motion systems, interface architecture, and AI for frontend engineers."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <p class="text-sm text-muted-foreground">Talks</p>
+          <h1
+            class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+          >
+            I share what I learn because it forces me to <Annotate
+              type="underline">learn it deeper</Annotate>.
+          </h1>
+          <p class="max-w-[56ch] text-pretty text-muted-foreground">
+            These talks come from things I ran into firsthand and couldn't stop
+            thinking about. Sharing them publicly keeps me honest, helps others
+            experiment sooner, and sharpens my own understanding in a way that
+            building alone never could.
+          </p>
+        </div>
+
+        <div class="grid gap-8">
+          {
+            talks.map((talk) => (
+              <div class="animate-fade-up grid gap-2">
+                <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+                  {talk.event} · {talk.date}
+                </p>
+                <h2 class="text-xl font-semibold tracking-tight">{talk.title}</h2>
+                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                  {talk.description}
+                </p>
+                <a href={talk.href} class="text-sm">View talk</a>
+              </div>
+            ))
+          }
+        </div>
+
+        <hr class="border-border/60" />
+
+        <div class="animate-fade-up grid gap-4">
+          <p class="text-sm text-muted-foreground">Open source</p>
+          <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight">
+            Contributions that started as problems I hit at work.
+          </h2>
+          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+            While building AI chat interfaces at Merlin, the core challenge was
+            rendering streamed markdown responses cleanly. That led me to
+            Streamdown, Vercel's open source markdown renderer built for AI
+            streaming. These contributions came from real product gaps, not side
+            quests.
+          </p>
+        </div>
+
+        <div class="grid gap-6">
+          {
+            contributions.map((item) => (
+              <div class="animate-fade-up grid gap-2">
+                <h3 class="text-lg font-semibold tracking-tight">{item.title}</h3>
+                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                  {item.context}
+                </p>
+                <a href={item.href} class="text-sm">Open contribution</a>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

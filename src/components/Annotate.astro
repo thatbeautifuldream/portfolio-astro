@@ -1,0 +1,29 @@
+---
+type AnnotateType =
+  | "underline"
+  | "highlight"
+  | "strike-through"
+  | "crossed-off"
+  | "circle";
+
+interface Props {
+  type?: AnnotateType;
+  color?: string;
+}
+
+const { type = "underline", color = "rgba(128, 128, 128, 0.18)" } = Astro.props;
+
+const classMap: Record<AnnotateType, string> = {
+  underline:
+    "underline decoration-foreground/80 decoration-2 underline-offset-4",
+  highlight: "rounded px-1",
+  "strike-through": "line-through decoration-foreground/70 decoration-2",
+  "crossed-off": "line-through decoration-foreground/70 decoration-2",
+  circle:
+    "rounded-full px-2 py-0.5 ring-1 ring-foreground/50",
+};
+
+const style = type === "highlight" ? `background-color: ${color}` : undefined;
+---
+
+<span class={classMap[type]} style={style}><slot /></span>

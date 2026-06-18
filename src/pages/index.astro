@@ -1,11 +1,187 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Annotate from "../components/Annotate.astro";
+import FullSign from "../components/FullSign.astro";
+import { siteLinks, heroStats, projects, hostname } from "../data/portfolio";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Milind Kumar Mishra — Product Engineer",
+  description:
+    "Product engineer building AI-native interfaces, product systems, and tools people return to.",
+  url: "https://milindmishra.com",
+  author: {
+    "@type": "Person",
+    name: "Milind Kumar Mishra",
+    url: "https://milindmishra.com",
+  },
+};
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Milind Kumar Mishra"
+  description="Product engineer building AI-native interfaces, product systems, and tools people return to."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-16">
+        <div class="grid gap-12">
+          <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+            <div class="grid gap-6">
+              <p class="text-sm text-muted-foreground">
+                Bengaluru, India. Design engineer.
+              </p>
+              <h1
+                class="max-w-[22ch] text-4xl leading-[1.25] font-semibold tracking-tight text-balance select-none md:text-6xl md:leading-[1.2]"
+              >
+                <span class="text-muted-foreground/40">Hi,</span>
+                <img
+                  src="/emojis/waving-hand.webp"
+                  alt="Waving hand"
+                  width="48"
+                  height="48"
+                  class="inline-block size-[0.85em] translate-y-[-0.05em] align-middle"
+                />
+                <span class="text-muted-foreground/40">I'm</span>
+                <img
+                  src="/icons/icon.png"
+                  alt="Milind"
+                  width="96"
+                  height="96"
+                  class="inline-block size-[0.9em] translate-y-[-0.05em] rounded-full object-cover align-middle ring-1 ring-border/70 dark:ring-white/10"
+                />
+                <span class="text-foreground">Milind.</span>
+                <span class="text-muted-foreground/40">I'm a</span>
+                <span class="text-foreground">design engineer</span>
+                <span class="text-muted-foreground/40">at</span>
+                <img
+                  src="/emojis/merlin.webp"
+                  alt="Merlin AI"
+                  width="96"
+                  height="96"
+                  class="inline-block size-[0.85em] translate-y-[-0.05em] cursor-pointer rounded-[0.2em] object-cover align-middle ring-1 ring-border/70 transition-transform duration-300 ease-out hover:-rotate-[15deg] dark:ring-white/10"
+                />
+                <span class="text-foreground">Merlin AI.</span>
+              </h1>
+              <p
+                class="max-w-[52ch] text-base text-pretty text-muted-foreground md:text-lg"
+              >
+                Working across the browser agent extension and Merlin's chat
+                interface, where ambient AI meets everyday workflows.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm"
+            style="animation-delay: 200ms"
+          >
+            <a href={siteLinks.primaryCta.href} class="font-medium">
+              {siteLinks.primaryCta.label}
+            </a>
+            <a href={siteLinks.resume.href}>{siteLinks.resume.label}</a>
+            <a href={siteLinks.github.href}>{siteLinks.github.label}</a>
+          </div>
+
+          <div class="animate-fade-up grid gap-10" style="animation-delay: 300ms">
+            <div class="flex items-baseline justify-between gap-4">
+              <p class="text-sm text-muted-foreground">Selected work</p>
+              <a
+                href="/projects"
+                class="text-sm text-muted-foreground no-underline transition-colors hover:text-foreground"
+              >
+                View all
+              </a>
+            </div>
+
+            <dl class="grid divide-y divide-border/40">
+              {
+                projects.map((project) => (
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="group grid gap-2 py-8 no-underline first:pt-0 last:pb-0"
+                  >
+                    <dt class="text-xl font-medium tracking-tight text-foreground sm:text-2xl">
+                      {project.name}
+                    </dt>
+                    <dd class="max-w-[56ch] text-sm text-pretty text-muted-foreground sm:text-base">
+                      {project.description}
+                    </dd>
+                    <span class="mt-1 font-mono text-xs text-muted-foreground/70 transition-colors group-hover:text-foreground">
+                      {hostname(project.href)} ↗
+                    </span>
+                  </a>
+                ))
+              }
+            </dl>
+          </div>
+
+          <div
+            class="animate-fade-up md:grid md:grid-cols-3 md:divide-x md:divide-border/40"
+            style="animation-delay: 300ms"
+          >
+            {
+              heroStats.map((stat, index) => (
+                <div
+                  class:list={[
+                    "grid gap-1 py-6 md:py-0",
+                    index === 0
+                      ? "md:pr-6"
+                      : index === heroStats.length - 1
+                        ? "md:pl-6"
+                        : "md:px-6",
+                  ]}
+                >
+                  <p class="text-3xl font-semibold tabular-nums">{stat.value}</p>
+                  <p class="text-sm text-pretty text-muted-foreground">
+                    {stat.label}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 400ms">
+          <div class="grid gap-8">
+            <div class="grid gap-4">
+              <p class="text-sm text-muted-foreground">Where I'm headed</p>
+              <h2
+                class="max-w-[24ch] text-3xl font-semibold tracking-tight text-balance md:text-4xl"
+              >
+                Toward design engineering, where <Annotate type="underline"
+                  >craft and code</Annotate
+                > meet at the surface.
+              </h2>
+              <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                I started as a product engineer who kept caring <Annotate
+                  type="crossed-off">too much</Annotate
+                > about how things looked and moved. Now I'm making that the focus.
+                I build agentic flows, design systems, and interaction-heavy surfaces,
+                and I'm sharpening my design intuition through close study of the
+                people and work I admire, with AI accelerating how fast I can ship
+                polished work.
+              </p>
+              <FullSign class="h-12 w-auto sm:h-14" />
+            </div>
+
+            <div class="grid gap-4 text-sm">
+              <p class="text-muted-foreground">Quick navigation</p>
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <a href="/work" class="font-medium">View my work experience</a>
+                <a href="/projects">Explore my projects</a>
+                <a href="/talks">See my talks</a>
+                <a href="/blog">Read my blog</a>
+                <a href="/contact">Get in touch</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>

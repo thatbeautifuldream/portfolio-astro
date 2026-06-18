@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+function gistDate(data: { datePublished?: Date; date?: Date }): Date {
+  return data.datePublished ?? data.date ?? new Date(0);
+}
+
+const gists = (await getCollection("gists")).sort(
+  (a, b) => gistDate(b.data).getTime() - gistDate(a.data).getTime(),
+);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Milind Mishra - Gists",
+  description: "Code snippets and quick solutions.",
+  url: "https://milindmishra.com/gist",
+  author: {
+    "@type": "Person",
+    name: "Milind Mishra",
+    url: "https://milindmishra.com",
+  },
+};
+---
+
+<Layout
+  title="Gists"
+  description="Code snippets and quick solutions."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <p class="text-sm text-muted-foreground">Gists</p>
+          <h1
+            class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+          >
+            Code snippets and quick solutions.
+          </h1>
+        </div>
+
+        <div
+          class="animate-fade-up grid gap-0 divide-y divide-border/40"
+          style="animation-delay: 150ms"
+        >
+          {
+            gists.map((gist) => {
+              const tag = gist.data.tags?.split(",")[0]?.trim() ?? "Gist";
+              return (
+                <div class="grid gap-1 py-5 first:pt-0 last:pb-0">
+                  <h2 class="text-lg font-semibold tracking-tight">
+                    <a href={`/gist/${gist.id}`}>{gist.data.title}</a>
+                  </h2>
+                  <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+                    {tag} · {formatDate(gistDate(gist.data))}
+                  </p>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
