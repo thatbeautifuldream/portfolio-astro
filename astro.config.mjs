@@ -31,12 +31,25 @@ export default defineConfig({
 
   fonts: [
     {
-      provider: fontProviders.google(),
+      provider: fontProviders.local(),
       name: "Inter",
       cssVariable: "--font-inter",
-      weights: ["100 900"],
-      styles: ["normal", "italic"],
-      subsets: ["latin"],
+      options: {
+        variants: [
+          {
+            weight: "100 900",
+            style: "normal",
+            src: ["./src/assets/fonts/InterVariable.woff2"],
+            featureSettings: '"cv02", "cv03", "cv04", "cv11", "ss01"',
+          },
+          {
+            weight: "100 900",
+            style: "italic",
+            src: ["./src/assets/fonts/InterVariable-Italic.woff2"],
+            featureSettings: '"cv02", "cv03", "cv04", "cv11", "ss01"',
+          },
+        ],
+      },
     },
     {
       provider: fontProviders.google(),
