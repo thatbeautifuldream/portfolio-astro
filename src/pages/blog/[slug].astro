@@ -48,28 +48,41 @@ const jsonLd = {
         <article class="grid min-w-0 gap-8">
           {
             post.data.coverImage && (
-              <div class="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-muted ring-1 ring-inset ring-white/5" style="--stagger: 1">
+              <div
+                class="animate-fade-up border-border/60 bg-muted overflow-hidden rounded-2xl border ring-1 ring-white/5 ring-inset"
+                style="--stagger: 1"
+              >
                 <img src={post.data.coverImage} alt="" class="block w-full" />
               </div>
             )
           }
           <header class="animate-fade-up grid gap-2" style="--stagger: 2">
-            <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+            <p
+              class="text-muted-foreground font-mono text-sm tracking-wide uppercase"
+            >
               {post.data.category} · {formatDate(post.data.date)}
             </p>
-            <h1 class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-pretty md:text-5xl">
+            <h1
+              class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-pretty md:text-5xl"
+            >
               {post.data.title}
             </h1>
-            <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+            <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
               {post.data.description}
             </p>
           </header>
 
-          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="--stagger: 3">
+          <div
+            class="animate-fade-up prose max-w-none overflow-x-hidden"
+            style="--stagger: 3"
+          >
             <Content />
           </div>
 
-          <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">
+          <a
+            href="/blog"
+            class="text-muted-foreground hover:text-foreground text-sm"
+          >
             ← Back to blog
           </a>
         </article>

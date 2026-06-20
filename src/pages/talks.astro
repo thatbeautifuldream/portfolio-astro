@@ -36,14 +36,15 @@ const jsonLd = {
     <section class="section-shell">
       <div class="section-inner grid gap-12">
         <div class="animate-fade-up grid gap-4" style="--stagger: 1">
-          <p class="text-sm text-muted-foreground">Talks</p>
+          <p class="text-muted-foreground text-sm">Talks</p>
           <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
           >
             I share what I learn because it forces me to <Annotate
-              type="underline">learn it deeper</Annotate>.
+              type="underline">learn it deeper</Annotate
+            >.
           </h1>
-          <p class="max-w-[56ch] text-pretty text-muted-foreground">
+          <p class="text-muted-foreground max-w-[56ch] text-pretty">
             These talks come from things I ran into firsthand and couldn't stop
             thinking about. Sharing them publicly keeps me honest, helps others
             experiment sooner, and sharpens my own understanding in a way that
@@ -54,15 +55,22 @@ const jsonLd = {
         <div class="grid gap-8">
           {
             talks.map((talk, index) => (
-              <div class="animate-fade-up grid gap-2" style={`--stagger: ${2 + index}`}>
-                <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+              <div
+                class="animate-fade-up grid gap-2"
+                style={`--stagger: ${2 + index}`}
+              >
+                <p class="text-muted-foreground font-mono text-sm tracking-wide uppercase">
                   {talk.event} · {talk.date}
                 </p>
-                <h2 class="text-xl font-semibold tracking-tight">{talk.title}</h2>
-                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                <h2 class="text-xl font-semibold tracking-tight">
+                  {talk.title}
+                </h2>
+                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
                   {talk.description}
                 </p>
-                <a href={talk.href} class="text-sm">View talk</a>
+                <a href={talk.href} class="text-sm">
+                  View talk
+                </a>
               </div>
             ))
           }
@@ -71,11 +79,11 @@ const jsonLd = {
         <hr class="border-border/60" />
 
         <div class="animate-fade-up grid gap-4" style="--stagger: 1">
-          <p class="text-sm text-muted-foreground">Open source</p>
+          <p class="text-muted-foreground text-sm">Open source</p>
           <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight">
             Contributions that started as problems I hit at work.
           </h2>
-          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+          <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
             While building AI chat interfaces at Merlin, the core challenge was
             rendering streamed markdown responses cleanly. That led me to
             Streamdown, Vercel's open source markdown renderer built for AI
@@ -87,12 +95,19 @@ const jsonLd = {
         <div class="grid gap-6">
           {
             contributions.map((item, index) => (
-              <div class="animate-fade-up grid gap-2" style={`--stagger: ${2 + index}`}>
-                <h3 class="text-lg font-semibold tracking-tight">{item.title}</h3>
-                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+              <div
+                class="animate-fade-up grid gap-2"
+                style={`--stagger: ${2 + index}`}
+              >
+                <h3 class="text-lg font-semibold tracking-tight">
+                  {item.title}
+                </h3>
+                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
                   {item.context}
                 </p>
-                <a href={item.href} class="text-sm">Open contribution</a>
+                <a href={item.href} class="text-sm">
+                  Open contribution
+                </a>
               </div>
             ))
           }

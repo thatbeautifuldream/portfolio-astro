@@ -50,15 +50,19 @@ const jsonLd = {
       <div class="section-inner grid min-w-0 gap-12">
         <article class="grid min-w-0 gap-8">
           <header class="animate-fade-up grid gap-2" style="--stagger: 1">
-            <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
+            <p
+              class="text-muted-foreground font-mono text-sm tracking-wide uppercase"
+            >
               {tag} · {formatDate(date)}
             </p>
-            <h1 class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-pretty md:text-5xl">
+            <h1
+              class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-pretty md:text-5xl"
+            >
               {gist.data.title}
             </h1>
             {
               gist.data.description && (
-                <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
                   {gist.data.description}
                 </p>
               )
@@ -67,17 +71,23 @@ const jsonLd = {
               href={gist.data.gistUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-2 inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+              class="text-muted-foreground hover:text-foreground mt-2 inline-flex w-fit items-center gap-1 text-sm"
             >
               View on GitHub ↗
             </a>
           </header>
 
-          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="--stagger: 2">
+          <div
+            class="animate-fade-up prose max-w-none overflow-x-hidden"
+            style="--stagger: 2"
+          >
             <Content />
           </div>
 
-          <a href="/gist" class="text-sm text-muted-foreground hover:text-foreground">
+          <a
+            href="/gist"
+            class="text-muted-foreground hover:text-foreground text-sm"
+          >
             ← Back to gists
           </a>
         </article>

@@ -40,23 +40,27 @@ const jsonLd = {
     <section class="section-shell">
       <div class="section-inner grid gap-12">
         <div class="animate-fade-up grid gap-4" style="--stagger: 1">
-          <p class="text-sm text-muted-foreground">Blog</p>
+          <p class="text-muted-foreground text-sm">Blog</p>
           <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
           >
-            Notes on the <Annotate type="underline">journey of building</Annotate
+            Notes on the <Annotate type="underline"
+              >journey of building</Annotate
             > products.
           </h1>
         </div>
 
         {
           featured && (
-            <article class="animate-fade-up group grid gap-4" style="--stagger: 2">
+            <article
+              class="animate-fade-up group grid gap-4"
+              style="--stagger: 2"
+            >
               {featured.data.coverImage && (
                 <a
                   href={`/blog/${featured.id}`}
                   aria-label={featured.data.title}
-                  class="block w-full overflow-hidden rounded-3xl border border-border/60 bg-muted no-underline ring-1 ring-inset ring-white/5"
+                  class="border-border/60 bg-muted block w-full overflow-hidden rounded-3xl border no-underline ring-1 ring-white/5 ring-inset"
                 >
                   <img
                     src={featured.data.coverImage}
@@ -65,13 +69,14 @@ const jsonLd = {
                   />
                 </a>
               )}
-              <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
-                Latest · {featured.data.category} · {formatDate(featured.data.date)}
+              <p class="text-muted-foreground font-mono text-sm tracking-wide uppercase">
+                Latest · {featured.data.category} ·{" "}
+                {formatDate(featured.data.date)}
               </p>
               <h2 class="max-w-[28ch] font-serif text-3xl font-normal tracking-tight text-pretty md:text-4xl">
                 <a href={`/blog/${featured.id}`}>{featured.data.title}</a>
               </h2>
-              <p class="max-w-[60ch] text-base text-pretty text-muted-foreground">
+              <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
                 {featured.data.description}
               </p>
             </article>
@@ -80,7 +85,7 @@ const jsonLd = {
 
         {
           rest.length > 0 && (
-            <div class="grid gap-0 divide-y divide-border/40 border-t border-border/40">
+            <div class="divide-border/40 border-border/40 grid gap-0 divide-y border-t">
               {rest.map((post, index) => (
                 <article
                   class="animate-fade-up group grid grid-cols-[88px_1fr] items-start gap-4 py-5 sm:grid-cols-[120px_1fr] sm:gap-6"
@@ -90,7 +95,7 @@ const jsonLd = {
                     <a
                       href={`/blog/${post.id}`}
                       aria-label={post.data.title}
-                      class="block aspect-square overflow-hidden rounded-xl border border-border/60 bg-muted no-underline ring-1 ring-inset ring-white/5"
+                      class="border-border/60 bg-muted block aspect-square overflow-hidden rounded-xl border no-underline ring-1 ring-white/5 ring-inset"
                     >
                       <img
                         src={post.data.coverImage}
@@ -100,16 +105,16 @@ const jsonLd = {
                       />
                     </a>
                   ) : (
-                    <div class="aspect-square rounded-xl bg-muted" />
+                    <div class="bg-muted aspect-square rounded-xl" />
                   )}
                   <div class="grid gap-1.5">
-                    <p class="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                    <p class="text-muted-foreground font-mono text-xs tracking-wide uppercase">
                       {post.data.category} · {formatDate(post.data.date)}
                     </p>
                     <h3 class="text-base font-semibold tracking-tight sm:text-lg">
                       <a href={`/blog/${post.id}`}>{post.data.title}</a>
                     </h3>
-                    <p class="line-clamp-2 max-w-[56ch] text-sm text-pretty text-muted-foreground">
+                    <p class="text-muted-foreground line-clamp-2 max-w-[56ch] text-sm text-pretty">
                       {post.data.description}
                     </p>
                   </div>

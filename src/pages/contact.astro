@@ -32,21 +32,23 @@ const jsonLd = {
     <section class="section-shell">
       <div class="section-inner grid gap-12">
         <div class="animate-fade-up grid gap-4" style="--stagger: 1">
-          <p class="text-sm text-muted-foreground">Contact</p>
+          <p class="text-muted-foreground text-sm">Contact</p>
           <h1
-            class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
+            class="max-w-[28ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
           >
             If the work needs <Annotate type="underline"
-              >product judgment and implementation discipline</Annotate>, I'd
-            like to hear about it.
+              >product judgment and implementation discipline</Annotate
+            >, I'd like to hear about it.
           </h1>
         </div>
 
         <div class="animate-fade-up grid gap-4" style="--stagger: 2">
-          <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
+          <h2
+            class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl"
+          >
             The best way to reach me
           </h2>
-          <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+          <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
             I'm most responsive on email and LinkedIn. If you have something
             interesting to discuss, I'd rather you send a detailed message than
             <Annotate type="strike-through">a generic introduction</Annotate>.
@@ -56,18 +58,26 @@ const jsonLd = {
         <div class="grid gap-6">
           {
             contactLinks.map((link, index) => (
-              <div class="animate-fade-up grid gap-4" style={`--stagger: ${3 + index}`}>
+              <div
+                class="animate-fade-up grid gap-4"
+                style={`--stagger: ${3 + index}`}
+              >
                 <div class="grid gap-1">
                   <p class="text-lg font-semibold">{link.label}</p>
-                  <p class="text-base text-muted-foreground">{link.copy}</p>
+                  <p class="text-muted-foreground text-base">{link.copy}</p>
                 </div>
-                <a href={link.href} class="text-sm font-medium">Open profile</a>
+                <a href={link.href} class="text-sm font-medium">
+                  Open profile
+                </a>
               </div>
             ))
           }
         </div>
 
-        <div class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style="--stagger: 6">
+        <div
+          class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm"
+          style="--stagger: 6"
+        >
           <a href={siteLinks.primaryCta.href} class="font-medium">
             {siteLinks.primaryCta.label}
           </a>

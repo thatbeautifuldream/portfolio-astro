@@ -34,7 +34,7 @@ const jsonLd = {
         <div class="grid gap-12">
           <div class="animate-fade-up grid gap-4" style="--stagger: 1">
             <div class="grid gap-6">
-              <p class="text-sm text-muted-foreground">
+              <p class="text-muted-foreground text-sm">
                 Bengaluru, India. Design engineer.
               </p>
               <h1
@@ -54,7 +54,7 @@ const jsonLd = {
                   alt="Milind"
                   width="96"
                   height="96"
-                  class="inline-block size-[0.9em] translate-y-[-0.05em] rounded-full object-cover align-middle ring-1 ring-border/70 dark:ring-white/10"
+                  class="ring-border/70 inline-block size-[0.9em] translate-y-[-0.05em] rounded-full object-cover align-middle ring-1 dark:ring-white/10"
                 />
                 <span class="text-foreground">Milind.</span>
                 <span class="text-muted-foreground/40">I'm a</span>
@@ -65,12 +65,12 @@ const jsonLd = {
                   alt="Merlin AI"
                   width="96"
                   height="96"
-                  class="inline-block size-[0.85em] translate-y-[-0.05em] cursor-pointer rounded-[0.2em] object-cover align-middle ring-1 ring-border/70 transition-transform duration-300 ease-out hover:-rotate-[15deg] dark:ring-white/10"
+                  class="ring-border/70 inline-block size-[0.85em] translate-y-[-0.05em] cursor-pointer rounded-[0.2em] object-cover align-middle ring-1 transition-transform duration-300 ease-out hover:-rotate-[15deg] dark:ring-white/10"
                 />
                 <span class="text-foreground">Merlin AI.</span>
               </h1>
               <p
-                class="max-w-[52ch] text-base text-pretty text-muted-foreground md:text-lg"
+                class="text-muted-foreground max-w-[52ch] text-base text-pretty md:text-lg"
               >
                 Working across the browser agent extension and Merlin's chat
                 interface, where ambient AI meets everyday workflows.
@@ -91,16 +91,16 @@ const jsonLd = {
 
           <div class="animate-fade-up grid gap-10" style="--stagger: 3">
             <div class="flex items-baseline justify-between gap-4">
-              <p class="text-sm text-muted-foreground">Selected work</p>
+              <p class="text-muted-foreground text-sm">Selected work</p>
               <a
                 href="/projects"
-                class="text-sm text-muted-foreground no-underline transition-colors hover:text-foreground"
+                class="text-muted-foreground hover:text-foreground text-sm no-underline transition-colors"
               >
                 View all
               </a>
             </div>
 
-            <dl class="grid divide-y divide-border/40">
+            <dl class="divide-border/40 grid divide-y">
               {
                 projects.map((project, index) => (
                   <a
@@ -110,13 +110,13 @@ const jsonLd = {
                     class="animate-fade-up group grid gap-2 py-8 no-underline first:pt-0 last:pb-0"
                     style={`--stagger: ${4 + index}`}
                   >
-                    <dt class="text-xl font-medium tracking-tight text-foreground sm:text-2xl">
+                    <dt class="text-foreground text-xl font-medium tracking-tight sm:text-2xl">
                       {project.name}
                     </dt>
-                    <dd class="max-w-[56ch] text-sm text-pretty text-muted-foreground sm:text-base">
+                    <dd class="text-muted-foreground max-w-[56ch] text-sm text-pretty sm:text-base">
                       {project.description}
                     </dd>
-                    <span class="mt-1 font-mono text-xs text-muted-foreground/70 transition-colors group-hover:text-foreground">
+                    <span class="text-muted-foreground/70 group-hover:text-foreground mt-1 font-mono text-xs transition-colors">
                       {hostname(project.href)} ↗
                     </span>
                   </a>
@@ -126,7 +126,7 @@ const jsonLd = {
           </div>
 
           <div
-            class="animate-fade-up md:grid md:grid-cols-3 md:divide-x md:divide-border/40"
+            class="animate-fade-up md:divide-border/40 md:grid md:grid-cols-3 md:divide-x"
             style="--stagger: 8"
           >
             {
@@ -141,8 +141,10 @@ const jsonLd = {
                         : "md:px-6",
                   ]}
                 >
-                  <p class="font-serif text-4xl font-normal tabular-nums">{stat.value}</p>
-                  <p class="text-sm text-pretty text-muted-foreground">
+                  <p class="font-serif text-4xl font-normal tabular-nums">
+                    {stat.value}
+                  </p>
+                  <p class="text-muted-foreground text-sm text-pretty">
                     {stat.label}
                   </p>
                 </div>
@@ -154,15 +156,17 @@ const jsonLd = {
         <div class="animate-fade-up grid gap-4" style="--stagger: 9">
           <div class="grid gap-8">
             <div class="grid gap-4">
-              <p class="text-sm text-muted-foreground">Where I'm headed</p>
+              <p class="text-muted-foreground text-sm">Where I'm headed</p>
               <h2
-                class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-4xl"
+                class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-4xl"
               >
                 Toward design engineering, where <Annotate type="underline"
                   >craft and code</Annotate
                 > meet at the surface.
               </h2>
-              <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
+              <p
+                class="text-muted-foreground max-w-[56ch] text-base text-pretty"
+              >
                 I started as a product engineer who kept caring <Annotate
                   type="crossed-off">too much</Annotate
                 > about how things looked and moved. Now I'm making that the focus.

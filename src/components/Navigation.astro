@@ -5,90 +5,108 @@ import { navItems } from "../data/portfolio";
 const links = navItems.filter((item) => item.href !== "/");
 ---
 
-<header transition:persist id="site-header" class="fixed inset-x-0 top-0 z-50 pt-3">
+<header
+  transition:persist
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 pt-3"
+>
   <div class="section-inner">
     <nav
       data-nav
-      class="-mx-3 flex items-center justify-between gap-3 rounded-full border border-transparent px-3 py-2 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out data-[scrolled]:border-border data-[scrolled]:bg-background/70 data-[scrolled]:shadow-lg data-[scrolled]:shadow-black/5 data-[scrolled]:backdrop-blur-xl"
+      class="data-[scrolled]:border-border data-[scrolled]:bg-background/70 -mx-3 flex items-center justify-between gap-3 rounded-full border border-transparent px-3 py-2 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out data-[scrolled]:shadow-lg data-[scrolled]:shadow-black/5 data-[scrolled]:backdrop-blur-xl"
     >
-    <a
-      href="/"
-      aria-label="Homepage"
-      class="shrink-0 rounded-full p-1 no-underline transition-transform duration-300 hover:scale-105 hover:text-foreground active:scale-95"
-    >
-      <Sign class="h-5 w-auto" />
-    </a>
-
-    <!-- Desktop links -->
-    <ul
-      role="list"
-      data-navlist
-      class="relative hidden items-center gap-x-1 text-sm sm:flex"
-    >
-      <span
-        data-indicator
-        aria-hidden="true"
-        class="pointer-events-none absolute left-0 top-0 -z-10 h-full rounded-full bg-accent opacity-0 transition-[transform,width,opacity] duration-300 ease-out"
-      ></span>
-      {
-        links.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              data-navlink
-              class="relative block rounded-full px-3 py-1.5 text-muted-foreground no-underline transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground"
-            >
-              {item.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
-    <!-- Mobile toggle -->
-    <button
-      type="button"
-      data-menu-toggle
-      aria-label="Toggle menu"
-      aria-expanded="false"
-      class="relative flex size-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors hover:bg-accent sm:hidden"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.75"
-        stroke-linecap="round"
-        class="size-5"
-        aria-hidden="true"
+      <a
+        href="/"
+        aria-label="Homepage"
+        class="hover:text-foreground shrink-0 rounded-full p-1 no-underline transition-transform duration-300 hover:scale-105 active:scale-95"
       >
-        <line data-bar-top x1="3.5" y1="9" x2="20.5" y2="9" class="transition-transform duration-300 ease-out" style="transform-box:fill-box;transform-origin:center"></line>
-        <line data-bar-bottom x1="3.5" y1="15" x2="20.5" y2="15" class="transition-transform duration-300 ease-out" style="transform-box:fill-box;transform-origin:center"></line>
-      </svg>
-    </button>
+        <Sign class="h-5 w-auto" />
+      </a>
+
+      <!-- Desktop links -->
+      <ul
+        role="list"
+        data-navlist
+        class="relative hidden items-center gap-x-1 text-sm sm:flex"
+      >
+        <span
+          data-indicator
+          aria-hidden="true"
+          class="bg-accent pointer-events-none absolute top-0 left-0 -z-10 h-full rounded-full opacity-0 transition-[transform,width,opacity] duration-300 ease-out"
+        ></span>
+        {
+          links.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                data-navlink
+                class="text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground relative block rounded-full px-3 py-1.5 no-underline transition-colors duration-200"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Mobile toggle -->
+      <button
+        type="button"
+        data-menu-toggle
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        class="text-foreground hover:bg-accent relative flex size-9 shrink-0 items-center justify-center rounded-full transition-colors sm:hidden"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          class="size-5"
+          aria-hidden="true"
+        >
+          <line
+            data-bar-top
+            x1="3.5"
+            y1="9"
+            x2="20.5"
+            y2="9"
+            class="transition-transform duration-300 ease-out"
+            style="transform-box:fill-box;transform-origin:center"></line>
+          <line
+            data-bar-bottom
+            x1="3.5"
+            y1="15"
+            x2="20.5"
+            y2="15"
+            class="transition-transform duration-300 ease-out"
+            style="transform-box:fill-box;transform-origin:center"></line>
+        </svg>
+      </button>
     </nav>
 
     <!-- Mobile panel -->
     <div
       data-menu-panel
-      class="mt-2 origin-top overflow-hidden rounded-2xl border border-border bg-background/80 shadow-lg shadow-black/5 backdrop-blur-xl transition-[max-height,opacity,transform] duration-300 ease-out sm:hidden"
+      class="border-border bg-background/80 mt-2 origin-top overflow-hidden rounded-2xl border shadow-lg shadow-black/5 backdrop-blur-xl transition-[max-height,opacity,transform] duration-300 ease-out sm:hidden"
       style="max-height:0;opacity:0;transform:translateY(-8px)"
     >
-    <ul role="list" class="flex flex-col gap-0.5 p-2 text-sm">
-      {
-        links.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              data-navlink-mobile
-              class="block rounded-xl px-3 py-2.5 text-muted-foreground no-underline transition-colors hover:bg-accent hover:text-foreground aria-[current=page]:bg-accent aria-[current=page]:text-foreground"
-            >
-              {item.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+      <ul role="list" class="flex flex-col gap-0.5 p-2 text-sm">
+        {
+          links.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                data-navlink-mobile
+                class="text-muted-foreground hover:bg-accent hover:text-foreground aria-[current=page]:bg-accent aria-[current=page]:text-foreground block rounded-xl px-3 py-2.5 no-underline transition-colors"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </header>
@@ -105,7 +123,7 @@ const links = navItems.filter((item) => item.href !== "/");
     ];
     const allLinks = [
       ...header.querySelectorAll<HTMLAnchorElement>(
-        "[data-navlink],[data-navlink-mobile]"
+        "[data-navlink],[data-navlink-mobile]",
       ),
     ];
 
@@ -150,10 +168,11 @@ const links = navItems.filter((item) => item.href !== "/");
     ];
     const allLinks = [
       ...header.querySelectorAll<HTMLAnchorElement>(
-        "[data-navlink],[data-navlink-mobile]"
+        "[data-navlink],[data-navlink-mobile]",
       ),
     ];
-    const toggle = header.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+    const toggle =
+      header.querySelector<HTMLButtonElement>("[data-menu-toggle]");
     const panel = header.querySelector<HTMLElement>("[data-menu-panel]");
     const barTop = header.querySelector<SVGLineElement>("[data-bar-top]");
     const barBottom = header.querySelector<SVGLineElement>("[data-bar-bottom]");
@@ -164,7 +183,7 @@ const links = navItems.filter((item) => item.href !== "/");
     for (const link of desktopLinks)
       link.addEventListener("mouseenter", () => move(link));
     list?.addEventListener("mouseleave", () =>
-      move((header as any).__activeLink)
+      move((header as any).__activeLink),
     );
     window.addEventListener("resize", () => {
       (header as any).__moveIndicator?.((header as any).__activeLink, false);

@@ -5,29 +5,48 @@ import { ClientRouter } from "astro:transitions";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import Analytics from "../components/Analytics.astro";
+import {
+  absoluteUrl,
+  buildPersonSchema,
+  buildWebsiteSchema,
+  defaultKeywords,
+  siteConfig,
+} from "../lib/seo";
 
 interface Props {
   title?: string;
   description?: string;
   canonical?: string;
+  keywords?: string[];
+  image?: string;
   jsonLd?: unknown;
 }
 
 const {
-  title = "Milind Kumar Mishra",
-  description = "Product engineer building AI-native interfaces, product systems, and tools people return to.",
+  title = siteConfig.name,
+  description = siteConfig.description,
   canonical,
+  keywords,
+  image = siteConfig.defaultImage,
   jsonLd,
 } = Astro.props;
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 const fullTitle =
-  title === "Milind Kumar Mishra" ? title : `${title} · Milind Kumar Mishra`;
-const ogImage = new URL("/icons/Icon-512.png", Astro.site).href;
+  title === siteConfig.name ? title : `${title} · ${siteConfig.name}`;
+const ogImage = absoluteUrl(image, Astro.site);
+const metaKeywords = keywords ?? defaultKeywords;
+const robots =
+  "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+const structuredData = jsonLd
+  ? Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd]
+  : [buildPersonSchema(Astro.site), buildWebsiteSchema(Astro.site)];
 ---
 
 <!doctype html>
-<html lang="en" class="dark scheme-only-dark antialiased">
+<html lang="en" class="dark antialiased scheme-only-dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,31 +58,45 @@ const ogImage = new URL("/icons/Icon-512.png", Astro.site).href;
     <ClientRouter />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="keywords" content={metaKeywords.join(", ")} />
+    <meta name="theme-color" content={siteConfig.themeColor} />
+    <meta name="robots" content={robots} />
+    <meta name="googlebot" content={robots} />
+    <meta name="application-name" content={siteConfig.name} />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Milind Kumar Mishra" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content={siteConfig.locale} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
+    <meta
+      property="og:image:alt"
+      content={`${siteConfig.name}: ${siteConfig.tagline}`}
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:creator" content="@milindmishra_" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:creator" content={siteConfig.twitter} />
 
     {
-      jsonLd && (
+      structuredData.map((schema) => (
         <script
           type="application/ld+json"
           is:inline
-          set:html={JSON.stringify(jsonLd)}
+          set:html={JSON.stringify(schema)}
         />
-      )
+      ))
     }
 
     <Analytics />
   </head>
-  <body class="min-h-svh bg-background font-sans text-foreground">
+  <body class="bg-background text-foreground min-h-svh font-sans">
     <Navigation />
     <slot />
     <Footer />
