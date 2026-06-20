@@ -31,7 +31,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Contact</p>
           <h1
             class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
@@ -42,7 +42,7 @@ const jsonLd = {
           </h1>
         </div>
 
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 200ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 2">
           <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
             The best way to reach me
           </h2>
@@ -55,8 +55,8 @@ const jsonLd = {
 
         <div class="grid gap-6">
           {
-            contactLinks.map((link) => (
-              <div class="animate-fade-up grid gap-4">
+            contactLinks.map((link, index) => (
+              <div class="animate-fade-up grid gap-4" style={`--stagger: ${3 + index}`}>
                 <div class="grid gap-1">
                   <p class="text-lg font-semibold">{link.label}</p>
                   <p class="text-base text-muted-foreground">{link.copy}</p>
@@ -67,7 +67,7 @@ const jsonLd = {
           }
         </div>
 
-        <div class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        <div class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" style="--stagger: 6">
           <a href={siteLinks.primaryCta.href} class="font-medium">
             {siteLinks.primaryCta.label}
           </a>

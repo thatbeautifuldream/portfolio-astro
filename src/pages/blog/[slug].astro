@@ -48,12 +48,12 @@ const jsonLd = {
         <article class="grid min-w-0 gap-8">
           {
             post.data.coverImage && (
-              <div class="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-muted ring-1 ring-inset ring-white/5" style="animation-delay: 80ms">
+              <div class="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-muted ring-1 ring-inset ring-white/5" style="--stagger: 1">
                 <img src={post.data.coverImage} alt="" class="block w-full" />
               </div>
             )
           }
-          <header class="animate-fade-up grid gap-2" style="animation-delay: 160ms">
+          <header class="animate-fade-up grid gap-2" style="--stagger: 2">
             <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
               {post.data.category} · {formatDate(post.data.date)}
             </p>
@@ -65,7 +65,7 @@ const jsonLd = {
             </p>
           </header>
 
-          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="animation-delay: 240ms">
+          <div class="animate-fade-up prose max-w-none overflow-x-hidden" style="--stagger: 3">
             <Content />
           </div>
 

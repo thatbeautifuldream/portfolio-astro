@@ -35,7 +35,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Talks</p>
           <h1
             class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
@@ -53,8 +53,8 @@ const jsonLd = {
 
         <div class="grid gap-8">
           {
-            talks.map((talk) => (
-              <div class="animate-fade-up grid gap-2">
+            talks.map((talk, index) => (
+              <div class="animate-fade-up grid gap-2" style={`--stagger: ${2 + index}`}>
                 <p class="font-mono text-sm tracking-wide text-muted-foreground uppercase">
                   {talk.event} · {talk.date}
                 </p>
@@ -70,7 +70,7 @@ const jsonLd = {
 
         <hr class="border-border/60" />
 
-        <div class="animate-fade-up grid gap-4">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Open source</p>
           <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight">
             Contributions that started as problems I hit at work.
@@ -86,8 +86,8 @@ const jsonLd = {
 
         <div class="grid gap-6">
           {
-            contributions.map((item) => (
-              <div class="animate-fade-up grid gap-2">
+            contributions.map((item, index) => (
+              <div class="animate-fade-up grid gap-2" style={`--stagger: ${2 + index}`}>
                 <h3 class="text-lg font-semibold tracking-tight">{item.title}</h3>
                 <p class="max-w-[56ch] text-base text-pretty text-muted-foreground">
                   {item.context}

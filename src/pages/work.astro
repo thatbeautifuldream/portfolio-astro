@@ -31,7 +31,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Selected work</p>
           <h1
             class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
@@ -46,7 +46,7 @@ const jsonLd = {
           </p>
         </div>
 
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 200ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 2">
           <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
             How I approach product work
           </h2>
@@ -59,8 +59,11 @@ const jsonLd = {
 
         <div class="grid gap-12">
           {
-            roles.map((role) => (
-              <article class="animate-fade-up grid gap-4">
+            roles.map((role, index) => (
+              <article
+                class="animate-fade-up grid gap-4"
+                style={`--stagger: ${3 + index}`}
+              >
                 <div class="grid gap-2">
                   <h2 class="text-2xl font-semibold tracking-tight">
                     {role.company}

@@ -40,7 +40,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Gists</p>
           <h1
             class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
@@ -49,15 +49,15 @@ const jsonLd = {
           </h1>
         </div>
 
-        <div
-          class="animate-fade-up grid gap-0 divide-y divide-border/40"
-          style="animation-delay: 150ms"
-        >
+        <div class="grid gap-0 divide-y divide-border/40">
           {
-            gists.map((gist) => {
+            gists.map((gist, index) => {
               const tag = gist.data.tags?.split(",")[0]?.trim() ?? "Gist";
               return (
-                <div class="grid gap-1 py-5 first:pt-0 last:pb-0">
+                <div
+                  class="animate-fade-up grid gap-1 py-5 first:pt-0 last:pb-0"
+                  style={`--stagger: ${2 + index}`}
+                >
                   <h2 class="text-lg font-semibold tracking-tight">
                     <a href={`/gist/${gist.id}`}>{gist.data.title}</a>
                   </h2>

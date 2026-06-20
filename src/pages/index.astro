@@ -32,7 +32,7 @@ const jsonLd = {
     <section class="section-shell">
       <div class="section-inner grid gap-16">
         <div class="grid gap-12">
-          <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+          <div class="animate-fade-up grid gap-4" style="--stagger: 1">
             <div class="grid gap-6">
               <p class="text-sm text-muted-foreground">
                 Bengaluru, India. Design engineer.
@@ -80,7 +80,7 @@ const jsonLd = {
 
           <div
             class="animate-fade-up flex flex-wrap items-center gap-x-6 gap-y-2 text-sm"
-            style="animation-delay: 200ms"
+            style="--stagger: 2"
           >
             <a href={siteLinks.primaryCta.href} class="font-medium">
               {siteLinks.primaryCta.label}
@@ -89,7 +89,7 @@ const jsonLd = {
             <a href={siteLinks.github.href}>{siteLinks.github.label}</a>
           </div>
 
-          <div class="animate-fade-up grid gap-10" style="animation-delay: 300ms">
+          <div class="animate-fade-up grid gap-10" style="--stagger: 3">
             <div class="flex items-baseline justify-between gap-4">
               <p class="text-sm text-muted-foreground">Selected work</p>
               <a
@@ -102,12 +102,13 @@ const jsonLd = {
 
             <dl class="grid divide-y divide-border/40">
               {
-                projects.map((project) => (
+                projects.map((project, index) => (
                   <a
                     href={project.href}
                     target="_blank"
                     rel="noreferrer"
-                    class="group grid gap-2 py-8 no-underline first:pt-0 last:pb-0"
+                    class="animate-fade-up group grid gap-2 py-8 no-underline first:pt-0 last:pb-0"
+                    style={`--stagger: ${4 + index}`}
                   >
                     <dt class="text-xl font-medium tracking-tight text-foreground sm:text-2xl">
                       {project.name}
@@ -126,7 +127,7 @@ const jsonLd = {
 
           <div
             class="animate-fade-up md:grid md:grid-cols-3 md:divide-x md:divide-border/40"
-            style="animation-delay: 300ms"
+            style="--stagger: 8"
           >
             {
               heroStats.map((stat, index) => (
@@ -150,7 +151,7 @@ const jsonLd = {
           </div>
         </div>
 
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 400ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 9">
           <div class="grid gap-8">
             <div class="grid gap-4">
               <p class="text-sm text-muted-foreground">Where I'm headed</p>

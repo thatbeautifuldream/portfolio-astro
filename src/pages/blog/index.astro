@@ -39,7 +39,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Blog</p>
           <h1
             class="max-w-[24ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-5xl"
@@ -51,7 +51,7 @@ const jsonLd = {
 
         {
           featured && (
-            <article class="animate-fade-up group grid gap-4" style="animation-delay: 200ms">
+            <article class="animate-fade-up group grid gap-4" style="--stagger: 2">
               {featured.data.coverImage && (
                 <a
                   href={`/blog/${featured.id}`}
@@ -81,8 +81,11 @@ const jsonLd = {
         {
           rest.length > 0 && (
             <div class="grid gap-0 divide-y divide-border/40 border-t border-border/40">
-              {rest.map((post) => (
-                <article class="animate-fade-up group grid grid-cols-[88px_1fr] items-start gap-4 py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+              {rest.map((post, index) => (
+                <article
+                  class="animate-fade-up group grid grid-cols-[88px_1fr] items-start gap-4 py-5 sm:grid-cols-[120px_1fr] sm:gap-6"
+                  style={`--stagger: ${3 + index}`}
+                >
                   {post.data.coverImage ? (
                     <a
                       href={`/blog/${post.id}`}

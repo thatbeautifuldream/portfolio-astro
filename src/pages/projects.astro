@@ -34,7 +34,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-16">
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 100ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
           <p class="text-sm text-muted-foreground">Side projects</p>
           <h1
             class="max-w-[28ch] font-serif text-3xl font-normal italic tracking-tight text-balance md:text-4xl"
@@ -50,7 +50,7 @@ const jsonLd = {
           </p>
         </div>
 
-        <div class="animate-fade-up grid gap-4" style="animation-delay: 200ms">
+        <div class="animate-fade-up grid gap-4" style="--stagger: 2">
           <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
             Why I ship experiments publicly
           </h2>
@@ -66,7 +66,10 @@ const jsonLd = {
         <dl class="grid divide-y divide-border/40">
           {
             projects.map((project, index) => (
-              <article class="animate-fade-up grid gap-8 py-12 first:pt-0 last:pb-0">
+              <article
+                class="animate-fade-up grid gap-8 py-12 first:pt-0 last:pb-0"
+                style={`--stagger: ${3 + index}`}
+              >
                 <a
                   href={project.href}
                   target="_blank"
