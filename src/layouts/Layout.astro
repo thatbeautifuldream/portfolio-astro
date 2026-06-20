@@ -4,6 +4,7 @@ import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
+import Analytics from "../components/Analytics.astro";
 
 interface Props {
   title?: string;
@@ -59,6 +60,8 @@ const ogImage = new URL("/icons/Icon-512.png", Astro.site).href;
         />
       )
     }
+
+    <Analytics />
   </head>
   <body class="min-h-svh bg-background font-sans text-foreground">
     <Navigation />
