@@ -2,7 +2,7 @@
 title: 4 Professional Years Later, Still Building
 description: A reflection on four years of growth, self-doubt, resilience, and staying in love with building products.
 category: Journey
-coverImage: https://pbs.twimg.com/media/HJIKAQ9awAAeg4U?format=jpg&name=large
+coverImage: ./4-years-later.jpg
 date: "2026-04-21"
 ---
 

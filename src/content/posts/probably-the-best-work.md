@@ -2,7 +2,7 @@
 title: "Probably the Best Work I've Done. Here's the Story."
 description: A few weeks at Merlin AI building an Agentic Chrome extension with a small team. From prototype to MCP, this is how it came together and why it changed how I think about building AI products.
 category: Product
-coverImage: https://pbs.twimg.com/media/HHpnLhwbAAA4znc?format=jpg&name=medium
+coverImage: ./probably-the-best-work.jpg
 date: "2025-05-06"
 ---
 
@@ -30,11 +30,11 @@ A holiday plus weekend later, we were pulling extra hours and just shipping.
 
 No overplanning. Just building, breaking, fixing. Pure engineering energy.
 
-![late night shipping](https://pbs.twimg.com/media/HHpiAZkaIAAHbr8?format=jpg&name=small)
+![late night shipping](./probably-the-best-work-HHpiAZkaIAAHbr8.jpg)
 
 I started with polishing the prototype Shubhankit built, the color tokens, AI content stream handling, and all that. An extension talking to a backend relay that handled AI calls. Very basic. But it worked.
 
-![early draft of the extension that performed tasks on gmail](https://pbs.twimg.com/media/HHpiYvmaQAAPjg0?format=jpg&name=900x900)
+![early draft of the extension that performed tasks on gmail](./probably-the-best-work-HHpiYvmaQAAPjg0.jpg)
 
 I focused on getting the basics right. Layout, spacing, components, design tokens.
 
@@ -52,7 +52,7 @@ I added small cues like a glow when the agent is active. A clear way to stop exe
 
 Small things, big difference.
 
-![](https://pbs.twimg.com/media/HHplbs3bAAY-0hT?format=jpg&name=medium)
+![](./probably-the-best-work-HHplbs3bAAY-0hT.jpg)
 
 ## Real Workflows
 
@@ -68,11 +68,11 @@ Seeing it actually work felt unreal.
 
 Team demos were a turning point.
 
-![The entire Merlin team trying out our internal release of Merlin's Agentic Extension.](https://pbs.twimg.com/media/HHpj3xSbMAATG3w?format=jpg&name=medium)
+![The entire Merlin team trying out our internal release of Merlin's Agentic Extension.](./probably-the-best-work-HHpj3xSbMAATG3w.jpg)
 
 The entire Merlin team trying out our internal release of Merlin's Agentic Extension.
 
-![Shubhankit trying out all kinds of fun things with YouTube automation.](https://pbs.twimg.com/media/HHpk-VBa0AAQrnH?format=jpg&name=medium)
+![Shubhankit trying out all kinds of fun things with YouTube automation.](./probably-the-best-work-HHpk-VBa0AAQrnH.jpg)
 
 We built a dynamic confirmation tool which could do all kinds of fun things, so there's also that.
 
@@ -88,7 +88,7 @@ Explored the ecosystem with [Composio](https://x.com/composio). Integrated tools
 
 This changed everything.
 
-![](https://pbs.twimg.com/media/HHpn2GtbAAMVGwT?format=jpg&name=large)
+![](./probably-the-best-work-HHpn2GtbAAMVGwT.jpg)
 
 The shift was obvious. From hoping the AI gets it right, to building flows where it actually completes tasks. That is when things started to click.
 
