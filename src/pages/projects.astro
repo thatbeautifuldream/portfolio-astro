@@ -65,7 +65,7 @@ const jsonLd = {
           </p>
         </div>
 
-        <dl class="divide-border/40 grid divide-y">
+        <div class="divide-border/40 grid divide-y">
           {
             projects.map((project, index) => (
               <article
@@ -98,16 +98,16 @@ const jsonLd = {
                 <div class="grid gap-6">
                   <div class="grid gap-3">
                     <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                      <dt class="text-foreground text-2xl font-semibold tracking-tight md:text-3xl">
+                      <h2 class="text-foreground text-2xl font-semibold tracking-tight md:text-3xl">
                         {project.name}
-                      </dt>
-                      <span class="text-muted-foreground/70 font-mono text-xs tracking-wide uppercase tabular-nums">
+                      </h2>
+                      <span class="text-muted-foreground font-mono text-xs tracking-wide uppercase tabular-nums">
                         {project.status}
                       </span>
                     </div>
-                    <dd class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg">
+                    <p class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg">
                       {project.description}
-                    </dd>
+                    </p>
                   </div>
 
                   {project.metrics.length > 0 && (
@@ -137,7 +137,7 @@ const jsonLd = {
                     ))}
                   </ul>
 
-                  <div class="text-muted-foreground/70 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs">
+                  <div class="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs">
                     {project.tags.map((tag, i) => (
                       <span class="inline-flex items-center">
                         {tag}
@@ -177,7 +177,7 @@ const jsonLd = {
               </article>
             ))
           }
-        </dl>
+        </div>
       </div>
     </section>
   </main>
