@@ -2,41 +2,206 @@
 import Sign from "./Sign.astro";
 import { navItems } from "../data/portfolio";
 
-const pathname = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === "/" ? pathname === "/" : pathname.startsWith(href);
+const links = navItems.filter((item) => item.href !== "/");
 ---
 
-<header class="fixed inset-x-0 top-0 z-50">
-  <nav
-    class="mx-auto flex max-w-3xl items-center justify-between gap-4 bg-background/80 px-4 py-3 backdrop-blur-lg sm:px-6"
-  >
-    <a href="/" aria-label="Homepage" class="no-underline hover:text-foreground">
-      <Sign class="h-5 w-auto transition-transform duration-300 hover:scale-105" />
+<header transition:persist id="site-header" class="fixed inset-x-0 top-0 z-50 pt-3">
+  <div class="section-inner">
+    <nav
+      data-nav
+      class="-mx-3 flex items-center justify-between gap-3 rounded-full border border-transparent px-3 py-2 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out data-[scrolled]:border-border data-[scrolled]:bg-background/70 data-[scrolled]:shadow-lg data-[scrolled]:shadow-black/5 data-[scrolled]:backdrop-blur-xl"
+    >
+    <a
+      href="/"
+      aria-label="Homepage"
+      class="shrink-0 rounded-full p-1 no-underline transition-transform duration-300 hover:scale-105 hover:text-foreground active:scale-95"
+    >
+      <Sign class="h-5 w-auto" />
     </a>
+
+    <!-- Desktop links -->
     <ul
       role="list"
-      class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm sm:gap-x-5"
+      data-navlist
+      class="relative hidden items-center gap-x-1 text-sm sm:flex"
     >
+      <span
+        data-indicator
+        aria-hidden="true"
+        class="pointer-events-none absolute left-0 top-0 -z-10 h-full rounded-full bg-accent opacity-0 transition-[transform,width,opacity] duration-300 ease-out"
+      ></span>
       {
-        navItems
-          .filter((item) => item.href !== "/")
-          .map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class:list={[
-                  "no-underline transition-colors hover:text-foreground",
-                  isActive(item.href)
-                    ? "text-foreground"
-                    : "text-muted-foreground",
-                ]}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+        links.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              data-navlink
+              class="relative block rounded-full px-3 py-1.5 text-muted-foreground no-underline transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
       }
     </ul>
-  </nav>
+
+    <!-- Mobile toggle -->
+    <button
+      type="button"
+      data-menu-toggle
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      class="relative flex size-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors hover:bg-accent sm:hidden"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        class="size-5"
+        aria-hidden="true"
+      >
+        <line data-bar-top x1="3.5" y1="9" x2="20.5" y2="9" class="transition-transform duration-300 ease-out" style="transform-box:fill-box;transform-origin:center"></line>
+        <line data-bar-bottom x1="3.5" y1="15" x2="20.5" y2="15" class="transition-transform duration-300 ease-out" style="transform-box:fill-box;transform-origin:center"></line>
+      </svg>
+    </button>
+    </nav>
+
+    <!-- Mobile panel -->
+    <div
+      data-menu-panel
+      class="mt-2 origin-top overflow-hidden rounded-2xl border border-border bg-background/80 shadow-lg shadow-black/5 backdrop-blur-xl transition-[max-height,opacity,transform] duration-300 ease-out sm:hidden"
+      style="max-height:0;opacity:0;transform:translateY(-8px)"
+    >
+    <ul role="list" class="flex flex-col gap-0.5 p-2 text-sm">
+      {
+        links.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              data-navlink-mobile
+              class="block rounded-xl px-3 py-2.5 text-muted-foreground no-underline transition-colors hover:bg-accent hover:text-foreground aria-[current=page]:bg-accent aria-[current=page]:text-foreground"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    </div>
+  </div>
 </header>
+
+<script>
+  function refreshHeader() {
+    const header = document.getElementById("site-header");
+    if (!header) return;
+
+    const list = header.querySelector<HTMLElement>("[data-navlist]");
+    const indicator = header.querySelector<HTMLElement>("[data-indicator]");
+    const desktopLinks = [
+      ...header.querySelectorAll<HTMLAnchorElement>("[data-navlink]"),
+    ];
+    const allLinks = [
+      ...header.querySelectorAll<HTMLAnchorElement>(
+        "[data-navlink],[data-navlink-mobile]"
+      ),
+    ];
+
+    const pathname = window.location.pathname;
+    const isActive = (href: string) =>
+      href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+    let activeLink: HTMLAnchorElement | null = null;
+    for (const link of allLinks) {
+      const href = link.getAttribute("href") || "";
+      const active = isActive(href);
+      link.setAttribute("aria-current", active ? "page" : "false");
+      if (active && desktopLinks.includes(link)) activeLink = link;
+    }
+
+    const moveIndicator = (target: HTMLElement | null, animate = true) => {
+      if (!indicator || !list) return;
+      if (!target) {
+        indicator.style.opacity = "0";
+        return;
+      }
+      indicator.style.transitionDuration = animate ? "300ms" : "0ms";
+      indicator.style.width = `${target.offsetWidth}px`;
+      indicator.style.transform = `translateX(${target.offsetLeft}px)`;
+      indicator.style.opacity = "1";
+    };
+
+    moveIndicator(activeLink, false);
+    (header as any).__moveIndicator = moveIndicator;
+    (header as any).__activeLink = activeLink;
+  }
+
+  function wireHeader() {
+    const header = document.getElementById("site-header");
+    if (!header || (header as any).__wired) return;
+    (header as any).__wired = true;
+
+    const nav = header.querySelector<HTMLElement>("[data-nav]");
+    const list = header.querySelector<HTMLElement>("[data-navlist]");
+    const desktopLinks = [
+      ...header.querySelectorAll<HTMLAnchorElement>("[data-navlink]"),
+    ];
+    const allLinks = [
+      ...header.querySelectorAll<HTMLAnchorElement>(
+        "[data-navlink],[data-navlink-mobile]"
+      ),
+    ];
+    const toggle = header.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+    const panel = header.querySelector<HTMLElement>("[data-menu-panel]");
+    const barTop = header.querySelector<SVGLineElement>("[data-bar-top]");
+    const barBottom = header.querySelector<SVGLineElement>("[data-bar-bottom]");
+
+    const move = (target: HTMLElement | null) =>
+      (header as any).__moveIndicator?.(target);
+
+    for (const link of desktopLinks)
+      link.addEventListener("mouseenter", () => move(link));
+    list?.addEventListener("mouseleave", () =>
+      move((header as any).__activeLink)
+    );
+    window.addEventListener("resize", () => {
+      (header as any).__moveIndicator?.((header as any).__activeLink, false);
+    });
+
+    const onScroll = () => {
+      if (!nav) return;
+      if (window.scrollY > 8) nav.setAttribute("data-scrolled", "");
+      else nav.removeAttribute("data-scrolled");
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    let open = false;
+    const setMenu = (next: boolean) => {
+      open = next;
+      toggle?.setAttribute("aria-expanded", String(open));
+      if (panel) {
+        panel.style.maxHeight = open ? `${panel.scrollHeight}px` : "0";
+        panel.style.opacity = open ? "1" : "0";
+        panel.style.transform = open ? "translateY(0)" : "translateY(-8px)";
+      }
+      if (barTop)
+        barTop.style.transform = open
+          ? "translateY(3px) rotate(45deg)"
+          : "translateY(0) rotate(0)";
+      if (barBottom)
+        barBottom.style.transform = open
+          ? "translateY(-3px) rotate(-45deg)"
+          : "translateY(0) rotate(0)";
+    };
+    toggle?.addEventListener("click", () => setMenu(!open));
+    for (const link of allLinks)
+      link.addEventListener("click", () => setMenu(false));
+  }
+
+  refreshHeader();
+  wireHeader();
+  document.addEventListener("astro:after-swap", refreshHeader);
+</script>
