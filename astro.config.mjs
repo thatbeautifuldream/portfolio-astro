@@ -19,6 +19,12 @@ export default defineConfig({
 
   prefetch: true,
 
+  redirects: {
+    "/whatsapp": "https://wa.me/919631333128",
+    "/resume":
+      "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf",
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
