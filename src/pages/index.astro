@@ -1,8 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
 import FullSign from "../components/FullSign.astro";
 import { siteLinks, heroStats, projects, hostname } from "../data/portfolio";
+import wavingHand from "../assets/emojis/waving-hand.webp";
+import merlin from "../assets/emojis/merlin.webp";
+import avatar from "../assets/icons/icon.png";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -37,16 +41,16 @@ const jsonLd = {
                 class="max-w-[22ch] text-4xl leading-[1.25] font-semibold tracking-tight text-balance select-none md:text-6xl md:leading-[1.2]"
               >
                 <span class="text-muted-foreground/40">Hi,</span>
-                <img
-                  src="/emojis/waving-hand.webp"
+                <Image
+                  src={wavingHand}
                   alt="Waving hand"
                   width="48"
                   height="48"
                   class="inline-block size-[0.85em] translate-y-[-0.05em] align-middle"
                 />
                 <span class="text-muted-foreground/40">I'm</span>
-                <img
-                  src="/icons/icon.png"
+                <Image
+                  src={avatar}
                   alt="Milind"
                   width="96"
                   height="96"
@@ -56,8 +60,8 @@ const jsonLd = {
                 <span class="text-muted-foreground/40">I'm a</span>
                 <span class="text-foreground">design engineer</span>
                 <span class="text-muted-foreground/40">at</span>
-                <img
-                  src="/emojis/merlin.webp"
+                <Image
+                  src={merlin}
                   alt="Merlin AI"
                   width="96"
                   height="96"
