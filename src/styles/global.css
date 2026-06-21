@@ -84,6 +84,20 @@
   animation-delay: calc(var(--stagger, 0) * 80ms);
 }
 
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.5s ease-out both;
+  animation-delay: calc(var(--stagger, 0) * 80ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
