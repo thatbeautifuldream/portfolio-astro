@@ -1,5 +1,5 @@
-// Minimal static server for ./dist that applies public/_headers rules,
-// so Lighthouse sees the same response headers Cloudflare Pages will serve.
+// Minimal static server for ./dist that applies the vercel.json header rules
+// (and gzips), so Lighthouse sees the same response headers Vercel serves.
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";

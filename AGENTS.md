@@ -22,3 +22,18 @@ Keep pre-commit fast: it only runs `lint-staged` (Prettier on staged files). The
 - Package manager is **pnpm**. Use `pnpm`, never `npm`/`npx`.
 - Match the surrounding style: 2-space indentation, double quotes, semicolons. Prettier enforces this.
 - Prefer small, targeted changes that reuse existing layout, content, and SEO patterns.
+
+## Lighthouse Verification
+
+Run `pnpm lighthouse` to audit **mobile + desktop** in one pass. It builds, serves `dist` via `scripts/serve-dist.mjs` (gzips responses and mirrors the `vercel.json` headers, so the local run matches production), runs Lighthouse for both form factors, and prints each category score plus every audit below 100%.
+
+- `pnpm lighthouse --no-build` — reuse the existing `dist` (skip the rebuild).
+- `pnpm lighthouse --url https://milindmishra.com/` — audit production directly instead of the local build.
+- `PUBLIC_DISABLE_ANALYTICS=true pnpm build` then `pnpm lighthouse --no-build` — measure the code's own ceiling with third-party analytics excluded.
+
+Interpreting results:
+
+- The local server is HTTP/1.1, so Lighthouse's lantern simulation over-penalizes **mobile** (inflated FCP/LCP vs production's HTTP/3). Trust **desktop** locally; use `--url` (or PageSpeed Insights) for the real mobile picture.
+- `Analytics.astro` loads GA4 + Clarity only on first user interaction, so they stay out of the audit trace — don't "fix" this by eagerly loading them.
+- Response headers (HSTS, CSP, X-Frame-Options, COOP, etc.) live in **`vercel.json`** — the site is on Vercel (Cloudflare only proxies the domain). A Cloudflare `public/_headers` file is ignored. Update `vercel.json`, and keep `scripts/serve-dist.mjs`'s parser in sync if the header shape changes.
+- Best-Practices is capped below 100 by Cloudflare's injected bot script (`/cdn-cgi/challenge-platform/...`, the `deprecations` audit) — that is a Cloudflare dashboard setting (Bot Fight Mode / JavaScript Detections), not a code issue. Don't chase it in the repo.
