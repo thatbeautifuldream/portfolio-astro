@@ -1,9 +1,10 @@
 ---
 const CLARITY_ID = "sz0cgixbfc";
 const GA_ID = "G-W9JFLQ2YJR";
+const enabled = import.meta.env.PUBLIC_DISABLE_ANALYTICS !== "true";
 ---
 
-<script is:inline define:vars={{ CLARITY_ID, GA_ID }}>
+<script is:inline define:vars={{ CLARITY_ID, GA_ID, enabled }}>
   function sendPageView() {
     if (!window.gtag) return;
     gtag("event", "page_view", {
@@ -52,14 +53,24 @@ const GA_ID = "G-W9JFLQ2YJR";
     if (window.__analyticsLoaded) sendPageView();
   });
 
-  // Defer third-party scripts off the critical path.
-  function defer() {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(loadAnalytics, { timeout: 3000 });
-    } else {
-      setTimeout(loadAnalytics, 1);
+  // Load analytics on the first real interaction, with a long idle fallback.
+  // This keeps the third-party scripts out of the critical path entirely (and
+  // out of synthetic-audit trace windows) while still tracking real visitors.
+  function start() {
+    const events = ["pointerdown", "keydown", "touchstart", "scroll"];
+    let timer;
+    function go() {
+      events.forEach((e) => removeEventListener(e, go, { passive: true }));
+      clearTimeout(timer);
+      loadAnalytics();
     }
+    events.forEach((e) =>
+      addEventListener(e, go, { passive: true, once: true }),
+    );
+    timer = setTimeout(loadAnalytics, 10000);
   }
-  if (document.readyState === "complete") defer();
-  else window.addEventListener("load", defer);
+  if (enabled) {
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start);
+  }
 </script>

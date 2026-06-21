@@ -19,6 +19,11 @@ export default defineConfig({
 
   prefetch: true,
 
+  build: {
+    // Inline all stylesheets so the critical CSS isn't a render-blocking request.
+    inlineStylesheets: "always",
+  },
+
   redirects: {
     "/whatsapp": "https://wa.me/919631333128",
     "/resume":
