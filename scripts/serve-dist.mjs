@@ -37,30 +37,21 @@ const TYPES = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-// Parse public/_headers into [{ test(path), headers }]
+// Parse vercel.json `headers` into [{ test(path), headers }] so the local
+// server mirrors the response headers Vercel serves in production.
 function parseHeaders() {
-  const file = new URL("../public/_headers", import.meta.url).pathname;
+  const file = new URL("../vercel.json", import.meta.url).pathname;
   if (!existsSync(file)) return [];
-  const rules = [];
-  let current = null;
-  for (const raw of readFileSync(file, "utf8").split("\n")) {
-    if (!raw.trim() || raw.trim().startsWith("#")) continue;
-    if (!/^\s/.test(raw)) {
-      const pattern = raw.trim();
-      const re = new RegExp(
-        "^" +
-          pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") +
-          "$",
-      );
-      current = { test: (p) => re.test(p), headers: {} };
-      rules.push(current);
-    } else if (current) {
-      const idx = raw.indexOf(":");
-      if (idx > -1)
-        current.headers[raw.slice(0, idx).trim()] = raw.slice(idx + 1).trim();
-    }
-  }
-  return rules;
+  const cfg = JSON.parse(readFileSync(file, "utf8"));
+  return (cfg.headers || []).map((rule) => {
+    const re = new RegExp(
+      "^" + rule.source.replace(/\(\.\*\)/g, ".*").replace(/\/$/, "/?") + "$",
+    );
+    const headers = Object.fromEntries(
+      rule.headers.map((h) => [h.key, h.value]),
+    );
+    return { test: (p) => re.test(p), headers };
+  });
 }
 
 const HEADER_RULES = parseHeaders();
