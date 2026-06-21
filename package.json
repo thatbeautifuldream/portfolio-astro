@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "lighthouse": "node scripts/lighthouse.mjs",
     "astro": "astro",
     "check": "astro check",
     "format": "prettier . --write",
