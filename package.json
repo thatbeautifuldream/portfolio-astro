@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "lighthouse": "node scripts/lighthouse.ts",
+    "subset:fonts": "node scripts/subset-fonts.ts",
     "astro": "astro",
     "check": "astro check",
     "format": "prettier . --write",
@@ -37,6 +38,7 @@
     "prettier": "^3.8.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "subset-font": "^2.5.0",
     "typescript": "^6.0.3"
   },
   "pnpm": {
