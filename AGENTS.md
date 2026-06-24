@@ -25,9 +25,16 @@ Keep pre-commit fast: it only runs `lint-staged` (Prettier on staged files). The
 
 ## Lighthouse Verification
 
-Run `pnpm lighthouse` to audit **mobile + desktop** in one pass. It builds, serves `dist` via `scripts/serve-dist.mjs` (gzips responses and mirrors the `vercel.json` headers, so the local run matches production), runs Lighthouse for both form factors, and prints each category score plus every audit below 100%.
+Run `pnpm lighthouse` to audit **mobile + desktop** in one pass. It builds, serves `dist`, drives Lighthouse through its Node API for both form factors, and prints each category score plus every audit below 100%. Each form factor runs 3 times and the **median** run is reported so scores don't jitter between runs.
+
+The work is split into three composable TypeScript modules (run directly via Node's type stripping, no build step):
+
+- `scripts/serve-dist.ts` — exports `startServer()`, a static `dist` server that gzips responses and mirrors the `vercel.json` headers so the local run matches production. Run it directly (`node scripts/serve-dist.ts [port]`) to just serve.
+- `scripts/lighthouse-runner.ts` — exports `withChrome`, `runOnce`, `runMedian`, `scores`, and `gapsByCategory`. Knows nothing about serving: give it any URL and a Chrome port and it audits it.
+- `scripts/lighthouse.ts` — the CLI that composes the two (build → serve → audit → report).
 
 - `pnpm lighthouse --no-build` — reuse the existing `dist` (skip the rebuild).
+- `pnpm lighthouse --runs 5` — change how many runs the median is taken over (default 3; use 1 for a quick smoke test).
 - `pnpm lighthouse --url https://milindmishra.com/` — audit production directly instead of the local build.
 - `PUBLIC_DISABLE_ANALYTICS=true pnpm build` then `pnpm lighthouse --no-build` — measure the code's own ceiling with third-party analytics excluded.
 
