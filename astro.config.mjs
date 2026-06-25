@@ -17,7 +17,10 @@ const changefreqMap = {
 export default defineConfig({
   site: "https://milindmishra.com",
 
-  prefetch: true,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
 
   build: {
     // Inline all stylesheets so the critical CSS isn't a render-blocking request.
