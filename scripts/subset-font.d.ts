@@ -7,7 +7,7 @@ declare module "subset-font" {
       preserveNameIds?: number[];
       variationAxes?: Record<
         string,
-        { min?: number; max?: number; default?: number }
+        number | { min?: number; max?: number; default?: number }
       >;
     },
   ): Promise<Buffer>;

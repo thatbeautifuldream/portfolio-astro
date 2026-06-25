@@ -41,3 +41,17 @@ for (const file of FILES) {
     `${file}: ${(input.length / 1024) | 0}KB -> ${target} ${(out.length / 1024) | 0}KB (-${pct}%)`,
   );
 }
+
+// CanvasKit (Skia) can't parse woff2, so the OG-image cards need raw TTF. Emit
+// static Inter instances at the weights the cards use (400 body, 600 title)
+// from the same source, so the OG font matches the site exactly.
+const interSource = await readFile(FONT_DIR + "InterVariable.woff2");
+for (const weight of [400, 600]) {
+  const out = await subsetFont(interSource, text, {
+    targetFormat: "sfnt",
+    variationAxes: { wght: weight },
+  });
+  const target = `Inter-${weight}.ttf`;
+  await writeFile(FONT_DIR + target, out);
+  console.log(`InterVariable.woff2 -> ${target} ${(out.length / 1024) | 0}KB`);
+}

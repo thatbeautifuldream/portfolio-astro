@@ -14,7 +14,7 @@ export const siteConfig = {
   language: "en",
   locale: "en_US",
   themeColor: "#0a0a0a",
-  defaultImage: "/icons/Icon-512.png",
+  defaultImage: "/og.png",
   twitter: "@milindmishra_",
   sameAs: [
     "https://github.com/thatbeautifuldream",

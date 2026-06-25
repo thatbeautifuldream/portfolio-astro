@@ -24,6 +24,13 @@ export default defineConfig({
     inlineStylesheets: "always",
   },
 
+  image: {
+    // Generate srcset/sizes for every <Image> and Markdown image. Styling stays
+    // with Tailwind (responsiveStyles left off so Astro's styles don't override
+    // Tailwind's cascade-layer classes).
+    layout: "constrained",
+  },
+
   redirects: {
     "/whatsapp": "https://wa.me/919631333128",
     "/resume":
