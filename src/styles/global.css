@@ -61,7 +61,7 @@
 }
 
 @utility section-shell {
-  @apply py-6 first:pt-20 md:py-8 first:md:pt-22;
+  @apply py-6 first:pt-6 md:py-8 first:md:pt-8;
 }
 
 @utility section-inner {

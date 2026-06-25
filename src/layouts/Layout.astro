@@ -107,8 +107,16 @@ const structuredData = jsonLd
     <Analytics />
   </head>
   <body class="bg-background text-foreground min-h-svh font-sans">
-    <Navigation />
-    <slot />
-    <Footer />
+    <div
+      class="mx-auto flex w-full max-w-[68rem] justify-center px-3 sm:px-4 xl:gap-6"
+    >
+      <Navigation />
+      <div class="flex min-h-svh max-w-3xl min-w-0 flex-1 flex-col">
+        <div class="grow">
+          <slot />
+        </div>
+        <Footer />
+      </div>
+    </div>
   </body>
 </html>

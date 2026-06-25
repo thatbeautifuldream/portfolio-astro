@@ -3,6 +3,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 import mdx from "@astrojs/mdx";
+import icon from "astro-icon";
 
 import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
 
@@ -90,6 +91,7 @@ export default defineConfig({
   },
 
   integrations: [
+    icon(),
     mdx(),
     sitemap({
       serialize(item) {

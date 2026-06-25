@@ -1,158 +1,70 @@
 ---
+import { Icon } from "astro-icon/components";
 import Sign from "./Sign.astro";
 import { navItems, siteLinks } from "../data/portfolio";
 
 const links = navItems;
 const cta = siteLinks.primaryCta;
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/"
+    ? pathname === "/"
+    : pathname === href || pathname.startsWith(href + "/");
+
+const icons: Record<string, { line: string; fill: string }> = {
+  "/": { line: "ri:home-5-line", fill: "ri:home-5-fill" },
+  "/work": { line: "ri:briefcase-line", fill: "ri:briefcase-fill" },
+  "/projects": { line: "ri:stack-line", fill: "ri:stack-fill" },
+  "/talks": { line: "ri:mic-line", fill: "ri:mic-fill" },
+  "/blog": { line: "ri:article-line", fill: "ri:article-fill" },
+  "/gist": { line: "ri:code-box-line", fill: "ri:code-box-fill" },
+  "/contact": { line: "ri:mail-line", fill: "ri:mail-fill" },
+};
 ---
 
-<header
-  data-header
-  class="fixed inset-x-0 top-0 z-130 px-3 pt-3 transition-[padding] duration-300 data-scrolled:px-4 data-scrolled:pt-4 sm:px-4 sm:data-scrolled:px-6"
+<aside
+  class="sticky top-0 flex h-dvh w-[60px] shrink-0 flex-col items-center gap-0.5 py-4 xl:w-60 xl:items-stretch xl:px-2"
 >
-  <nav
-    data-nav
-    class="bg-background squircle mx-auto flex max-w-3xl items-center justify-between rounded-3xl px-4 py-3 data-scrolled:inset-ring data-scrolled:inset-ring-white/10 sm:px-6"
+  <a
+    href="/"
+    aria-label="Homepage"
+    class="hover:text-foreground hover:bg-foreground/5 squircle mb-1 inline-flex size-11 items-center justify-center rounded-2xl no-underline transition-colors xl:ml-1"
   >
-    <a
-      href="/"
-      aria-label="Homepage"
-      class="hover:text-foreground no-underline"
-    >
-      <Sign class="h-5 w-auto" />
-    </a>
+    <Sign class="h-6 w-auto" />
+  </a>
 
-    <button
-      type="button"
-      data-menu-toggle
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-label="Open menu"
-      class="group text-foreground relative flex size-10 cursor-pointer items-center justify-center"
-    >
-      <span class="relative block size-4">
-        <span
-          class="absolute top-1/2 left-0 -mt-px h-0.5 w-4 -translate-y-[3px] bg-current transition-[translate,rotate] duration-200 ease-out group-aria-expanded:translate-y-0 group-aria-expanded:-rotate-45"
-        ></span>
-        <span
-          class="absolute top-1/2 left-0 -mt-px h-0.5 w-4 translate-y-[3px] bg-current transition-[translate,rotate] duration-200 ease-out group-aria-expanded:translate-y-0 group-aria-expanded:rotate-45"
-        ></span>
-      </span>
-    </button>
-  </nav>
-</header>
-
-<!-- Full-screen overlay menu -->
-<div
-  data-menu-overlay
-  role="dialog"
-  aria-modal="true"
-  aria-label="Navigation"
-  class="group invisible fixed inset-0 z-120 opacity-0 transition-[opacity,visibility] duration-200 ease-out data-open:visible data-open:opacity-100"
->
-  <div class="bg-background absolute inset-0"></div>
-
-  <div class="relative flex min-h-dvh flex-col overflow-y-auto">
-    <div
-      class="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 pt-24 pb-10 sm:px-6"
-    >
-      {
-        links.map((item, i) => (
-          <div
-            class="-translate-y-2.5 opacity-0 blur-xs transition-[transform,opacity,filter] [transition-delay:var(--stagger)] duration-200 ease-out group-data-open:translate-y-0 group-data-open:opacity-100 group-data-open:filter-none"
-            style={`--stagger:${20 + i * 35}ms`}
+  <nav class="flex w-full flex-col items-center gap-0.5 xl:items-start">
+    {
+      links.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <a
+            href={item.href}
+            aria-current={active ? "page" : undefined}
+            class="text-foreground hover:bg-foreground/5 aria-[current=page]:bg-foreground/10 squircle inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
           >
-            <a
-              href={item.href}
-              data-navlink
-              class="text-muted-foreground hover:text-foreground aria-[current=page]:text-foreground group/link relative block text-2xl font-medium no-underline transition-colors duration-200 ease-out"
-            >
-              <span class="before:bg-foreground relative inline-block transition-transform duration-200 ease-out group-hover/link:translate-x-5 before:absolute before:top-1/2 before:-left-5 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:rounded-full before:opacity-0 before:transition before:duration-200 before:ease-out before:content-[''] group-hover/link:before:scale-100 group-hover/link:before:opacity-100">
-                {item.label}
-              </span>
-            </a>
-          </div>
-        ))
-      }
-      <div
-        class="-translate-y-2.5 opacity-0 blur-xs transition-[transform,opacity,filter] [transition-delay:var(--stagger)] duration-200 ease-out group-data-open:translate-y-0 group-data-open:opacity-100 group-data-open:filter-none"
-        style={`--stagger:${20 + links.length * 35}ms`}
-      >
-        <a
-          href={cta.href}
-          data-navlink
-          class="text-muted-foreground hover:text-foreground group/link relative block text-2xl font-medium no-underline transition-colors duration-200 ease-out"
-        >
-          <span
-            class="before:bg-foreground relative inline-block transition-transform duration-200 ease-out group-hover/link:translate-x-5 before:absolute before:top-1/2 before:-left-5 before:size-1.5 before:-translate-y-1/2 before:scale-0 before:rounded-full before:opacity-0 before:transition before:duration-200 before:ease-out before:content-[''] group-hover/link:before:scale-100 group-hover/link:before:opacity-100"
-          >
-            {cta.label}
-          </span>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  const isOpen = () =>
-    !!document.querySelector("[data-menu-overlay]")?.hasAttribute("data-open");
-
-  function setMenu(open: boolean) {
-    const overlay = document.querySelector<HTMLElement>("[data-menu-overlay]");
-    const toggle =
-      document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
-    if (!overlay || !toggle) return;
-    overlay.toggleAttribute("data-open", open);
-    toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    document.documentElement.style.overflow = open ? "hidden" : "";
-    document.body.style.overflow = open ? "hidden" : "";
-    if (open)
-      document.querySelector("[data-nav]")?.removeAttribute("data-scrolled");
-    else applyScrolled();
-  }
-
-  function applyScrolled() {
-    if (isOpen()) return;
-    const nav = document.querySelector("[data-nav]");
-    nav?.toggleAttribute("data-scrolled", window.scrollY > 32);
-  }
-
-  function markActive() {
-    const pathname = window.location.pathname;
-    const isActive = (href: string) =>
-      href === "/" ? pathname === "/" : pathname.startsWith(href);
-    for (const link of document.querySelectorAll<HTMLAnchorElement>(
-      "[data-navlink]",
-    )) {
-      const href = link.getAttribute("href") || "";
-      if (href.startsWith("http")) continue;
-      link.setAttribute("aria-current", isActive(href) ? "page" : "false");
+            <Icon
+              name={
+                active
+                  ? (icons[item.href]?.fill ?? "ri:circle-fill")
+                  : (icons[item.href]?.line ?? "ri:circle-line")
+              }
+              class="size-6 shrink-0"
+            />
+            <span class="hidden xl:inline">{item.label}</span>
+          </a>
+        );
+      })
     }
-  }
+  </nav>
 
-  function init() {
-    applyScrolled();
-    markActive();
-  }
-
-  if (!(window as any).__navBound) {
-    (window as any).__navBound = true;
-    document.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement)?.closest?.("[data-menu-toggle]"))
-        setMenu(!isOpen());
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && isOpen()) setMenu(false);
-    });
-    window.addEventListener("scroll", applyScrolled, { passive: true });
-  }
-
-  init();
-  document.addEventListener("astro:after-swap", () => {
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-    init();
-  });
-</script>
+  <a
+    href={cta.href}
+    aria-label={cta.label}
+    class="bg-foreground text-background squircle mt-3 inline-flex size-11 items-center justify-center rounded-2xl font-semibold no-underline transition-opacity hover:opacity-90 xl:mt-6 xl:h-12 xl:w-full xl:rounded-full xl:px-8"
+  >
+    <span class="hidden xl:inline">{cta.label}</span>
+    <Icon name="ri:add-line" class="size-6 xl:hidden" />
+  </a>
+</aside>
