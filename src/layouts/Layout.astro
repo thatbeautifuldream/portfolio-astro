@@ -35,6 +35,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 const fullTitle =
   title === siteConfig.name ? title : `${title} · ${siteConfig.name}`;
 const ogImage = absoluteUrl(image, Astro.site);
+const ogLogo = absoluteUrl("/icons/Icon-192.png", Astro.site);
 const metaKeywords = keywords ?? defaultKeywords;
 const robots =
   "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -86,6 +87,7 @@ const structuredData = jsonLd
       property="og:image:alt"
       content={`${siteConfig.name}: ${siteConfig.tagline}`}
     />
+    <meta property="og:logo" content={ogLogo} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
