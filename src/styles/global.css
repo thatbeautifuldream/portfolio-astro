@@ -60,6 +60,11 @@
   --ring: #d4d4d4;
 }
 
+html {
+  background-color: var(--background);
+  color-scheme: dark;
+}
+
 @utility section-shell {
   @apply py-6 first:pt-6 md:py-8 first:md:pt-8;
 }
@@ -81,15 +86,22 @@
 @keyframes vt-fade-in {
   from {
     opacity: 0;
+    filter: blur(4px);
+    transform: translateY(6px);
   }
 }
 
 ::view-transition-old(root) {
-  animation: vt-fade-out 0.2s ease both;
+  animation: vt-fade-out 0.16s ease-out both;
 }
 
 ::view-transition-new(root) {
-  animation: vt-fade-in 0.2s ease both;
+  animation: vt-fade-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+}
+
+::view-transition-group(nav-active) {
+  animation-duration: 0.32s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

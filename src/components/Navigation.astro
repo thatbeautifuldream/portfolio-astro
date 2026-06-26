@@ -41,8 +41,15 @@ const icons: Record<string, { line: string; fill: string }> = {
           href={item.href}
           aria-label={item.label}
           aria-current={isActive(item.href) ? "page" : undefined}
-          class="text-foreground hover:bg-foreground/5 aria-[current=page]:bg-foreground/10 group/rail squircle inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
+          class="text-foreground hover:bg-foreground/5 group/rail squircle relative inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
         >
+          {isActive(item.href) && (
+            <span
+              aria-hidden="true"
+              style="view-transition-name: nav-active"
+              class="bg-foreground/10 squircle absolute inset-0 -z-10 rounded-2xl"
+            />
+          )}
           <Icon
             name={icons[item.href]?.line ?? "ri:circle-line"}
             class="size-6 shrink-0 group-aria-[current=page]/rail:hidden"

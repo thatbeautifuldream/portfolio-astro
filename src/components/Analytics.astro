@@ -64,8 +64,15 @@ const enabled = import.meta.env.PUBLIC_DISABLE_ANALYTICS !== "true";
     );
     timer = setTimeout(loadAnalytics, 10000);
   }
-  if (enabled) {
+  function startWhenActive() {
+    if (document.prerendering) {
+      document.addEventListener("prerenderingchange", startWhenActive, {
+        once: true,
+      });
+      return;
+    }
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start);
   }
+  if (enabled) startWhenActive();
 </script>
