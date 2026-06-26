@@ -23,6 +23,8 @@ const icons: Record<string, { line: string; fill: string }> = {
 ---
 
 <aside
+  transition:persist
+  transition:animate="none"
   class="sticky top-0 flex h-dvh w-[60px] shrink-0 flex-col items-center gap-0.5 py-4 xl:w-60 xl:items-stretch xl:px-2"
 >
   <a
@@ -35,27 +37,25 @@ const icons: Record<string, { line: string; fill: string }> = {
 
   <nav class="flex w-full flex-col items-center gap-0.5 xl:items-start">
     {
-      links.map((item) => {
-        const active = isActive(item.href);
-        return (
-          <a
-            href={item.href}
-            aria-label={item.label}
-            aria-current={active ? "page" : undefined}
-            class="text-foreground hover:bg-foreground/5 aria-[current=page]:bg-foreground/10 squircle inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
-          >
-            <Icon
-              name={
-                active
-                  ? (icons[item.href]?.fill ?? "ri:circle-fill")
-                  : (icons[item.href]?.line ?? "ri:circle-line")
-              }
-              class="size-6 shrink-0"
-            />
-            <span class="hidden xl:inline">{item.label}</span>
-          </a>
-        );
-      })
+      links.map((item) => (
+        <a
+          href={item.href}
+          data-navlink
+          aria-label={item.label}
+          aria-current={isActive(item.href) ? "page" : undefined}
+          class="text-foreground hover:bg-foreground/5 aria-[current=page]:bg-foreground/10 group/rail squircle inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
+        >
+          <Icon
+            name={icons[item.href]?.line ?? "ri:circle-line"}
+            class="size-6 shrink-0 group-aria-[current=page]/rail:hidden"
+          />
+          <Icon
+            name={icons[item.href]?.fill ?? "ri:circle-fill"}
+            class="hidden size-6 shrink-0 group-aria-[current=page]/rail:block"
+          />
+          <span class="hidden xl:inline">{item.label}</span>
+        </a>
+      ))
     }
   </nav>
 
@@ -68,3 +68,24 @@ const icons: Record<string, { line: string; fill: string }> = {
     <Icon name="ri:add-line" class="size-6 xl:hidden" />
   </a>
 </aside>
+
+<script>
+  // The rail is persisted across client navigations, so it isn't re-rendered
+  // server-side. Sync the active item from the URL after every navigation.
+  function markActive() {
+    const pathname = window.location.pathname;
+    const isActive = (href: string) =>
+      href === "/"
+        ? pathname === "/"
+        : pathname === href || pathname.startsWith(href + "/");
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      "[data-navlink]",
+    )) {
+      const href = link.getAttribute("href") || "";
+      if (isActive(href)) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    }
+  }
+
+  document.addEventListener("astro:page-load", markActive);
+</script>
