@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
+import CodeCopy from "../../components/CodeCopy.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -82,4 +83,5 @@ const jsonLd = {
       </div>
     </section>
   </main>
+  <CodeCopy />
 </Layout>
