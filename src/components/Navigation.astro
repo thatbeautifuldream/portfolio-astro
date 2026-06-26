@@ -73,3 +73,17 @@ const icons: Record<string, { line: string; fill: string }> = {
     <Icon name="ri:add-line" class="size-6 xl:hidden" />
   </a>
 </aside>
+
+<script is:inline>
+  document.querySelectorAll('aside a[href^="/"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const url = new URL(link.href);
+      if (
+        url.pathname === location.pathname &&
+        url.search === location.search
+      ) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>
