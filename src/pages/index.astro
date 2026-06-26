@@ -93,12 +93,6 @@ const jsonLd = {
           <div class="animate-fade-up grid gap-10" style="--stagger: 3">
             <div class="flex items-baseline justify-between gap-4">
               <p class="text-muted-foreground text-sm">Selected work</p>
-              <a
-                href="/projects"
-                class="text-muted-foreground hover:text-foreground text-sm no-underline transition-colors"
-              >
-                View all
-              </a>
             </div>
 
             <ul role="list" class="divide-border/40 grid divide-y">
@@ -146,7 +140,7 @@ const jsonLd = {
                         : "md:px-6",
                   ]}
                 >
-                  <p class="font-serif text-4xl font-normal tabular-nums">
+                  <p class="text-4xl font-semibold tracking-tight tabular-nums">
                     {stat.value}
                   </p>
                   <p class="text-muted-foreground text-sm text-pretty">
@@ -187,7 +181,6 @@ const jsonLd = {
               <p class="text-muted-foreground">Quick navigation</p>
               <div class="flex flex-wrap gap-x-6 gap-y-2">
                 <a href="/work" class="font-medium">View my work experience</a>
-                <a href="/projects">Explore my projects</a>
                 <a href="/talks">See my talks</a>
                 <a href="/blog">Read my blog</a>
                 <a href="/contact">Get in touch</a>

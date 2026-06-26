@@ -214,7 +214,6 @@ export const contactLinks = [
 export const navItems = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
-  { href: "/projects", label: "Projects" },
   { href: "/talks", label: "Talks" },
   { href: "/blog", label: "Blog" },
   { href: "/gist", label: "Gist" },

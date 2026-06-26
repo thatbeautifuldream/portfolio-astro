@@ -26,7 +26,6 @@ export const siteConfig = {
 export const sitePages = [
   { path: "/", changefreq: "weekly", priority: 1.0 },
   { path: "/work", changefreq: "monthly", priority: 0.9 },
-  { path: "/projects", changefreq: "monthly", priority: 0.9 },
   { path: "/blog", changefreq: "weekly", priority: 0.8 },
   { path: "/gist", changefreq: "weekly", priority: 0.8 },
   { path: "/talks", changefreq: "monthly", priority: 0.7 },

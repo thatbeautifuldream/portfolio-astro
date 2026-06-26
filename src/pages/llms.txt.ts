@@ -22,7 +22,6 @@ export const GET: APIRoute = async ({ site }) => {
     "## Pages",
     "",
     `- [Work](${absoluteUrl("/work", site)}): Product and AI work across startup environments.`,
-    `- [Projects](${absoluteUrl("/projects", site)}): Side projects born from curiosity.`,
     `- [Talks](${absoluteUrl("/talks", site)}): Talks on React, motion systems, interface architecture, and AI.`,
     `- [Blog](${absoluteUrl("/blog", site)}): Notes on product engineering, AI interfaces, and developer tools.`,
     `- [Gists](${absoluteUrl("/gist", site)}): Code snippets and quick solutions.`,
