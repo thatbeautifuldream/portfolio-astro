@@ -40,6 +40,7 @@ const icons: Record<string, { line: string; fill: string }> = {
         return (
           <a
             href={item.href}
+            aria-label={item.label}
             aria-current={active ? "page" : undefined}
             class="text-foreground hover:bg-foreground/5 aria-[current=page]:bg-foreground/10 squircle inline-flex items-center gap-5 rounded-2xl p-2.5 text-xl no-underline transition-colors aria-[current=page]:font-semibold xl:py-2.5 xl:pr-6 xl:pl-3"
           >
