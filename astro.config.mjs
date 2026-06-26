@@ -18,15 +18,6 @@ const changefreqMap = {
 export default defineConfig({
   site: "https://milindmishra.com",
 
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "hover",
-  },
-
-  experimental: {
-    clientPrerender: true,
-  },
-
   build: {
     // Inline all stylesheets so the critical CSS isn't a render-blocking request.
     inlineStylesheets: "always",

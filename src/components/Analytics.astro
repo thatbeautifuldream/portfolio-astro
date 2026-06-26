@@ -48,11 +48,6 @@ const enabled = import.meta.env.PUBLIC_DISABLE_ANALYTICS !== "true";
     sendPageView();
   }
 
-  // Fire a pageview after every View Transition navigation once analytics is live.
-  document.addEventListener("astro:page-load", () => {
-    if (window.__analyticsLoaded) sendPageView();
-  });
-
   // Load analytics on the first real interaction, with a long idle fallback.
   // This keeps the third-party scripts out of the critical path entirely (and
   // out of synthetic-audit trace windows) while still tracking real visitors.

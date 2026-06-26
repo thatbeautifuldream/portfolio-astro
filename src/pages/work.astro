@@ -31,7 +31,7 @@ const jsonLd = {
   <main class="isolate">
     <section class="section-shell">
       <div class="section-inner grid gap-12">
-        <div class="animate-fade-up grid gap-4" style="--stagger: 1">
+        <div class="grid gap-4">
           <p class="text-muted-foreground text-sm">Selected work</p>
           <h1
             class="max-w-[28ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
@@ -48,7 +48,7 @@ const jsonLd = {
           </p>
         </div>
 
-        <div class="animate-fade-up grid gap-4" style="--stagger: 2">
+        <div class="grid gap-4">
           <h2
             class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl"
           >
@@ -64,10 +64,7 @@ const jsonLd = {
         <div class="grid gap-12">
           {
             roles.map((role, index) => (
-              <article
-                class="animate-fade-up grid gap-4"
-                style={`--stagger: ${3 + index}`}
-              >
+              <article class="grid gap-4">
                 <div class="grid gap-2">
                   <h2 class="text-2xl font-semibold tracking-tight">
                     {role.company}
