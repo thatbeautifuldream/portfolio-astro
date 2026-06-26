@@ -6,7 +6,7 @@ import { roles } from "../data/portfolio";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Work Experience — Milind Kumar Mishra",
+  name: "Work Experience · Milind Kumar Mishra",
   description:
     "Work across startup environments. Different products and teams, but a consistent pull toward the surfaces people touch and the craft behind them.",
   url: "https://milindmishra.com/work",
@@ -61,24 +61,27 @@ const jsonLd = {
           </p>
         </div>
 
-        <div class="grid gap-12">
+        <div class="grid">
           {
-            roles.map((role, index) => (
-              <article class="grid gap-4">
-                <div class="grid gap-2">
-                  <h2 class="text-2xl font-semibold tracking-tight">
-                    {role.company}
-                  </h2>
-                  <p class="text-muted-foreground text-sm">
-                    {role.role} · {role.period} · {role.location}
+            roles.map((role) => (
+              <article class="border-border/60 grid gap-4 border-t py-10 first:border-t-0 first:pt-0">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                  <div class="grid gap-1">
+                    <h2 class="text-xl font-semibold tracking-tight">
+                      {role.company}
+                    </h2>
+                    <p class="text-muted-foreground text-base">{role.role}</p>
+                  </div>
+                  <p class="text-muted-foreground shrink-0 text-base sm:text-right sm:text-sm">
+                    {role.period} · {role.location}
                   </p>
                 </div>
-                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
+                <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
                   {role.summary}
                 </p>
-                <ul role="list" class="grid max-w-[56ch] gap-3">
+                <ul role="list" class="grid max-w-[68ch] gap-2.5">
                   {role.highlights.map((highlight) => (
-                    <li class="text-muted-foreground before:text-muted-foreground/50 text-base text-pretty before:mr-2 before:content-['–']">
+                    <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
                       {highlight}
                     </li>
                   ))}

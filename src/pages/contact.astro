@@ -1,12 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
+import CalEmbed from "../components/CalEmbed.astro";
 import { contactLinks, siteLinks, contactEmail } from "../data/portfolio";
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: "Contact — Milind Kumar Mishra",
+  name: "Contact · Milind Kumar Mishra",
   description: "Get in touch: email, GitHub, LinkedIn, or book a time.",
   url: "https://milindmishra.com/contact",
   mainEntity: {
@@ -72,10 +73,17 @@ const jsonLd = {
         </div>
 
         <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          <a href={siteLinks.primaryCta.href} class="font-medium">
-            {siteLinks.primaryCta.label}
-          </a>
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        </div>
+
+        <div class="grid gap-4">
+          <h2
+            id="book"
+            class="max-w-[24ch] scroll-mt-6 text-2xl font-semibold tracking-tight md:text-3xl"
+          >
+            {siteLinks.primaryCta.label}
+          </h2>
+          <CalEmbed calLink="milind/15min" />
         </div>
       </div>
     </section>

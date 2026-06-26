@@ -1,6 +1,6 @@
 export const siteLinks = {
-  primaryCta: { href: "https://cal.com/milind", label: "Book time" },
-  resume: { href: "https://resume.milind.app", label: "View resume" },
+  primaryCta: { href: "/contact#book", label: "Book time" },
+  resume: { href: "/resume", label: "View resume" },
   github: { href: "https://github.com/thatbeautifuldream", label: "GitHub" },
   linkedin: {
     href: "https://www.linkedin.com/in/mishramilind/",
@@ -18,41 +18,70 @@ export const heroStats = [
 export const roles = [
   {
     company: "Merlin AI by Foyer",
-    role: "Product Engineer / Design Engineer",
+    role: "Product Engineer",
     period: "Feb 2025 to present",
-    location: "Bengaluru",
+    location: "Bengaluru, India",
     summary:
-      "Built and shipped AI-native product experiences across onboarding, chat history, model selection, and interaction-heavy surfaces.",
+      "Product engineer on an AI SaaS, building interaction-heavy surfaces across chat, desktop coding agents, browser agents, onboarding, growth, and retention, and owning monetization end to end.",
     highlights: [
-      "Shipped ChatGPT Imports UI to improve migration and onboarding for 10,000+ users.",
-      "Revamped chat history flows and dynamic row behavior to make large conversation archives easier to navigate.",
-      "Built a richer model selector with motion and stronger information hierarchy.",
+      "Shipped core AI SaaS workflows across chat, desktop coding agents, browser agents, onboarding, growth, and retention using React, TypeScript, and reusable frontend architecture.",
+      "Built ChatGPT Imports, Projects, chat history, and prompt-driven workflows, helping users preserve context, organize conversations, and reuse AI outputs across sessions.",
+      "Refactored design-system and component patterns across multiple product surfaces, improving accessibility, UI consistency, implementation speed, and frontend review quality.",
+      "Owned billing, subscription, checkout, and payment flows, enabling pricing experiments, lifecycle state handling, customer account management, and monetization workflows.",
     ],
   },
   {
     company: "SARAL",
     role: "Software Engineer",
     period: "Dec 2024 to Feb 2025",
-    location: "Bengaluru / remote",
+    location: "Bengaluru, India",
     summary:
-      "Improved internal product workflows for support, growth, and campaign execution in a fast-moving operations-heavy product.",
+      "Built internal tooling for influencer-marketing operations: analytics, creator workflows, and campaign execution.",
     highlights: [
-      "Revamped the internal dashboard to improve visibility of campaign and support metrics.",
-      "Built multi-select drag and drop for faster bulk operations.",
-      "Created a content submission flow that reduced approval friction for campaign execution.",
+      "Revamped internal analytics dashboards with React, TypeScript, and reusable UI patterns, giving growth and operations teams clearer visibility into customer workflows and campaign metrics.",
+      "Built creator content submission and approval workflows, reducing manual coordination across operations, creators, and internal review teams during influencer campaigns.",
+      "Implemented multi-select drag-and-drop bulk actions for campaign operations, reducing repetitive creator-management steps and improving internal workflow speed.",
     ],
   },
   {
     company: "Proof-of-Skill Protocol",
     role: "Founding Product Engineer",
     period: "Jun 2024 to Dec 2024",
-    location: "Bengaluru",
+    location: "Bengaluru, India",
     summary:
-      "Led product engineering for an assessment and skill validation platform from MVP to deployment.",
+      "Built the frontend for a three-sided skill-assessment marketplace from ambiguous 0-to-1 requirements to launch.",
     highlights: [
-      "Owned MVP frontend flows across validators, candidates, and recruiters.",
-      "Designed consensus-driven validator interfaces and real-time proctoring surfaces.",
-      "Handled product and deployment end to end while the system was still taking shape.",
+      "Built the frontend for a 3-sided assessment marketplace across validators, candidates, and recruiters, turning ambiguous 0-to-1 product requirements into launch-ready workflows.",
+      "Designed consensus-driven validation, assessment, and review experiences with clear UX states, scalable interaction patterns, and trust-focused decision flows.",
+      "Built real-time recording, proctoring, API integrations, and candidate integrity workflows to support reliable remote skill assessment and evaluation.",
+      "Owned frontend architecture, release execution, and deployment from prototype to launch, balancing speed, maintainability, and rapid product iteration.",
+    ],
+  },
+  {
+    company: "StartupHire",
+    role: "Frontend Engineer (Lead)",
+    period: "Aug 2023 to Jan 2024",
+    location: "Remote",
+    summary:
+      "Led frontend delivery for an AI recruiting workflow SaaS, improving candidate pipeline management and recruiter productivity.",
+    highlights: [
+      "Led frontend delivery for a recruiting workflow SaaS platform, improving candidate pipeline management, hiring operations, and recruiter productivity.",
+      "Integrated multiple job boards and application sources into a unified recruiter dashboard, centralizing candidate intake, workflows, and pipeline visibility.",
+      "Shipped recruiting automation and GenAI-powered product features from planning to release, supporting recruiter screening, outreach, and pipeline management workflows.",
+    ],
+  },
+  {
+    company: "Locus Connect (NYCU)",
+    role: "Frontend Engineer",
+    period: "Jul 2022 to Jul 2023",
+    location: "Hsinchu, Taiwan",
+    summary:
+      "Built frontend systems for a real-time 3D indoor-positioning platform, integrating IoT telemetry with interactive spatial visualization.",
+    highlights: [
+      "Built frontend systems for a real-time 3D indoor positioning platform, integrating IoT telemetry, location data, and interactive spatial visualization workflows.",
+      "Developed real-time 3D indoor maps with React, Three.js, GSAP, state management, and rendering optimizations for smooth telemetry visualization.",
+      "Improved indoor positioning accuracy from approximately 20cm to under 10cm through HDOP optimization, telemetry analysis, and iterative calibration.",
+      "Managed production infrastructure with Docker, NGINX, load balancers, and networking configurations to keep real-time visualization environments stable.",
     ],
   },
 ];
