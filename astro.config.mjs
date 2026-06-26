@@ -80,8 +80,8 @@ export default defineConfig({
 
   markdown: {
     shikiConfig: {
-      theme: "github-dark-default",
-      wrap: true,
+      theme: "vesper",
+      wrap: false,
     },
   },
 
