@@ -2,8 +2,9 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
-import Annotate from "../components/Annotate.astro";
 import FullSign from "../components/FullSign.astro";
+import Annotate from "../components/Annotate.astro";
+import IframeDialog from "../components/IframeDialog.astro";
 import { siteLinks, heroStats, projects, hostname } from "../data/portfolio";
 import wavingHand from "../assets/emojis/waving-hand.webp";
 import merlin from "../assets/emojis/merlin.webp";
@@ -82,11 +83,20 @@ const jsonLd = {
           </div>
 
           <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-            <a href={siteLinks.primaryCta.href} class="font-medium">
-              {siteLinks.primaryCta.label}
-            </a>
-            <a href={siteLinks.resume.href}>{siteLinks.resume.label}</a>
-            <a href={siteLinks.github.href}>{siteLinks.github.label}</a>
+            <IframeDialog
+              id="book"
+              label={siteLinks.primaryCta.label}
+              title={siteLinks.primaryCta.label}
+              src="https://cal.com/milind/15min"
+              triggerClass="font-medium"
+            />
+            <IframeDialog
+              id="resume"
+              label={siteLinks.resume.label}
+              title="Milind's Resume"
+              src={siteLinks.resume.pdf}
+            />
+            <a href="/blog">Read the blog</a>
           </div>
 
           <div class="grid gap-10">
@@ -160,13 +170,12 @@ const jsonLd = {
               <p
                 class="text-muted-foreground max-w-[56ch] text-base text-pretty"
               >
-                I started as a product engineer who kept caring <Annotate
-                  type="crossed-off">too much</Annotate
-                > about how things looked and moved. Now I'm making that the focus.
-                I build agentic flows, design systems, and interaction-heavy surfaces,
-                and I'm sharpening my design intuition through close study of the
-                people and work I admire, with AI accelerating how fast I can ship
-                polished work.
+                I started as a product engineer who kept caring too much about
+                how things looked and moved. Now I'm making that the focus. I
+                build agentic flows, design systems, and interaction-heavy
+                surfaces, and I'm sharpening my design intuition through close
+                study of the people and work I admire, with AI accelerating how
+                fast I can ship polished work.
               </p>
               <FullSign class="h-12 w-auto sm:h-14" />
             </div>

@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Sign from "./Sign.astro";
+import IframeDialog from "./IframeDialog.astro";
 import { navItems, siteLinks } from "../data/portfolio";
 
 const links = navItems;
@@ -66,14 +67,17 @@ const icons: Record<string, { line: string; fill: string }> = {
     }
   </nav>
 
-  <a
-    href={cta.href}
-    aria-label={cta.label}
-    class="bg-foreground text-background mt-3 inline-flex size-11 items-center justify-center rounded-2xl font-semibold no-underline transition-opacity hover:opacity-90 xl:mt-6 xl:h-12 xl:w-full xl:rounded-full xl:px-8"
+  <IframeDialog
+    id="book-nav"
+    label={cta.label}
+    title={cta.label}
+    src="https://cal.com/milind/15min"
+    bare
+    triggerClass="bg-foreground text-background mt-3 inline-flex size-11 items-center justify-center rounded-2xl font-semibold transition-opacity hover:opacity-90 xl:mt-6 xl:h-12 xl:w-full xl:rounded-full xl:px-8"
   >
     <span class="hidden xl:inline">{cta.label}</span>
     <Icon name="ri:add-line" class="size-6 xl:hidden" />
-  </a>
+  </IframeDialog>
 </aside>
 
 <script is:inline>

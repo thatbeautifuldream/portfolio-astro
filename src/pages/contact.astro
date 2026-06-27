@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
-import CalEmbed from "../components/CalEmbed.astro";
-import { contactLinks, siteLinks, contactEmail } from "../data/portfolio";
+import { contactLinks, contactEmail } from "../data/portfolio";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -52,7 +51,7 @@ const jsonLd = {
           <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
             I'm most responsive on email and LinkedIn. If you have something
             interesting to discuss, I'd rather you send a detailed message than
-            <Annotate type="strike-through">a generic introduction</Annotate>.
+            a generic introduction.
           </p>
         </div>
 
@@ -74,16 +73,6 @@ const jsonLd = {
 
         <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-        </div>
-
-        <div class="grid gap-4">
-          <h2
-            id="book"
-            class="max-w-[24ch] scroll-mt-6 text-2xl font-semibold tracking-tight md:text-3xl"
-          >
-            {siteLinks.primaryCta.label}
-          </h2>
-          <CalEmbed calLink="milind/15min" />
         </div>
       </div>
     </section>

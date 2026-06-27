@@ -1,6 +1,10 @@
 export const siteLinks = {
   primaryCta: { href: "/contact#book", label: "Book time" },
-  resume: { href: "/resume", label: "View resume" },
+  resume: {
+    href: "/resume",
+    label: "View resume",
+    pdf: "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf",
+  },
   github: { href: "https://github.com/thatbeautifuldream", label: "GitHub" },
   linkedin: {
     href: "https://www.linkedin.com/in/mishramilind/",
