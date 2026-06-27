@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Icon } from "astro-icon/components";
 import Layout from "../../layouts/Layout.astro";
 import CodeCopy from "../../components/CodeCopy.astro";
 
@@ -74,7 +75,8 @@ const jsonLd = {
               rel="noopener noreferrer"
               class="text-muted-foreground hover:text-foreground mt-2 inline-flex w-fit items-center gap-1 text-sm"
             >
-              View on GitHub ↗
+              View on GitHub
+              <Icon name="ri:arrow-right-up-line" class="size-4" />
             </a>
           </header>
 

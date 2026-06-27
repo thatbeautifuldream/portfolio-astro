@@ -1,5 +1,18 @@
 ---
+import { execSync } from "node:child_process";
 import { siteLinks } from "../data/portfolio";
+
+const repoUrl = "https://github.com/thatbeautifuldream/portfolio-astro";
+
+let commitHash = process.env.VERCEL_GIT_COMMIT_SHA ?? "";
+if (!commitHash) {
+  try {
+    commitHash = execSync("git rev-parse HEAD").toString().trim();
+  } catch {
+    commitHash = "";
+  }
+}
+const shortHash = commitHash.slice(0, 7);
 
 const socialLinks = [
   {
@@ -44,6 +57,27 @@ const socialLinks = [
         ))
       }
     </div>
-    <p class="text-muted-foreground font-mono text-xs">milindmishra.com</p>
+    {
+      shortHash ? (
+        <a
+          href={`${repoUrl}/commit/${commitHash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Latest commit ${shortHash}`}
+          class="text-muted-foreground hover:text-foreground font-mono text-xs no-underline"
+        >
+          {shortHash}
+        </a>
+      ) : (
+        <a
+          href={repoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground hover:text-foreground font-mono text-xs no-underline"
+        >
+          source
+        </a>
+      )
+    }
   </div>
 </footer>

@@ -88,10 +88,33 @@ export const roles = [
 
 export const projects = [
   {
+    name: "imgzly",
+    status: "Live",
+    href: "https://imgzly.com",
+    description:
+      "Privacy-first, browser-based image toolkit that compresses, resizes, converts, crops, removes backgrounds, makes PDFs, and prepares form-ready photos, all processed locally on-device with no uploads or accounts.",
+    metrics: [
+      { label: "Processing", value: "100% on-device" },
+      { label: "Formats", value: "JPG · PNG · WebP · AVIF" },
+    ],
+    highlights: [
+      "Runs every operation locally in the browser so images never leave the user's device, with no sign-up or server uploads required.",
+      "Bundles editing, format conversion, compression, HEIC-to-JPG, background removal, OCR, and EXIF/metadata tools into a single chained workflow.",
+      "Batch-processes multiple images at once and exports the results as a ZIP, plus generators for favicons, Instagram grids, and contact sheets.",
+    ],
+    tags: [
+      "TypeScript",
+      "WebAssembly",
+      "Canvas",
+      "Image Processing",
+      "Privacy",
+    ],
+  },
+  {
     name: "Expense Agent",
     status: "Active",
-    href: "https://expense.milind.fyi",
-    github: "https://api.expense.milind.fyi/docs",
+    href: "https://github.com/thatbeautifuldream/expense-agent-monorepo",
+    github: "https://github.com/thatbeautifuldream/expense-agent-monorepo",
     description:
       "Full-stack AI bookkeeping agent that tracks expenses, income, and savings through natural conversation across a Next.js 16 PWA, a Telegram bot, and an MCP server, all backed by a single Express API and unified PostgreSQL ledger.",
     metrics: [
