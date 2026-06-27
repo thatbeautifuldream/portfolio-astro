@@ -2,10 +2,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@utility squircle {
-  corner-shape: squircle;
-}
-
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono:
@@ -256,6 +252,12 @@ html {
 }
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    corner-shape: squircle;
+  }
+
   * {
     @apply border-border outline-ring/50;
     scrollbar-width: none;
