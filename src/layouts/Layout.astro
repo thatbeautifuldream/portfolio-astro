@@ -46,9 +46,18 @@ const structuredData = jsonLd
 ---
 
 <!doctype html>
-<html lang="en" class="dark antialiased scheme-only-dark">
+<html lang="en" class="antialiased">
   <head>
     <meta charset="UTF-8" />
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem("theme");
+        const dark = stored
+          ? stored === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", dark);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

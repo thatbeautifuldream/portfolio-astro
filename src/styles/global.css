@@ -26,6 +26,7 @@
 }
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
   --card: #ffffff;
@@ -42,6 +43,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: #0a0a0a;
   --foreground: #fafafa;
   --card: #171717;
@@ -58,7 +60,6 @@
 
 html {
   background-color: var(--background);
-  color-scheme: dark;
 }
 
 @utility section-shell {
@@ -98,6 +99,20 @@ html {
 ::view-transition-group(nav-active) {
   animation-duration: 0.32s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-transition::view-transition-old(root) {
+  z-index: 1;
+}
+
+html.theme-transition::view-transition-new(root) {
+  z-index: 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
