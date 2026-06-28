@@ -113,6 +113,8 @@ const jsonLd = {
                       target="_blank"
                       rel="noreferrer"
                       class="group grid gap-2 no-underline"
+                      data-project-name={project.name}
+                      data-project-href={project.href}
                     >
                       <h2 class="text-foreground text-xl font-medium tracking-tight sm:text-2xl">
                         {project.name}
@@ -182,11 +184,13 @@ const jsonLd = {
 
             <div class="grid gap-4 text-sm">
               <p class="text-muted-foreground">Quick navigation</p>
-              <div class="flex flex-wrap gap-x-6 gap-y-2">
-                <a href="/work" class="font-medium">View my work experience</a>
-                <a href="/talks">See my talks</a>
-                <a href="/blog">Read my blog</a>
-                <a href="/contact">Get in touch</a>
+              <div class="flex flex-wrap gap-x-6 gap-y-2" id="quick-nav">
+                <a href="/work" class="font-medium" data-nav-label="work"
+                  >View my work experience</a
+                >
+                <a href="/talks" data-nav-label="talks">See my talks</a>
+                <a href="/blog" data-nav-label="blog">Read my blog</a>
+                <a href="/contact" data-nav-label="contact">Get in touch</a>
               </div>
             </div>
           </div>
@@ -195,3 +199,22 @@ const jsonLd = {
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll("[data-project-name]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("project_clicked", {
+        project_name: link.dataset.projectName,
+        project_href: link.dataset.projectHref,
+      });
+    });
+  });
+
+  document.querySelectorAll("#quick-nav [data-nav-label]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("quick_nav_link_clicked", {
+        destination: link.dataset.navLabel,
+      });
+    });
+  });
+</script>

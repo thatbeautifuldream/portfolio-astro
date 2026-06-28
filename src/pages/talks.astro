@@ -65,7 +65,12 @@ const jsonLd = {
                 <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
                   {talk.description}
                 </p>
-                <a href={talk.href} class="text-sm">
+                <a
+                  href={talk.href}
+                  class="text-sm"
+                  data-talk-title={talk.title}
+                  data-talk-event={talk.event}
+                >
                   View talk
                 </a>
               </div>
@@ -99,7 +104,11 @@ const jsonLd = {
                 <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
                   {item.context}
                 </p>
-                <a href={item.href} class="text-sm">
+                <a
+                  href={item.href}
+                  class="text-sm"
+                  data-contribution-title={item.title}
+                >
                   Open contribution
                 </a>
               </div>
@@ -110,3 +119,22 @@ const jsonLd = {
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll("[data-talk-title]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("talk_clicked", {
+        talk_title: link.dataset.talkTitle,
+        talk_event: link.dataset.talkEvent,
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-contribution-title]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("contribution_clicked", {
+        contribution_title: link.dataset.contributionTitle,
+      });
+    });
+  });
+</script>

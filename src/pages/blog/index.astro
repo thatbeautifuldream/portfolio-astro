@@ -122,3 +122,19 @@ const jsonLd = {
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll('a[href^="/blog/"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      const slug = link.getAttribute("href").replace("/blog/", "");
+      const title = link
+        .closest("article")
+        ?.querySelector("h2, h3")
+        ?.textContent?.trim();
+      window.posthog?.capture("blog_post_clicked", {
+        post_slug: slug,
+        post_title: title ?? null,
+      });
+    });
+  });
+</script>

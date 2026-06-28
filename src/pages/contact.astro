@@ -63,7 +63,11 @@ const jsonLd = {
                   <p class="text-lg font-semibold">{link.label}</p>
                   <p class="text-muted-foreground text-base">{link.copy}</p>
                 </div>
-                <a href={link.href} class="text-sm font-medium">
+                <a
+                  href={link.href}
+                  class="text-sm font-medium"
+                  data-contact-label={link.label}
+                >
                   Open profile
                 </a>
               </div>
@@ -72,9 +76,24 @@ const jsonLd = {
         </div>
 
         <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          <a href={`mailto:${contactEmail}`} id="email-link">{contactEmail}</a>
         </div>
       </div>
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll("[data-contact-label]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("contact_link_clicked", {
+        platform: link.dataset.contactLabel,
+        href: link.getAttribute("href"),
+      });
+    });
+  });
+
+  document.getElementById("email-link")?.addEventListener("click", () => {
+    window.posthog?.capture("email_clicked");
+  });
+</script>

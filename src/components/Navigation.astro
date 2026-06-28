@@ -108,6 +108,7 @@ const icons: Record<string, { line: string; fill: string }> = {
     ?.addEventListener("click", (event) => {
       const root = document.documentElement;
       const next = root.classList.contains("dark") ? "light" : "dark";
+      window.posthog?.capture("theme_toggled", { theme: next });
       const apply = () => {
         root.classList.toggle("dark", next === "dark");
         localStorage.setItem("theme", next);

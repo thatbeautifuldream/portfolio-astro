@@ -89,6 +89,10 @@ const openHref = externalHref ?? src;
     ?.addEventListener("click", () => {
       if (frame && !frame.src) frame.src = src;
       dialog?.showModal();
+      window.posthog?.capture("dialog_opened", {
+        dialog_id: id,
+        dialog_src: src,
+      });
     });
 
   dialog
