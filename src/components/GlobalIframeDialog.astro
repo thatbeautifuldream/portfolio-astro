@@ -50,6 +50,16 @@ import { Icon } from "astro-icon/components";
     const titleEl = dialog.querySelector("[data-global-iframe-title]");
     const externalLink = dialog.querySelector("[data-global-iframe-external]");
 
+    const noEmbedHosts = [
+      "github.com",
+      "linkedin.com",
+      "x.com",
+      "twitter.com",
+      "meetup.com",
+    ];
+    const isBlocked = (host) =>
+      noEmbedHosts.some((h) => host === h || host.endsWith("." + h));
+
     const open = (href, label) => {
       if (frame) frame.src = href;
       if (titleEl) titleEl.textContent = label || href;
@@ -82,6 +92,10 @@ import { Icon } from "astro-icon/components";
       if (url.origin === location.origin) return;
 
       event.preventDefault();
+      if (isBlocked(url.hostname.replace(/^www\./, ""))) {
+        window.open(url.href, "_blank", "noopener,noreferrer");
+        return;
+      }
       open(url.href, link.dataset.dialogTitle || link.textContent?.trim());
     });
 
