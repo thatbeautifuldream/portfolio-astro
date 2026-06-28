@@ -58,9 +58,37 @@
       }),
       (e.__SV = 1));
   })(document, window.posthog || []);
-  posthog.init(apiKey || "", {
-    api_host: apiHost || "https://us.i.posthog.com",
-    defaults: "2026-01-30",
-    session_recording: { maskAllInputs: false },
-  });
+  // Defer the init (and its array.js/recorder network load) until the first
+  // real interaction, with a long idle fallback. Keeps the third-party scripts
+  // out of the critical path and synthetic-audit window while still tracking
+  // real visitors. The stub above queues any early posthog.* calls.
+  function loadPostHog() {
+    if (window.__posthogLoaded) return;
+    window.__posthogLoaded = true;
+    posthog.init(apiKey || "", {
+      api_host: apiHost || "https://us.i.posthog.com",
+      defaults: "2026-01-30",
+      session_recording: { maskAllInputs: false },
+    });
+  }
+  function start() {
+    const events = ["pointerdown", "keydown", "touchstart", "scroll"];
+    let timer;
+    function go() {
+      events.forEach((e) => removeEventListener(e, go, { passive: true }));
+      clearTimeout(timer);
+      loadPostHog();
+    }
+    events.forEach((e) =>
+      addEventListener(e, go, { passive: true, once: true }),
+    );
+    timer = setTimeout(loadPostHog, 10000);
+  }
+  if (document.prerendering) {
+    document.addEventListener("prerenderingchange", start, { once: true });
+  } else if (document.readyState === "complete") {
+    start();
+  } else {
+    window.addEventListener("load", start);
+  }
 </script>
