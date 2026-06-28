@@ -37,7 +37,7 @@ const jsonLd = {
           <div class="grid gap-4">
             <div class="grid gap-6">
               <p class="text-muted-foreground text-sm">
-                Bengaluru, India. Design engineer.
+                Bengaluru, India. Product engineer.
               </p>
               <h1
                 class="max-w-[22ch] text-4xl leading-[1.25] font-semibold tracking-tight text-balance select-none md:text-6xl md:leading-[1.2]"
@@ -62,7 +62,7 @@ const jsonLd = {
                 />
                 <span class="text-foreground">Milind.</span>
                 <span class="text-muted-foreground">I'm a</span>
-                <span class="text-foreground">design engineer</span>
+                <span class="text-foreground">product engineer</span>
                 <span class="text-muted-foreground">at</span>
                 <Image
                   src={merlin}
@@ -79,24 +79,35 @@ const jsonLd = {
                 Working across the browser agent extension and Merlin's chat
                 interface, where ambient AI meets everyday workflows.
               </p>
+              <p
+                class="text-muted-foreground max-w-[52ch] text-base text-pretty md:text-lg"
+              >
+                Always happy to talk shop with people building thoughtful
+                products.
+              </p>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-            <IframeDialog
-              id="book"
-              label={siteLinks.primaryCta.label}
-              title={siteLinks.primaryCta.label}
-              src="https://cal.com/milind/15min"
-              triggerClass="font-medium"
-            />
-            <IframeDialog
-              id="resume"
-              label={siteLinks.resume.label}
-              title="Milind's Resume"
-              src={siteLinks.resume.pdf}
-            />
-            <a href="/blog">Read the blog</a>
+          <div class="grid gap-3">
+            <p class="text-muted-foreground text-sm">
+              Hiring a product engineer, or want to build something together?
+            </p>
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+              <IframeDialog
+                id="book"
+                label="Book 15 minutes"
+                title="Book 15 minutes"
+                src="https://cal.com/milind/15min"
+                triggerClass="font-medium"
+              />
+              <IframeDialog
+                id="resume"
+                label={siteLinks.resume.label}
+                title="Milind's Resume"
+                src={siteLinks.resume.pdf}
+              />
+              <a href="/blog">Read the blog</a>
+            </div>
           </div>
 
           <div class="grid gap-10">

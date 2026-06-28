@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { Font } from "astro:assets";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
+import GlobalIframeDialog from "../components/GlobalIframeDialog.astro";
 import Analytics from "../components/Analytics.astro";
 import PostHog from "../components/posthog.astro";
 import {
@@ -147,5 +148,6 @@ const structuredData = jsonLd
         <Footer />
       </div>
     </div>
+    <GlobalIframeDialog />
   </body>
 </html>

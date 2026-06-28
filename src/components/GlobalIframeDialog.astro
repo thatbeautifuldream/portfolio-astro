@@ -1,0 +1,100 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<dialog
+  data-global-iframe-dialog
+  class="@container m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+>
+  <div
+    class="bg-background text-foreground mx-auto flex h-full w-full flex-col @md:my-[2.5dvh] @md:h-[95dvh] @md:w-[min(90vw,900px)] @md:rounded-2xl"
+  >
+    <div
+      class="border-border/60 flex items-center justify-between border-b px-3 py-1.5"
+    >
+      <p data-global-iframe-title class="truncate text-xs font-medium"></p>
+      <div class="flex items-center gap-0.5">
+        <a
+          data-global-iframe-external
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open in new tab"
+          class="text-muted-foreground hover:text-foreground hover:bg-foreground/5 inline-flex size-7 items-center justify-center rounded-lg no-underline"
+        >
+          <Icon name="ri:external-link-line" class="size-4" />
+        </a>
+        <button
+          type="button"
+          data-global-iframe-close
+          aria-label="Close"
+          class="text-muted-foreground hover:text-foreground hover:bg-foreground/5 inline-flex size-7 cursor-pointer items-center justify-center rounded-lg"
+        >
+          <Icon name="ri:close-line" class="size-4" />
+        </button>
+      </div>
+    </div>
+    <iframe
+      data-global-iframe-frame
+      title="Embedded page"
+      class="h-full w-full flex-1 border-0"
+      loading="lazy"></iframe>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const dialog = document.querySelector("[data-global-iframe-dialog]");
+    if (!dialog) return;
+    const frame = dialog.querySelector("[data-global-iframe-frame]");
+    const titleEl = dialog.querySelector("[data-global-iframe-title]");
+    const externalLink = dialog.querySelector("[data-global-iframe-external]");
+
+    const open = (href, label) => {
+      if (frame) frame.src = href;
+      if (titleEl) titleEl.textContent = label || href;
+      if (externalLink) externalLink.href = href;
+      dialog.showModal();
+      window.posthog?.capture("dialog_opened", {
+        dialog_id: "global-link",
+        dialog_src: href,
+      });
+    };
+
+    const close = () => {
+      dialog.close();
+      if (frame) frame.removeAttribute("src");
+    };
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+      if (link.hasAttribute("data-no-dialog")) return;
+      if (link.hasAttribute("download")) return;
+
+      let url;
+      try {
+        url = new URL(link.href, location.href);
+      } catch {
+        return;
+      }
+      if (url.protocol !== "http:" && url.protocol !== "https:") return;
+      if (url.origin === location.origin) return;
+
+      event.preventDefault();
+      open(url.href, link.dataset.dialogTitle || link.textContent?.trim());
+    });
+
+    dialog
+      .querySelector("[data-global-iframe-close]")
+      ?.addEventListener("click", close);
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) close();
+    });
+
+    dialog.addEventListener("close", () => {
+      if (frame) frame.removeAttribute("src");
+    });
+  })();
+</script>
