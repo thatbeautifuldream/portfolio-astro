@@ -43,6 +43,7 @@ const socialLinks = [
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
+            data-footer-social={label}
             class="text-muted-foreground hover:text-foreground no-underline"
           >
             <svg
@@ -81,3 +82,13 @@ const socialLinks = [
     }
   </div>
 </footer>
+
+<script is:inline>
+  document.querySelectorAll("footer [data-footer-social]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("footer_social_clicked", {
+        platform: link.dataset.footerSocial,
+      });
+    });
+  });
+</script>

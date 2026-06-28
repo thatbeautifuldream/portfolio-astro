@@ -99,7 +99,12 @@ const icons: Record<string, { line: string; fill: string }> = {
         url.search === location.search
       ) {
         event.preventDefault();
+        return;
       }
+      window.posthog?.capture("nav_link_clicked", {
+        destination: url.pathname,
+        label: link.getAttribute("aria-label"),
+      });
     });
   });
 

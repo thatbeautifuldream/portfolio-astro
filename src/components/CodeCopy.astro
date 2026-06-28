@@ -32,6 +32,7 @@
         const code = pre.querySelector("code");
         try {
           await navigator.clipboard.writeText(code.innerText);
+          window.posthog?.capture("code_copied", { path: location.pathname });
           button.innerHTML = checkIcon;
           button.setAttribute("aria-label", "Copied");
           clearTimeout(timer);

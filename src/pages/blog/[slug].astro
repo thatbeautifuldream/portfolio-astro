@@ -85,3 +85,28 @@ const jsonLd = {
   </main>
   <CodeCopy />
 </Layout>
+
+<script is:inline define:vars={{ slug: post.id, title: post.data.title }}>
+  const milestones = [25, 50, 75, 100];
+  const fired = new Set();
+  function onScroll() {
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - innerHeight;
+    const percent = scrollable <= 0 ? 100 : (scrollY / scrollable) * 100;
+    for (const m of milestones) {
+      if (percent >= m && !fired.has(m)) {
+        fired.add(m);
+        window.posthog?.capture("blog_read_depth", {
+          post_slug: slug,
+          post_title: title,
+          depth: m,
+        });
+      }
+    }
+    if (fired.size === milestones.length) {
+      removeEventListener("scroll", onScroll);
+    }
+  }
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>

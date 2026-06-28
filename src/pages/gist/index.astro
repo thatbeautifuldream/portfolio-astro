@@ -70,3 +70,14 @@ const jsonLd = {
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  document.querySelectorAll('a[href^="/gist/"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("gist_clicked", {
+        gist_slug: link.getAttribute("href").replace("/gist/", ""),
+        gist_title: link.textContent?.trim() ?? null,
+      });
+    });
+  });
+</script>
