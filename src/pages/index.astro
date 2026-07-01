@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import FullSign from "../components/FullSign.astro";
 import Annotate from "../components/Annotate.astro";
 import IframeDialog from "../components/IframeDialog.astro";
+import EmailLink from "../components/EmailLink.astro";
 import { siteLinks, heroStats, projects, hostname } from "../data/portfolio";
 import wavingHand from "../assets/emojis/waving-hand.webp";
 import merlin from "../assets/emojis/merlin.webp";
@@ -62,7 +63,7 @@ const jsonLd = {
                 />
                 <span class="text-foreground">Milind.</span>
                 <span class="text-muted-foreground">I'm a</span>
-                <span class="text-foreground">product engineer</span>
+                <span class="text-foreground">Product Engineer</span>
                 <span class="text-muted-foreground">at</span>
                 <Image
                   src={merlin}
@@ -85,6 +86,10 @@ const jsonLd = {
                 Always happy to talk shop with people building thoughtful
                 products.
               </p>
+              <EmailLink
+                class="mt-2"
+                emailClass="text-2xl sm:text-3xl md:text-4xl"
+              />
             </div>
           </div>
 

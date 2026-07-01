@@ -1,0 +1,74 @@
+---
+import { Icon } from "astro-icon/components";
+import { contactEmail } from "../data/portfolio";
+
+interface Props {
+  class?: string;
+  emailClass?: string;
+}
+
+const { class: className, emailClass = "text-3xl sm:text-4xl md:text-5xl" } =
+  Astro.props;
+---
+
+<div class:list={["flex flex-wrap items-center gap-x-4 gap-y-2", className]}>
+  <a
+    href={`mailto:${contactEmail}`}
+    data-email-link
+    class:list={[
+      "decoration-border hover:decoration-foreground font-semibold tracking-tight break-all underline decoration-1 underline-offset-[6px] transition-colors",
+      emailClass,
+    ]}
+  >
+    {contactEmail}
+  </a>
+  <button
+    type="button"
+    data-email-copy
+    class="text-muted-foreground hover:text-foreground inline-flex size-10 shrink-0 cursor-pointer items-center justify-center transition-colors md:size-11"
+    data-email={contactEmail}
+    aria-label="Copy email address"
+  >
+    <span class="t-icon-swap" data-state="a" data-email-swap>
+      <Icon name="ri:file-copy-line" class="t-icon size-5" data-icon="a" />
+      <Icon name="ri:check-line" class="t-icon size-5" data-icon="b" />
+    </span>
+  </button>
+</div>
+
+<script is:inline>
+  function setupEmailCopy() {
+    document.querySelectorAll("[data-email-copy]").forEach((button) => {
+      if (button.dataset.emailBound) return;
+      button.dataset.emailBound = "true";
+
+      const swap = button.querySelector("[data-email-swap]");
+      const link = button.parentElement?.querySelector("[data-email-link]");
+      link?.addEventListener("click", () => {
+        window.posthog?.capture("email_clicked");
+      });
+
+      let timer;
+      button.addEventListener("click", async () => {
+        const email = button.dataset.email;
+        if (!email) return;
+        try {
+          await navigator.clipboard.writeText(email);
+          window.posthog?.capture("email_copied");
+          swap?.setAttribute("data-state", "b");
+          button.setAttribute("aria-label", "Copied");
+          button.classList.add("text-foreground");
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            swap?.setAttribute("data-state", "a");
+            button.setAttribute("aria-label", "Copy email address");
+            button.classList.remove("text-foreground");
+          }, 1500);
+        } catch {}
+      });
+    });
+  }
+
+  if (document.readyState !== "loading") setupEmailCopy();
+  else document.addEventListener("DOMContentLoaded", setupEmailCopy);
+</script>

@@ -246,7 +246,7 @@ export const navItems = [
   { href: "/contact", label: "Contact" },
 ];
 
-export const contactEmail = "milindmishra.work@gmail.com";
+export const contactEmail = "hey@milindmishra.com";
 
 export function hostname(url: string): string {
   try {

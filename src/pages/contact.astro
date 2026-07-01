@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
+import EmailLink from "../components/EmailLink.astro";
 import { contactLinks, contactEmail } from "../data/portfolio";
 
 const jsonLd = {
@@ -55,6 +56,8 @@ const jsonLd = {
           </p>
         </div>
 
+        <EmailLink />
+
         <div class="grid gap-6">
           {
             contactLinks.map((link, index) => (
@@ -74,10 +77,6 @@ const jsonLd = {
             ))
           }
         </div>
-
-        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          <a href={`mailto:${contactEmail}`} id="email-link">{contactEmail}</a>
-        </div>
       </div>
     </section>
   </main>
@@ -91,9 +90,5 @@ const jsonLd = {
         href: link.getAttribute("href"),
       });
     });
-  });
-
-  document.getElementById("email-link")?.addEventListener("click", () => {
-    window.posthog?.capture("email_clicked");
   });
 </script>

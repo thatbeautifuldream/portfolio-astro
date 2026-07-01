@@ -1,0 +1,42 @@
+---
+title: "Cloudflare Email Worker"
+description: "Cloudflare Email Worker"
+datePublished: 2026-07-01T02:33:51.000Z
+date: 2026-07-01T02:33:51.000Z
+slug: cloudflare-email-worker
+tags: javascript, gist
+gistId: b1a00c9e99da92e0716298e58522a7fd
+gistUrl: https://gist.github.com/thatbeautifuldream/b1a00c9e99da92e0716298e58522a7fd
+isPublic: true
+---
+
+```javascript title="index.js"
+export default {
+  async email(message, env, ctx) {
+    const subject = message.headers.get("subject") || "(no subject)";
+
+    await fetch("https://discord.com/api/webhooks/123/345", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        content: null,
+        embeds: [
+          {
+            title: "New email at hey@milindmishra.com",
+            fields: [
+              { name: "From", value: message.from || "Unknown", inline: false },
+              { name: "To", value: message.to || "Unknown", inline: false },
+              { name: "Subject", value: subject, inline: false },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
+
+    await message.forward("milindmishra.work@gmail.com");
+  },
+};
+```
