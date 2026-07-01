@@ -32,7 +32,7 @@ export const siteConfig = {
   currentRole: {
     title: "Product Engineer",
     company: "Merlin AI",
-    url: "https://merlin.ai",
+    url: "https://www.getmerlin.in",
   },
   sameAs: [
     "https://github.com/thatbeautifuldream",
