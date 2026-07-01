@@ -108,9 +108,9 @@ const icons: Record<string, { line: string; fill: string }> = {
     view-transition-name: nav-active;
   }
   @media (max-width: 639.98px) {
-    #side-nav,
-    .nav-active {
-      view-transition-name: none;
+    :global(html.nav-vt-instant) #side-nav,
+    :global(html.nav-vt-instant) #nav-backdrop {
+      transition: none !important;
     }
     #side-nav {
       position: fixed;
@@ -166,6 +166,11 @@ const icons: Record<string, { line: string; fill: string }> = {
       .forEach((btn) => btn.addEventListener("click", () => setOpen(false)));
     addEventListener("keydown", (e) => {
       if (e.key === "Escape") setOpen(false);
+    });
+    addEventListener("pageswap", () => {
+      if (!matchMedia("(max-width: 639.98px)").matches) return;
+      root.classList.add("nav-vt-instant");
+      root.classList.remove("nav-open");
     });
   })();
 
