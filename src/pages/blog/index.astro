@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Annotate from "../../components/Annotate.astro";
+import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
@@ -20,15 +21,11 @@ function formatDate(date: Date): string {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "Milind Mishra - Blog",
+  name: `${siteConfig.shortName} - Blog`,
   description:
     "Notes on product engineering, AI interfaces, developer tools, and the journey of building products.",
-  url: "https://milindmishra.com/blog",
-  author: {
-    "@type": "Person",
-    name: "Milind Mishra",
-    url: "https://milindmishra.com",
-  },
+  url: absoluteUrl("/blog", Astro.site),
+  author: buildPersonRef(Astro.site),
 };
 ---
 

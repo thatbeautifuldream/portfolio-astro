@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import Layout from "../../layouts/Layout.astro";
 import CodeCopy from "../../components/CodeCopy.astro";
+import { absoluteUrl, buildPersonRef } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const gists = await getCollection("gists");
@@ -31,11 +32,7 @@ const jsonLd = {
   "@type": "Article",
   headline: gist.data.title,
   description: gist.data.description ?? "",
-  author: {
-    "@type": "Person",
-    name: "Milind Mishra",
-    url: "https://milindmishra.com",
-  },
+  author: buildPersonRef(Astro.site),
   datePublished: date.toISOString(),
   dateModified: date.toISOString(),
 };
@@ -44,7 +41,7 @@ const jsonLd = {
 <Layout
   title={gist.data.title}
   description={gist.data.description ?? "Code snippets and quick solutions."}
-  canonical={`https://milindmishra.com/gist/${gist.id}`}
+  canonical={absoluteUrl(`/gist/${gist.id}`, Astro.site)}
   image={`/og/gist/${gist.id}.png`}
   jsonLd={jsonLd}
 >

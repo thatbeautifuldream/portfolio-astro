@@ -2,19 +2,18 @@
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
 import { roles } from "../data/portfolio";
+import { absoluteUrl, buildPersonRef, siteConfig } from "../lib/seo";
+
+const pageUrl = absoluteUrl("/work", Astro.site);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Work Experience · Milind Kumar Mishra",
+  name: `Work Experience · ${siteConfig.name}`,
   description:
     "Work across startup environments. Different products and teams, but a consistent pull toward the surfaces people touch and the craft behind them.",
-  url: "https://milindmishra.com/work",
-  author: {
-    "@type": "Person",
-    name: "Milind Kumar Mishra",
-    url: "https://milindmishra.com",
-  },
+  url: pageUrl,
+  author: buildPersonRef(Astro.site),
   hasPart: roles.map((role) => ({
     "@type": "OrganizationRole",
     roleName: role.role,

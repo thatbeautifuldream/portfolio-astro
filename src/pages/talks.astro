@@ -2,19 +2,18 @@
 import Layout from "../layouts/Layout.astro";
 import Annotate from "../components/Annotate.astro";
 import { talks, contributions } from "../data/portfolio";
+import { absoluteUrl, buildPersonRef, siteConfig } from "../lib/seo";
+
+const pageUrl = absoluteUrl("/talks", Astro.site);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Talks · Milind Kumar Mishra",
+  name: `Talks · ${siteConfig.name}`,
   description:
     "Talks on React, motion systems, interface architecture, and AI for frontend engineers.",
-  url: "https://milindmishra.com/talks",
-  author: {
-    "@type": "Person",
-    name: "Milind Kumar Mishra",
-    url: "https://milindmishra.com",
-  },
+  url: pageUrl,
+  author: buildPersonRef(Astro.site),
   hasPart: talks.map((talk) => ({
     "@type": "Event",
     name: talk.title,
@@ -22,7 +21,7 @@ const jsonLd = {
     startDate: talk.date,
     location: { "@type": "Place", name: talk.event },
     url: talk.href,
-    performer: { "@type": "Person", name: "Milind Kumar Mishra" },
+    performer: buildPersonRef(Astro.site),
   })),
 };
 ---
