@@ -16,10 +16,42 @@ export const siteConfig = {
   themeColor: "#0a0a0a",
   defaultImage: "/og.png",
   twitter: "@milindmishra_",
+  // Centralized identity — the single source of truth so author name,
+  // email, and location never drift between pages and structured data.
+  email: "hey@milindmishra.com",
+  location: {
+    city: "Bengaluru",
+    region: "Karnataka",
+    country: "India",
+    countryCode: "IN",
+    /** IANA timezone, used for availability windows and schema. */
+    timezone: "Asia/Kolkata",
+    /** Human-readable offset label for the homepage availability block. */
+    timezoneLabel: "IST (UTC+5:30)",
+  },
+  currentRole: {
+    title: "Product Engineer",
+    company: "Merlin AI",
+    url: "https://merlin.ai",
+  },
   sameAs: [
     "https://github.com/thatbeautifuldream",
     "https://www.linkedin.com/in/mishramilind/",
     "https://x.com/milindmishra_",
+  ],
+  alumniOf: [
+    {
+      name: "Visvesvaraya Technological University",
+      url: "https://www.vtu.ac.in/",
+      area: "Electronics and Communication",
+      studyType: "Bachelor of Engineering",
+    },
+    {
+      name: "National Yang Ming Chiao Tung University",
+      url: "https://www.nycu.edu.tw/",
+      area: "Computer Software Engineering",
+      studyType: "Short Term Research Program",
+    },
   ],
 } as const;
 
@@ -64,8 +96,24 @@ export function absoluteUrl(path: string, site?: URL | null) {
   return new URL(path, `${getSiteOrigin(site)}/`).toString();
 }
 
+/**
+ * Minimal Person reference for embedded `author` fields. Use this inside
+ * Article/Blog/etc. schemas so every page points at the same `@id` and the
+ * canonical Person entity, instead of re-declaring a free-standing one.
+ */
+export function buildPersonRef(site?: URL | null) {
+  const origin = getSiteOrigin(site);
+  return {
+    "@type": "Person",
+    "@id": `${origin}/#person`,
+    name: siteConfig.name,
+    url: `${origin}/`,
+  };
+}
+
 export function buildPersonSchema(site?: URL | null) {
   const origin = getSiteOrigin(site);
+  const { city, region, country } = siteConfig.location;
 
   return {
     "@context": "https://schema.org",
@@ -73,10 +121,48 @@ export function buildPersonSchema(site?: URL | null) {
     "@id": `${origin}/#person`,
     name: siteConfig.name,
     alternateName: siteConfig.shortName,
+    givenName: "Milind",
+    familyName: "Mishra",
     url: `${origin}/`,
     image: absoluteUrl(siteConfig.defaultImage, site),
-    jobTitle: "Product Engineer",
+    jobTitle: siteConfig.currentRole.title,
     description: siteConfig.description,
+    email: `mailto:${siteConfig.email}`,
+    gender: "Male",
+    nationality: {
+      "@type": "Country",
+      name: country,
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: city,
+      addressRegion: region,
+      addressCountry: country,
+    },
+    knowsAbout: [
+      "Product engineering",
+      "AI-native interfaces",
+      "Design engineering",
+      "React",
+      "TypeScript",
+      "Motion design",
+      "Design systems",
+    ],
+    knowsLanguage: [
+      { "@type": "Language", name: "English", alternateName: "en" },
+      { "@type": "Language", name: "Hindi", alternateName: "hi" },
+    ],
+    alumniOf: siteConfig.alumniOf.map((school) => ({
+      "@type": "EducationalOrganization",
+      name: school.name,
+      url: school.url,
+      department: { "@type": "Organization", name: school.area },
+    })),
+    worksFor: {
+      "@type": "Organization",
+      name: siteConfig.currentRole.company,
+      url: siteConfig.currentRole.url,
+    },
     sameAs: [...siteConfig.sameAs],
   };
 }
@@ -93,5 +179,33 @@ export function buildWebsiteSchema(site?: URL | null) {
     description: siteConfig.description,
     inLanguage: siteConfig.language,
     publisher: { "@id": `${origin}/#person` },
+  };
+}
+
+/**
+ * Google's recommended type for a personal site homepage. `ProfilePage`
+ * paired with `Person` is what drives the Knowledge Panel and gives AI
+ * assistants a clear "this is a person" signal to cite.
+ */
+export function buildProfilePageSchema(site?: URL | null) {
+  const origin = getSiteOrigin(site);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": `${origin}/#profilepage`,
+    url: `${origin}/`,
+    name: `${siteConfig.name} · ${siteConfig.currentRole.title}`,
+    description: siteConfig.description,
+    inLanguage: siteConfig.language,
+    isPartOf: { "@id": `${origin}/#website` },
+    mainEntity: {
+      "@id": `${origin}/#person`,
+    },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: absoluteUrl(siteConfig.defaultImage, site),
+    },
+    about: { "@id": `${origin}/#person` },
   };
 }

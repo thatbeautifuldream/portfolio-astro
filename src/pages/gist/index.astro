@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 
 function gistDate(data: { datePublished?: Date; date?: Date }): Date {
   return data.datePublished ?? data.date ?? new Date(0);
@@ -21,14 +22,10 @@ function formatDate(date: Date): string {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "Milind Mishra - Gists",
+  name: `${siteConfig.shortName} - Gists`,
   description: "Code snippets and quick solutions.",
-  url: "https://milindmishra.com/gist",
-  author: {
-    "@type": "Person",
-    name: "Milind Mishra",
-    url: "https://milindmishra.com",
-  },
+  url: absoluteUrl("/gist", Astro.site),
+  author: buildPersonRef(Astro.site),
 };
 ---
 

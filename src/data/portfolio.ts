@@ -246,6 +246,8 @@ export const navItems = [
   { href: "/contact", label: "Contact" },
 ];
 
+// Derived from the central identity config so the contact email stays in
+// sync with structured data. Prefer importing `siteConfig.email` directly.
 export const contactEmail = "hey@milindmishra.com";
 
 export function hostname(url: string): string {
