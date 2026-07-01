@@ -25,7 +25,6 @@ const icons: Record<string, { line: string; fill: string }> = {
 
 <aside
   id="side-nav"
-  style="view-transition-name: nav"
   class="relative sticky top-0 flex h-dvh w-[60px] shrink-0 flex-col items-center gap-0.5 py-4 xl:w-60 xl:items-stretch xl:px-2"
 >
   <a
@@ -49,8 +48,7 @@ const icons: Record<string, { line: string; fill: string }> = {
             {isActive(item.href) && (
               <span
                 aria-hidden="true"
-                style="view-transition-name: nav-active"
-                class="bg-foreground/10 absolute inset-0 -z-10 rounded-2xl"
+                class="nav-active bg-foreground/10 absolute inset-0 -z-10 rounded-2xl"
               />
             )}
             <Icon
@@ -103,7 +101,17 @@ const icons: Record<string, { line: string; fill: string }> = {
 </button>
 
 <style>
+  #side-nav {
+    view-transition-name: nav;
+  }
+  .nav-active {
+    view-transition-name: nav-active;
+  }
   @media (max-width: 639.98px) {
+    #side-nav,
+    .nav-active {
+      view-transition-name: none;
+    }
     #side-nav {
       position: fixed;
       inset: 0 auto 0 0;
