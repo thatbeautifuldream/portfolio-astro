@@ -62,6 +62,12 @@ html {
   background-color: var(--background);
 }
 
+@media (max-width: 639.98px) {
+  body {
+    padding-top: 3.5rem;
+  }
+}
+
 @utility section-shell {
   @apply py-6 first:pt-6 md:py-8 first:md:pt-8;
 }
