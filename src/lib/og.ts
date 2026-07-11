@@ -41,3 +41,17 @@ export function ogImageOptions(page: { title: string; description?: string }) {
     ],
   };
 }
+
+export function productOgImageOptions(product: {
+  name: string;
+  tagline: string;
+}) {
+  return {
+    ...ogImageOptions({ title: product.name, description: product.tagline }),
+    border: {
+      color: [55, 55, 55] as [number, number, number],
+      width: 3,
+      side: "block-start" as const,
+    },
+  };
+}

@@ -43,7 +43,7 @@ const products = defineCollection({
       appStoreUrl: z.string().optional(),
       icon: image().optional(),
       coverImage: image().optional(),
-      screenshots: z.array(image()).default([]),
+      screenshotUrls: z.array(z.string()).default([]),
       features: z
         .array(
           z.object({

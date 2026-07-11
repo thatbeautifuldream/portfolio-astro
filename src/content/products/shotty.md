@@ -24,6 +24,10 @@ platforms:
   - iPhone
   - iPad
 appStoreUrl: ""
+screenshotUrls:
+  - "https://cdn.milind.app/media/products/shotty/screenshots/iphone/iphone-dark-01.webp"
+  - "https://cdn.milind.app/media/products/shotty/screenshots/iphone/iphone-dark-02.webp"
+  - "https://cdn.milind.app/media/products/shotty/screenshots/iphone/iphone-dark-03.webp"
 publishedAt: "2025-07-12"
 features:
   - title: "Search the words inside your screenshots"
