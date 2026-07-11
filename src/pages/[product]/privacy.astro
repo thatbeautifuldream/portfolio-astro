@@ -1,0 +1,246 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Annotate from "../../components/Annotate.astro";
+import { absoluteUrl, siteConfig } from "../../lib/seo";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((product) => ({
+    params: { product: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const data = product.data;
+
+const privacyPath = `/${product.id}/privacy`;
+const marketingPath = `/${product.id}`;
+const supportPath = `/${product.id}/support`;
+const privacyUrl = absoluteUrl(privacyPath, Astro.site);
+
+const policyDate = data.policyUpdatedAt
+  ? data.policyUpdatedAt.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `Privacy Policy · ${data.name}`,
+  description: `How ${data.name} handles your data and privacy.`,
+  url: privacyUrl,
+  isPartOf: {
+    "@type": "SoftwareApplication",
+    name: data.name,
+    url: absoluteUrl(marketingPath, Astro.site),
+  },
+  ...(data.policyUpdatedAt
+    ? { dateModified: data.policyUpdatedAt.toISOString() }
+    : {}),
+};
+---
+
+<Layout
+  title={`Privacy · ${data.name}`}
+  description={`How ${data.name} handles your data and privacy.`}
+  canonical={privacyUrl}
+  keywords={[...data.keywords, "privacy", "policy"]}
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <header class="grid gap-4">
+          <div class="text-muted-foreground flex items-center gap-2 text-sm">
+            <a href="/" class="no-underline">{siteConfig.shortName}</a>
+            <span aria-hidden="true">/</span>
+            <a href={marketingPath} class="no-underline">{data.name}</a>
+            <span aria-hidden="true">/</span>
+            <span class="text-foreground font-medium">Privacy</span>
+          </div>
+          <p class="text-muted-foreground text-sm">Privacy policy</p>
+          <h1
+            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
+          >
+            Your screenshots stay <Annotate type="underline"
+              >on your device</Annotate
+            >.
+          </h1>
+          <p
+            class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
+          >
+            {data.description}
+          </p>
+          {
+            policyDate && (
+              <p class="text-muted-foreground font-mono text-xs tracking-wide uppercase">
+                Last updated · {policyDate}
+              </p>
+            )
+          }
+        </header>
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">Overview</h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            {data.name} is built privacy-first. Everything the app does, reading screenshots,
+            recognizing text, suggesting tags, storing the index, happens locally
+            on your device.
+          </p>
+        </section>
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">Data we collect</h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            {
+              data.dataCollected ??
+                "None. This app does not collect, transmit, or share any personal data."
+            }
+          </p>
+        </section>
+
+        {
+          data.privacyPoints.length > 0 && (
+            <section class="grid gap-3">
+              <h2 class="text-lg font-semibold tracking-tight">
+                How your data is processed
+              </h2>
+              <ul role="list" class="grid max-w-[60ch] gap-2">
+                {data.privacyPoints.map((point) => (
+                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          data.permissions.length > 0 && (
+            <section class="grid gap-3">
+              <h2 class="text-lg font-semibold tracking-tight">Permissions</h2>
+              <ul role="list" class="grid max-w-[60ch] gap-2">
+                {data.permissions.map((perm) => (
+                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
+                    {perm}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">
+            Third-party services
+          </h2>
+          {
+            data.thirdParties.length > 0 ? (
+              <ul role="list" class="grid max-w-[60ch] gap-3">
+                {data.thirdParties.map((party) => (
+                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
+                    {party}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+                {data.name} does not use any third-party services. No analytics,
+                no crash reporting, no advertising SDKs, no servers.
+              </p>
+            )
+          }
+        </section>
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">
+            Children's privacy
+          </h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            {data.name} does not collect any data from anyone, including children.
+            There are no accounts, no sign-up flows, and no age-gated features. It
+            is safe for use by anyone who already has screenshots in their Photos
+            library.
+          </p>
+        </section>
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">
+            Data retention and deletion
+          </h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            The index {data.name} builds lives only on your device, inside the app's
+            local SwiftData store. Deleting a screenshot from inside
+            {data.name} or from Photos removes it from the index. Uninstalling
+            {data.name} deletes the entire index immediately. There is no server-side
+            copy to delete because nothing was ever uploaded.
+          </p>
+        </section>
+
+        <section class="grid gap-3">
+          <h2 class="text-lg font-semibold tracking-tight">
+            Changes to this policy
+          </h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            If {data.name} ever starts doing something new with your data, this page
+            will be updated before that change ships, and the "last updated" date
+            above will reflect it.
+          </p>
+        </section>
+
+        <section class="border-border/60 grid gap-4 border-t pt-8">
+          <h2 class="text-lg font-semibold tracking-tight">Questions</h2>
+          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
+            If anything here is unclear, email and you'll get a real reply from
+            a real person.
+          </p>
+          <div class="grid gap-2 text-sm">
+            {
+              data.supportEmail && (
+                <a
+                  href={`mailto:${data.supportEmail}?subject=${encodeURIComponent(`${data.name} privacy question`)}`}
+                  class="font-medium"
+                  data-contact="email"
+                >
+                  {data.supportEmail}
+                </a>
+              )
+            }
+            <a
+              href={supportPath}
+              class="text-muted-foreground font-medium no-underline"
+            >
+              Read the support page
+            </a>
+            <a
+              href={marketingPath}
+              class="text-muted-foreground font-medium no-underline"
+            >
+              Back to {data.name}
+            </a>
+          </div>
+        </section>
+
+        <footer class="text-muted-foreground text-sm text-pretty">
+          Built by{" "}
+          <a href="/" class="font-medium no-underline">{siteConfig.name}</a>.
+        </footer>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script is:inline>
+  document.querySelectorAll("[data-contact='email']").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("product_privacy_contacted", {
+        product: document.title,
+      });
+    });
+  });
+</script>

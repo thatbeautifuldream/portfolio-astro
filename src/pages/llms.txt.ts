@@ -17,6 +17,9 @@ export const GET: APIRoute = async ({ site }) => {
   const gists = (await getCollection("gists"))
     .filter((gist) => gist.data.isPublic)
     .sort((a, b) => gistDate(b.data).getTime() - gistDate(a.data).getTime());
+  const products = (await getCollection("products")).sort((a, b) =>
+    a.data.name.localeCompare(b.data.name),
+  );
 
   const sections = [
     "## Pages",
@@ -26,6 +29,18 @@ export const GET: APIRoute = async ({ site }) => {
     `- [Blog](${absoluteUrl("/blog", site)}): Notes on product engineering, AI interfaces, and developer tools.`,
     `- [Gists](${absoluteUrl("/gist", site)}): Code snippets and quick solutions.`,
     `- [Contact](${absoluteUrl("/contact", site)}): Get in touch.`,
+    ...(products.length > 0
+      ? [
+          "",
+          "## Products",
+          "",
+          ...products.flatMap((product) => [
+            `- [${product.data.name}](${absoluteUrl(`/${product.id}`, site)}): ${product.data.tagline}`,
+            `- [${product.data.name} Support](${absoluteUrl(`/${product.id}/support`, site)}): Help, FAQ, permissions, and privacy for ${product.data.name}.`,
+            `- [${product.data.name} Privacy](${absoluteUrl(`/${product.id}/privacy`, site)}): Privacy policy for ${product.data.name}.`,
+          ]),
+        ]
+      : []),
     "",
     "## Writing",
     "",

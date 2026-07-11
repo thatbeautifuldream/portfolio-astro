@@ -85,6 +85,28 @@ export function getSitePage(path: string) {
     return { path: normalized, changefreq: "monthly", priority: 0.7 } as const;
   if (normalized.startsWith("/gist/"))
     return { path: normalized, changefreq: "monthly", priority: 0.6 } as const;
+  const segments = normalized.split("/").filter(Boolean);
+  if (
+    segments.length === 1 &&
+    !sitePages.some((p) => p.path === `/${segments[0]}`)
+  ) {
+    return {
+      path: normalized,
+      changefreq: "monthly",
+      priority: 0.9,
+    } as const;
+  }
+  if (
+    segments.length === 2 &&
+    (segments[1] === "support" || segments[1] === "privacy") &&
+    !sitePages.some((p) => p.path === `/${segments[0]}`)
+  ) {
+    return {
+      path: normalized,
+      changefreq: "monthly",
+      priority: 0.6,
+    } as const;
+  }
   return sitePages.find((page) => page.path === normalized);
 }
 
