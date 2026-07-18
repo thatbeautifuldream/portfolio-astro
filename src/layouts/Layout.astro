@@ -52,12 +52,18 @@ const structuredData = jsonLd
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
+      // Apply the theme before paint; re-apply when the OS scheme changes
+      // while no explicit preference is stored.
       (() => {
-        const stored = localStorage.getItem("theme");
-        const dark = stored
-          ? stored === "dark"
-          : matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.classList.toggle("dark", dark);
+        const scheme = matchMedia("(prefers-color-scheme: dark)");
+        const apply = () => {
+          const stored = localStorage.getItem("theme");
+          const dark =
+            stored === "dark" || (stored !== "light" && scheme.matches);
+          document.documentElement.classList.toggle("dark", dark);
+        };
+        apply();
+        scheme.addEventListener("change", apply);
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -149,5 +155,18 @@ const structuredData = jsonLd
       </div>
     </div>
     <GlobalIframeDialog />
+    <script is:inline>
+      document.addEventListener("keydown", (e) => {
+        if (
+          (e.metaKey || e.ctrlKey) &&
+          !e.altKey &&
+          !e.shiftKey &&
+          e.key.toLowerCase() === "d"
+        ) {
+          e.preventDefault();
+          document.getElementById("theme-toggle")?.click();
+        }
+      });
+    </script>
   </body>
 </html>

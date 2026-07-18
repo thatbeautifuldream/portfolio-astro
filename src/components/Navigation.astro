@@ -107,6 +107,13 @@ const icons: Record<string, { line: string; fill: string }> = {
   .nav-active {
     view-transition-name: nav-active;
   }
+  /* Page transitions: the nav's own snapshot keeps it out of the root
+     blur/fade. Theme wipes: drop the snapshot so the wipe sweeps the nav
+     along with the rest of the page instead of crossfading it separately. */
+  :global(html.theme-transition) #side-nav,
+  :global(html.theme-transition) .nav-active {
+    view-transition-name: none;
+  }
   @media (max-width: 639.98px) {
     :global(html.nav-vt-instant) #side-nav,
     :global(html.nav-vt-instant) #nav-backdrop {
@@ -192,9 +199,9 @@ const icons: Record<string, { line: string; fill: string }> = {
     });
   });
 
-  document
-    .getElementById("theme-toggle")
-    ?.addEventListener("click", (event) => {
+  (() => {
+    let activeTransition = null;
+    document.getElementById("theme-toggle")?.addEventListener("click", () => {
       const root = document.documentElement;
       const next = root.classList.contains("dark") ? "light" : "dark";
       window.posthog?.capture("theme_toggled", { theme: next });
@@ -209,32 +216,19 @@ const icons: Record<string, { line: string; fill: string }> = {
         return;
       }
 
-      const x = event.clientX;
-      const y = event.clientY;
-      const endRadius = Math.hypot(
-        Math.max(x, innerWidth - x),
-        Math.max(y, innerHeight - y),
-      );
-
       root.classList.add("theme-transition");
       const transition = document.startViewTransition(apply);
-      transition.ready.then(() => {
-        root.animate(
-          {
-            clipPath: [
-              `circle(0px at ${x}px ${y}px)`,
-              `circle(${endRadius}px at ${x}px ${y}px)`,
-            ],
-          },
-          {
-            duration: 450,
-            easing: "ease-in-out",
-            pseudoElement: "::view-transition-new(root)",
-          },
-        );
+      activeTransition = transition;
+      // A rapid second toggle skips this transition and fires its finished
+      // callback while the new one is still running — only the latest
+      // transition may clean up the class, or the page-transition CSS takes
+      // over mid-wipe.
+      transition.finished.finally(() => {
+        if (activeTransition === transition) {
+          activeTransition = null;
+          root.classList.remove("theme-transition");
+        }
       });
-      transition.finished.finally(() =>
-        root.classList.remove("theme-transition"),
-      );
     });
+  })();
 </script>
