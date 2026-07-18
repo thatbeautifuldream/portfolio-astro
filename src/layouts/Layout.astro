@@ -33,8 +33,12 @@ const {
 } = Astro.props;
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+// Name-first so the installed PWA window doesn't repeat it: Chrome prefixes
+// the manifest app name unless the title already starts with it.
 const fullTitle =
-  title === siteConfig.name ? title : `${title} · ${siteConfig.name}`;
+  title === siteConfig.name
+    ? `${siteConfig.shortName} · ${siteConfig.tagline}`
+    : `${siteConfig.shortName} · ${title}`;
 const ogImage = absoluteUrl(image, Astro.site);
 const ogLogo = absoluteUrl("/icons/Icon-192.png", Astro.site);
 const metaKeywords = keywords ?? defaultKeywords;
@@ -67,9 +71,10 @@ const structuredData = jsonLd
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/icons/Icon-192.png" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48 32x32 16x16" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <Font cssVariable="--font-inter" />
     <Font cssVariable="--font-google-sans-code" />
