@@ -1,0 +1,168 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import DownloadButton from "../../components/DownloadButton.astro";
+import { absoluteUrl, siteConfig } from "../../lib/seo";
+import {
+  getLatestRelease,
+  repoReleasesUrl,
+  repoTagUrl,
+} from "../../lib/releases";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products
+    .filter((product) => product.data.downloadRepo)
+    .map((product) => ({
+      params: { product: product.id },
+      props: { product },
+    }));
+}
+
+const { product } = Astro.props;
+const data = product.data;
+
+const downloadRepo = data.downloadRepo!;
+const release = await getLatestRelease(downloadRepo);
+
+const marketingPath = `/${product.id}`;
+const downloadPath = `/${product.id}/download`;
+const downloadUrl = absoluteUrl(downloadPath, Astro.site);
+
+// Prefer the resolved `.dmg` asset; if the build-time fetch was rate limited or
+// the release had no `.dmg`, fall back to the releases index so the user still
+// lands somewhere useful instead of a dead link.
+const target = release?.dmgUrl ?? repoReleasesUrl(downloadRepo);
+const isFallback = !release?.dmgUrl;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `Download · ${data.name}`,
+  description: `Download the latest build of ${data.name} for macOS.`,
+  url: downloadUrl,
+  isPartOf: {
+    "@type": "SoftwareApplication",
+    name: data.name,
+    url: absoluteUrl(marketingPath, Astro.site),
+  },
+};
+---
+
+<Layout
+  title={`Download · ${data.name}`}
+  description={`Download the latest build of ${data.name} for macOS.`}
+  canonical={downloadUrl}
+  keywords={[...data.keywords, "download", "macos", "dmg"]}
+  jsonLd={jsonLd}
+>
+  <Fragment slot="head-extra">
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+  </Fragment>
+
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-8">
+        <header class="grid gap-4">
+          <div class="text-muted-foreground flex items-center gap-2 text-sm">
+            <a href="/" class="no-underline">{siteConfig.shortName}</a>
+            <span aria-hidden="true">/</span>
+            <a href={marketingPath} class="no-underline">{data.name}</a>
+            <span aria-hidden="true">/</span>
+            <span class="text-foreground font-medium">Download</span>
+          </div>
+          <h1
+            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
+          >
+            Starting your download.
+          </h1>
+          <p
+            class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
+          >
+            Your Mac should start pulling down{" "}
+            <span class="text-foreground font-medium">{data.name}</span> in a moment.
+            If nothing happens, use the link below.
+          </p>
+        </header>
+
+        <section class="grid gap-4">
+          <DownloadButton
+            href={target}
+            release={release}
+            cta="download-direct"
+            label={isFallback
+              ? "View releases on GitHub"
+              : "Download for macOS"}
+          />
+
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+            {
+              release?.prerelease && (
+                <span class="ring-border/60 rounded-full px-2.5 py-1 text-xs font-medium tracking-wide uppercase ring-1">
+                  Pre-release
+                </span>
+              )
+            }
+            {
+              release && (
+                <span class="text-muted-foreground">
+                  {release.tag}
+                  <span class="text-muted-foreground/40"> · </span>
+                  {new Date(release.publishedAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+              )
+            }
+            <a
+              href={release
+                ? repoTagUrl(downloadRepo, release.tag)
+                : repoReleasesUrl(downloadRepo)}
+              data-no-dialog
+              class="text-muted-foreground font-medium no-underline"
+            >
+              Release notes
+            </a>
+          </div>
+        </section>
+
+        {
+          data.platforms.length > 0 && (
+            <p class="text-muted-foreground max-w-[60ch] text-sm text-pretty">
+              Built for {data.platforms.join(" · ")}.{" "}
+              {data.downloadRepo && "Open source on GitHub."}
+            </p>
+          )
+        }
+
+        <footer class="border-border/60 grid gap-2 border-t pt-6 text-sm">
+          <a
+            href={marketingPath}
+            class="text-muted-foreground font-medium no-underline"
+          >
+            Back to {data.name}
+          </a>
+        </footer>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script is:inline define:vars={{ target }}>
+  document.querySelectorAll("[data-cta='download-direct']").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.posthog?.capture("product_cta_clicked", {
+        product: document.title,
+        cta: "download-direct",
+      });
+    });
+  });
+  try {
+    window.location.replace(target);
+  } catch {
+    window.location.href = target;
+  }
+</script>

@@ -4,7 +4,9 @@ import { Icon } from "astro-icon/components";
 import Layout from "../../layouts/Layout.astro";
 import Annotate from "../../components/Annotate.astro";
 import Carousel from "../../components/Carousel.astro";
+import DownloadButton from "../../components/DownloadButton.astro";
 import { absoluteUrl, siteConfig } from "../../lib/seo";
+import { getLatestRelease } from "../../lib/releases";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -20,7 +22,15 @@ const { Content } = await render(product);
 const data = product.data;
 const supportPath = `/${product.id}/support`;
 const marketingPath = `/${product.id}`;
+const downloadPath = `/${product.id}/download`;
 const marketingUrl = absoluteUrl(marketingPath, Astro.site);
+
+// Products with a `downloadRepo` resolve their newest GitHub release at build
+// time so the marketing page can show the version + pre-release badge and the
+// `/{product}/download` route can redirect straight to the `.dmg`.
+const release = data.downloadRepo
+  ? await getLatestRelease(data.downloadRepo)
+  : null;
 
 const jsonLd = [
   {
@@ -36,7 +46,11 @@ const jsonLd = [
       price: "0",
       priceCurrency: "USD",
     },
-    ...(data.appStoreUrl ? { downloadUrl: data.appStoreUrl } : {}),
+    ...(data.appStoreUrl
+      ? { downloadUrl: data.appStoreUrl }
+      : release?.dmgUrl
+        ? { downloadUrl: release.dmgUrl }
+        : {}),
     featureList: data.features.map((f) => f.title),
   },
   {
@@ -104,6 +118,22 @@ const jsonLd = [
                   <Icon name="ri:apple-fill" class="size-4" />
                   Download on the App Store
                 </a>
+              )
+            }
+            {
+              data.downloadRepo && (
+                <>
+                  <DownloadButton
+                    href={downloadPath}
+                    release={release}
+                    cta="download"
+                  />
+                  {release?.prerelease && (
+                    <span class="ring-border/60 rounded-full px-2.5 py-1 text-xs font-medium tracking-wide uppercase ring-1">
+                      Pre-release
+                    </span>
+                  )}
+                </>
               )
             }
             <a
@@ -177,6 +207,17 @@ const jsonLd = [
 
         <footer class="border-border/60 grid gap-4 border-t pt-8 text-sm">
           <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+            {
+              data.downloadRepo && (
+                <a
+                  href={downloadPath}
+                  class="font-medium"
+                  data-cta="download-footer"
+                >
+                  Download for macOS
+                </a>
+              )
+            }
             <a href={supportPath} class="font-medium" data-cta="support-footer">
               Support and documentation
             </a>

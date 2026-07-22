@@ -27,6 +27,32 @@ const policyDate = data.policyUpdatedAt
       day: "numeric",
     })
   : null;
+
+// The privacy H1 can carry one underlined fragment. Split the configured
+// headline around the highlight so the Annotate underline lands on the right
+// word. When a product sets no headline, fall back to a generic one.
+const privacyHeadline = data.privacyHeadline ?? "Private by design.";
+const privacyHighlight =
+  data.privacyHeadlineHighlight ?? (data.privacyHeadline ? null : "by design");
+type HeadlinePart = { text: string; highlight: boolean };
+const headlineParts: HeadlinePart[] =
+  privacyHighlight && privacyHeadline.includes(privacyHighlight)
+    ? (() => {
+        const [before, after = ""] = privacyHeadline.split(privacyHighlight);
+        return [
+          { text: before, highlight: false },
+          { text: privacyHighlight, highlight: true },
+          { text: after, highlight: false },
+        ];
+      })()
+    : [{ text: privacyHeadline, highlight: false }];
+
+const privacyOverview =
+  data.privacyOverview ??
+  `${data.name} is built privacy-first. The sections below describe exactly what is collected, what stays on your device, and what, if anything, leaves it.`;
+const privacyRetention =
+  data.privacyRetention ??
+  `Anything ${data.name} stores locally lives only on your device. Uninstalling ${data.name} removes it immediately. There is no server-side copy to delete because ${data.name} does not run a server.`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -66,9 +92,15 @@ const jsonLd = {
           <h1
             class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
           >
-            Your screenshots stay <Annotate type="underline"
-              >on your device</Annotate
-            >.
+            {
+              headlineParts.map((part) =>
+                part.highlight ? (
+                  <Annotate type="underline">{part.text}</Annotate>
+                ) : (
+                  part.text
+                ),
+              )
+            }
           </h1>
           <p
             class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
@@ -87,9 +119,7 @@ const jsonLd = {
         <section class="grid gap-3">
           <h2 class="text-lg font-semibold tracking-tight">Overview</h2>
           <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            {data.name} is built privacy-first. Everything the app does, reading screenshots,
-            recognizing text, suggesting tags, storing the index, happens locally
-            on your device.
+            {privacyOverview}
           </p>
         </section>
 
@@ -163,9 +193,7 @@ const jsonLd = {
           </h2>
           <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
             {data.name} does not collect any data from anyone, including children.
-            There are no accounts, no sign-up flows, and no age-gated features. It
-            is safe for use by anyone who already has screenshots in their Photos
-            library.
+            There are no accounts, no sign-up flows, and no age-gated features.
           </p>
         </section>
 
@@ -174,11 +202,7 @@ const jsonLd = {
             Data retention and deletion
           </h2>
           <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            The index {data.name} builds lives only on your device, inside the app's
-            local SwiftData store. Deleting a screenshot from inside
-            {data.name} or from Photos removes it from the index. Uninstalling
-            {data.name} deletes the entire index immediately. There is no server-side
-            copy to delete because nothing was ever uploaded.
+            {privacyRetention}
           </p>
         </section>
 

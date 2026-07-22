@@ -41,6 +41,14 @@ const products = defineCollection({
       pricing: z.string().default("Free"),
       platforms: z.array(z.string()).default([]),
       appStoreUrl: z.string().optional(),
+      /**
+       * GitHub "owner/repo" for products distributed as native downloads.
+       * When set, the product page shows a macOS download button and a
+       * `/{product}/download` route is generated that redirects to the
+       * newest release's `.dmg` asset (resolved at build time, pre-releases
+       * included). Falls back to the releases page if the API is unreachable.
+       */
+      downloadRepo: z.string().optional(),
       icon: image().optional(),
       coverImage: image().optional(),
       screenshotUrls: z.array(z.string()).default([]),
@@ -53,6 +61,16 @@ const products = defineCollection({
         )
         .default([]),
       privacyPoints: z.array(z.string()).default([]),
+      /**
+       * Optional privacy-policy narrative. Each product can carry its own
+       * accurate posture (shotty is fully on-device; murmur has an Apple
+       * Speech framework caveat). When omitted, the template falls back to
+       * generic, product-agnostic copy so every product gets a sane policy.
+       */
+      privacyHeadline: z.string().optional(),
+      privacyHeadlineHighlight: z.string().optional(),
+      privacyOverview: z.string().optional(),
+      privacyRetention: z.string().optional(),
       dataCollected: z.string().optional(),
       thirdParties: z.array(z.string()).default([]),
       policyUpdatedAt: z.coerce.date().optional(),
@@ -80,4 +98,17 @@ const products = defineCollection({
     }),
 });
 
-export const collections = { posts, gists, products };
+const uses = defineCollection({
+  loader: glob({ pattern: "*.md", base: "./src/content/uses" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      category: z.string(),
+      url: z.string().optional(),
+      date: z.coerce.date(),
+      coverImage: image().optional(),
+    }),
+});
+
+export const collections = { posts, gists, products, uses };

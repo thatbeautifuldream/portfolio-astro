@@ -92,6 +92,10 @@ export default defineConfig({
     icon(),
     mdx(),
     sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, "");
+        return !pathname.endsWith("/download");
+      },
       serialize(item) {
         const page = getSitePage(new URL(item.url).pathname);
         if (page) {

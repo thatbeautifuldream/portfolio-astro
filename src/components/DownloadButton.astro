@@ -1,0 +1,38 @@
+---
+import { Icon } from "astro-icon/components";
+import type { GithubRelease } from "../lib/releases";
+
+interface Props {
+  href: string;
+  release?: GithubRelease | null;
+  cta?: string;
+  /** Override the default "Download for macOS" label (e.g. fallback copy). */
+  label?: string;
+}
+
+const {
+  href,
+  release = null,
+  cta = "download",
+  label = "Download for macOS",
+} = Astro.props;
+
+const version = release?.version ? `v${release.version}` : null;
+---
+
+<a
+  href={href}
+  data-no-dialog
+  class="bg-foreground text-background inline-flex w-fit items-center gap-2 justify-self-start rounded-full px-5 py-2.5 font-semibold no-underline transition-opacity hover:opacity-90"
+  data-cta={cta}
+>
+  <Icon name="ri:apple-fill" class="size-4" />
+  {label}
+  {
+    version && (
+      <span class="text-background/70 font-mono text-xs font-normal">
+        {version}
+      </span>
+    )
+  }
+</a>
