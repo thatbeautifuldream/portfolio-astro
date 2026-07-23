@@ -243,6 +243,7 @@ export const navItems = [
   { href: "/talks", label: "Talks" },
   { href: "/blog", label: "Blog" },
   { href: "/gist", label: "Gist" },
+  { href: "/uses", label: "Uses" },
   { href: "/contact", label: "Contact" },
 ];
 
