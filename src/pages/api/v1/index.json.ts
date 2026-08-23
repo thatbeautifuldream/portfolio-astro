@@ -14,16 +14,14 @@ export const GET: APIRoute = ({ site }) =>
       {
         name: "Profile",
         url: absoluteUrl("/api/v1/profile.json", site),
-        legacyUrl: absoluteUrl("/api/profile.json", site),
       },
       {
         name: "Health",
         url: absoluteUrl("/api/v1/health.json", site),
-        legacyUrl: absoluteUrl("/api/health.json", site),
       },
     ],
     errors: {
-      schema: `${absoluteUrl("/openapi.json", site)}#/components/schemas/Error`,
+      schema: absoluteUrl("/openapi.json#/components/schemas/Error", site),
       example: absoluteUrl("/api/v1/error.json", site),
     },
   });

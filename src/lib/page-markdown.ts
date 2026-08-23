@@ -30,9 +30,9 @@ function staticPage(path: string, site?: URL | null): string | null {
       `I'm most responsive on email and LinkedIn. If you have something interesting to discuss, send a detailed message rather than a generic introduction.\n\nEmail: ${siteConfig.email}\n\nBased in ${siteConfig.location.city}, ${siteConfig.location.country} (${siteConfig.location.timezoneLabel}). I keep a 3–4 hour overlap with US mornings and most of the European workday, and I'm open to remote roles, B2B contractor, or EOR arrangements.\n\n${list(contactLinks.map((item) => `[${item.label}](${item.href}) — ${item.copy}`))}`,
       site,
     ),
-    "/developers": page(
-      `Developer resources · ${siteConfig.name}`,
-      `This is the public developer portal for ${siteConfig.name}. It provides stable, read-only access to professional identity, current role, expertise, and canonical links.\n\n## Quickstart\n\nNo authentication or API key is required.\n\n\`\`\`sh\ncurl -s ${absoluteUrl("/api/v1/index.json", site)}\ncurl -s ${absoluteUrl("/api/v1/profile.json", site)}\n\`\`\`\n\n## Resources\n\n- ${link("OpenAPI", "/openapi.json", site)}\n- ${link("API index", "/api/v1/index.json", site)}\n- ${link("Profile JSON", "/api/v1/profile.json", site)}\n- ${link("Health JSON", "/api/v1/health.json", site)}\n\nUse \/api\/v1\/ for integrations. JSON errors expose stable \`code\`, \`message\`, and \`hint\` fields.`,
+    "/docs": page(
+      `API documentation · ${siteConfig.name}`,
+      `This is the public API documentation for ${siteConfig.name}. It provides stable, read-only access to professional identity, current role, expertise, and canonical links.\n\n## Quickstart\n\nNo authentication or API key is required.\n\n\`\`\`sh\ncurl -s ${absoluteUrl("/api/v1/index.json", site)}\ncurl -s ${absoluteUrl("/api/v1/profile.json", site)}\n\`\`\`\n\n## Resources\n\n- ${link("OpenAPI", "/openapi.json", site)}\n- ${link("API index", "/api/v1/index.json", site)}\n- ${link("Profile JSON", "/api/v1/profile.json", site)}\n\nUse \/api\/v1\/ for integrations. JSON errors expose stable \`code\`, \`message\`, and \`hint\` fields.`,
       site,
     ),
     "/privacy": page(
@@ -219,7 +219,7 @@ ${products.map((product) => `- ${link(product.data.name, `/${product.id}`, site)
 
 ## Resources
 
-- ${link("Developer portal", "/developers", site)}
+- ${link("API documentation", "/docs", site)}
 - ${link("OpenAPI contract", "/openapi.json", site)}
 - ${link("Profile JSON", "/api/v1/profile.json", site)}
 - ${link("Full context", "/llms-full.txt", site)}

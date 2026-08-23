@@ -3,7 +3,7 @@
 // Import `startServer()` to embed it, or run this file directly to serve.
 import { createServer, type Server } from "node:http";
 import { readFile } from "node:fs/promises";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
 import { gzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
@@ -108,14 +108,12 @@ export function startServer(opts: ServerOptions = {}): Promise<ServerHandle> {
       res.writeHead(403).end();
       return;
     }
-    if (!wantsMarkdown && pathname.endsWith("/"))
+    if (existsSync(filePath) && statSync(filePath).isDirectory())
       filePath = join(filePath, "index.html");
     if (!existsSync(filePath) && existsSync(filePath + ".html"))
       filePath += ".html";
-    if (!existsSync(filePath) && existsSync(join(filePath, "index.html")))
-      filePath = join(filePath, "index.html");
     if (!existsSync(filePath) && pathname.startsWith("/api/")) {
-      filePath = join(dist, "api/error.json");
+      filePath = join(dist, "api/v1/error.json");
       status = 404;
     }
 

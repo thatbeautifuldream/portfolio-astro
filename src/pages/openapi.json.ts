@@ -135,12 +135,12 @@ const profileSchema = {
     },
     resources: {
       type: "object",
-      required: ["llms", "fullContext", "openapi", "developers"],
+      required: ["llms", "fullContext", "openapi", "docs"],
       properties: {
         llms: { type: "string", format: "uri" },
         fullContext: { type: "string", format: "uri" },
         openapi: { type: "string", format: "uri" },
-        developers: { type: "string", format: "uri" },
+        docs: { type: "string", format: "uri" },
       },
     },
     apiVersion: { type: "string", example: API_VERSION },
@@ -166,11 +166,10 @@ const indexSchema = {
       type: "array",
       items: {
         type: "object",
-        required: ["name", "url", "legacyUrl"],
+        required: ["name", "url"],
         properties: {
           name: { type: "string" },
           url: { type: "string", format: "uri" },
-          legacyUrl: { type: "string", format: "uri" },
         },
       },
     },
@@ -197,7 +196,7 @@ const healthSchema = {
 
 export const GET: APIRoute = ({ site }) => {
   const origin = getSiteOrigin(site);
-  const legacy = (path: string) => `${origin}${path}`;
+  const docs = (path: string) => `${origin}${path}`;
 
   return new Response(
     JSON.stringify({
@@ -212,15 +211,12 @@ export const GET: APIRoute = ({ site }) => {
       servers: [{ url: origin }],
       externalDocs: {
         description: "Interactive Scalar API reference",
-        url: legacy("/developers"),
+        url: docs("/docs"),
       },
       "x-api-versioning": {
         strategy: "URL path",
         current: API_VERSION,
         canonicalPrefix: "/api/v1/",
-        legacyPrefix: "/api/",
-        deprecation:
-          "Unversioned aliases remain for compatibility. Future breaking changes use a new URL version and are announced in /developers.",
       },
       paths: {
         "/api/v1/index.json": operation(
@@ -247,51 +243,6 @@ export const GET: APIRoute = ({ site }) => {
             summary: "Read the not-found error contract",
             description:
               "Returns the JSON shape clients should expect for unsupported API resources.",
-            responses: {
-              ...response("Not-found error example", errorRef, "404"),
-              ...response("Rate limit exceeded.", errorRef, "429"),
-            },
-          },
-        },
-        "/api/index.json": {
-          get: {
-            ...operation(
-              "getApiIndexLegacy",
-              "Discover the public API through a legacy alias",
-              "Compatibility alias for the versioned API index.",
-              "ApiIndex",
-            ).get,
-            deprecated: true,
-          },
-        },
-        "/api/profile.json": {
-          get: {
-            ...operation(
-              "getProfileLegacy",
-              "Get the profile through a legacy alias",
-              "Compatibility alias for the versioned profile endpoint.",
-              "Profile",
-            ).get,
-            deprecated: true,
-          },
-        },
-        "/api/health.json": {
-          get: {
-            ...operation(
-              "getHealthLegacy",
-              "Check availability through a legacy alias",
-              "Compatibility alias for the versioned health endpoint.",
-              "Health",
-            ).get,
-            deprecated: true,
-          },
-        },
-        "/api/error.json": {
-          get: {
-            operationId: "getApiErrorExampleLegacy",
-            summary: "Read the not-found error contract through a legacy alias",
-            description: "Compatibility alias for the versioned error example.",
-            deprecated: true,
             responses: {
               ...response("Not-found error example", errorRef, "404"),
               ...response("Rate limit exceeded.", errorRef, "429"),

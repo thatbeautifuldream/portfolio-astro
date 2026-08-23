@@ -1,0 +1,51 @@
+---
+import { ScalarComponent } from "@scalar/astro";
+import Layout from "../layouts/Layout.astro";
+import { absoluteUrl, siteConfig } from "../lib/seo";
+
+const pageUrl = absoluteUrl("/docs", Astro.site);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  name: `API documentation · ${siteConfig.name}`,
+  description:
+    "Documentation for Milind Mishra's public, read-only machine-readable API.",
+  url: pageUrl,
+  author: { "@type": "Person", name: siteConfig.name },
+};
+---
+
+<Layout
+  title={`API documentation · ${siteConfig.name}`}
+  description="Documentation for Milind Mishra's public, read-only machine-readable API."
+  canonical={pageUrl}
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-4">
+        <p class="text-muted-foreground text-sm">Developer resources</p>
+        <h1 class="text-foreground text-4xl font-semibold tracking-tight">
+          API documentation
+        </h1>
+        <p class="text-muted-foreground max-w-2xl text-base leading-7">
+          Read-only, machine-readable resources for agents and developers. No
+          API key is required. Start with the OpenAPI contract or the versioned
+          API index.
+        </p>
+      </div>
+    </section>
+    <section class="section-shell border-t">
+      <div class="section-inner">
+        <ScalarComponent
+          renderMode="static"
+          configuration={{
+            url: "/openapi.json",
+            pageTitle: `${siteConfig.name} API Reference`,
+            theme: "default",
+          }}
+        />
+      </div>
+    </section>
+  </main>
+</Layout>

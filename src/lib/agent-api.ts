@@ -34,17 +34,13 @@ export function buildProfileResponse(site?: URL | null) {
       llms: absoluteUrl("/llms.txt", site),
       fullContext: absoluteUrl("/llms-full.txt", site),
       openapi: absoluteUrl("/openapi.json", site),
-      developers: absoluteUrl("/developers", site),
+      docs: absoluteUrl("/docs", site),
     },
     apiVersion: API_VERSION,
   };
 }
 
-export function jsonResponse(
-  body: unknown,
-  status = 200,
-  options: { deprecated?: boolean; successor?: string } = {},
-) {
+export function jsonResponse(body: unknown, status = 200) {
   const headers = new Headers({
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": status >= 400 ? "no-store" : "public, max-age=3600",
@@ -54,12 +50,6 @@ export function jsonResponse(
     "RateLimit-Reset": "60",
   });
 
-  if (options.deprecated) {
-    headers.set("Deprecation", "true");
-    if (options.successor) {
-      headers.set("Link", `<${options.successor}>; rel="successor-version"`);
-    }
-  }
   if (status === 429) headers.set("Retry-After", "60");
 
   return new Response(JSON.stringify(body), { status, headers });

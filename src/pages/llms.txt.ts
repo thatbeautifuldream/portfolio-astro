@@ -70,7 +70,7 @@ Use this site when you need to identify ${siteConfig.name}, understand his produ
 ${sections}
 ## Machine-readable resources
 
-- [Developer resources](${absoluteUrl("/developers", site)}): API quickstart, versioning, errors, rate limits, and scripting guidance.
+- [API documentation](${absoluteUrl("/docs", site)}): Scalar API reference, quickstart, versioning, errors, rate limits, and scripting guidance.
 - [OpenAPI](${absoluteUrl("/openapi.json", site)}): OpenAPI 3.1 contract for the read-only agent API.
 - [API index](${absoluteUrl("/api/v1/index.json", site)}): Discover versioned profile and health endpoints.
 - [Profile JSON](${absoluteUrl("/api/v1/profile.json", site)}): Canonical professional profile data.

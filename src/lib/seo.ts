@@ -61,7 +61,7 @@ export const sitePages = [
   { path: "/blog", changefreq: "weekly", priority: 0.8 },
   { path: "/gist", changefreq: "weekly", priority: 0.8 },
   { path: "/talks", changefreq: "monthly", priority: 0.7 },
-  { path: "/developers", changefreq: "monthly", priority: 0.7 },
+  { path: "/docs", changefreq: "monthly", priority: 0.7 },
   { path: "/about", changefreq: "monthly", priority: 0.6 },
   { path: "/contact", changefreq: "monthly", priority: 0.6 },
   { path: "/privacy", changefreq: "monthly", priority: 0.4 },

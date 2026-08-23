@@ -36,36 +36,6 @@
       ]
     },
     {
-      "source": "/api/index.json",
-      "headers": [
-        { "key": "Deprecation", "value": "true" },
-        {
-          "key": "Link",
-          "value": "</api/v1/index.json>; rel=\"successor-version\""
-        }
-      ]
-    },
-    {
-      "source": "/api/profile.json",
-      "headers": [
-        { "key": "Deprecation", "value": "true" },
-        {
-          "key": "Link",
-          "value": "</api/v1/profile.json>; rel=\"successor-version\""
-        }
-      ]
-    },
-    {
-      "source": "/api/health.json",
-      "headers": [
-        { "key": "Deprecation", "value": "true" },
-        {
-          "key": "Link",
-          "value": "</api/v1/health.json>; rel=\"successor-version\""
-        }
-      ]
-    },
-    {
       "source": "/_astro/(.*)",
       "headers": [
         {
@@ -105,21 +75,12 @@
       "dest": "/$1.md"
     },
     {
-      "src": "^/api/error\\.json$",
+      "src": "^/api/(?!v1/(index|profile|health|error)\\.json$).*$",
       "headers": {
         "Vary": "Accept, Accept-Encoding",
         "Cache-Control": "no-store"
       },
-      "dest": "/api/error.json",
-      "status": 404
-    },
-    {
-      "src": "^/api/(?!index\\.json$|profile\\.json$|health\\.json$|v1/(index|profile|health|error)\\.json$).*$",
-      "headers": {
-        "Vary": "Accept, Accept-Encoding",
-        "Cache-Control": "no-store"
-      },
-      "dest": "/api/error.json",
+      "dest": "/api/v1/error.json",
       "status": 404
     }
   ]

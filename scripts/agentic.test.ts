@@ -43,7 +43,7 @@ test("404 page contains agent recovery links", async () => {
   assert.match(html, /# Not found/);
   assert.match(html, /\/sitemap-index\.xml/);
   assert.match(html, /\/llms\.txt/);
-  assert.match(html, /\/developers/);
+  assert.match(html, /\/docs/);
 });
 
 test("robots explicitly allows major AI crawlers", async () => {
@@ -82,13 +82,6 @@ test("OpenAPI contract documents typed versioned operations and errors", async (
     ].schema.$ref,
     "#/components/schemas/Error",
   );
-  assert.equal(openapi.paths["/api/profile.json"].get.deprecated, true);
-  assert.equal(
-    openapi.paths["/api/profile.json"].get.responses["200"].content[
-      "application/json"
-    ].schema.$ref,
-    "#/components/schemas/Profile",
-  );
   assert.equal(
     openapi.paths["/api/v1/profile.json"].get.responses["429"].headers[
       "Retry-After"
@@ -112,18 +105,6 @@ test("OpenAPI contract documents typed versioned operations and errors", async (
   }
 });
 
-test("legacy API aliases advertise their versioned successors", async () => {
-  const [index, profile, health] = await Promise.all([
-    readRoot("src/pages/api/index.json.ts"),
-    readRoot("src/pages/api/profile.json.ts"),
-    readRoot("src/pages/api/health.json.ts"),
-  ]);
-
-  assert.match(index, /successor: "\/api\/v1\/index\.json"/);
-  assert.match(profile, /successor: "\/api\/v1\/profile\.json"/);
-  assert.match(health, /successor: "\/api\/v1\/health\.json"/);
-});
-
 test("public API files contain versioned machine-readable payloads", async () => {
   const index = JSON.parse(await readDist("api/v1/index.json"));
   const profile = JSON.parse(await readDist("api/v1/profile.json"));
@@ -131,6 +112,8 @@ test("public API files contain versioned machine-readable payloads", async () =>
   const error = JSON.parse(await readDist("api/v1/error.json"));
 
   assert.equal(index.apiVersion, "1");
+  assert.match(index.openapi, /\/openapi\.json$/);
+  assert.match(index.errors.example, /\/api\/v1\/error\.json$/);
   assert.equal(profile.type, "Person");
   assert.equal(profile.name, "Milind Kumar Mishra");
   assert.equal(profile.apiVersion, "1");
@@ -143,12 +126,10 @@ test("public API files contain versioned machine-readable payloads", async () =>
 test("markdown representation and discovery guidance are published", async () => {
   const markdown = await readDist("index.md");
   const pages = await Promise.all(
-    ["about.md", "blog.md", "gist.md", "uses.md", "developers.md"].map(
-      readDist,
-    ),
+    ["about.md", "blog.md", "gist.md", "uses.md", "docs.md"].map(readDist),
   );
   const llms = await readDist("llms.txt");
-  const developers = await readDist("developers/index.html");
+  const docs = await readDist("docs/index.html");
 
   assert.match(markdown, /^# Milind Kumar Mishra/m);
   assert.match(markdown, /\/api\/v1\/profile\.json/);
@@ -158,8 +139,8 @@ test("markdown representation and discovery guidance are published", async () =>
   assert.match(pages[3], /^# Uses/m);
   assert.match(pages[4], /\/api\/v1\/profile\.json/);
   assert.match(llms, /When to use this site/);
-  assert.match(llms, /\/developers/);
-  assert.match(developers, /Scalar/);
+  assert.match(llms, /\/docs/);
+  assert.match(docs, /Scalar/);
 });
 
 test("trust anchor pages contain substantive content", async () => {
