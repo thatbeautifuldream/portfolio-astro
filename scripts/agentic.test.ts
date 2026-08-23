@@ -144,10 +144,15 @@ test("markdown representation and discovery guidance are published", async () =>
 });
 test("resume is available as direct Markdown content", async () => {
   const resume = await readDist("resume.md");
+  const gist = await readDist("gist/resume/index.html");
 
   assert.match(resume, /^# Milind Kumar Mishra/m);
-  assert.match(resume, /Work Experience/);
+  assert.match(resume, /Merlin AI by Foyer/);
+  assert.match(resume, /130\+ tagged releases/);
+  assert.match(resume, /x\.com\/milindmishra_/);
   assert.doesNotMatch(resume, /^```/m);
+  assert.match(gist, /Merlin AI by Foyer/);
+  assert.match(gist, /x\.com\/milindmishra_/);
 });
 
 test("trust anchor pages contain substantive content", async () => {
