@@ -64,6 +64,11 @@ export const GET: APIRoute = async ({ site }) => {
 ${siteConfig.shortName} is a product engineer building AI-native interfaces, product systems, and tools people return to. This site collects his work, projects, talks, writing, and code gists.
 
 ${sections}
+## Machine-readable resources
+
+- [OpenAPI](${absoluteUrl("/openapi.json", site)}): OpenAPI 3.1 contract for the read-only agent API.
+- [API index](${absoluteUrl("/api/index.json", site)}): Discover profile and health endpoints.
+- [Profile JSON](${absoluteUrl("/api/profile.json", site)}): Canonical professional profile data.
 
 ## Citation Facts
 

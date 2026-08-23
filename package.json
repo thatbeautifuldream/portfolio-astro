@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "lighthouse": "node scripts/lighthouse.ts",
     "subset:fonts": "node scripts/subset-fonts.ts",
+    "test:agentic": "node --test scripts/agentic.test.ts",
     "astro": "astro",
     "check": "astro check",
     "format": "prettier . --write",
