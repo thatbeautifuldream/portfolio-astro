@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { absoluteUrl, buildPersonSchema, siteConfig } from "../lib/seo";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: `About · ${siteConfig.name}`,
+  description: siteConfig.description,
+  url: absoluteUrl("/about", Astro.site),
+  mainEntity: buildPersonSchema(Astro.site),
+};
+---
+
+<Layout title="About" description={siteConfig.description} jsonLd={jsonLd}>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="grid gap-4">
+          <p class="text-muted-foreground text-sm">About</p>
+          <h1
+            class="max-w-[26ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
+          >
+            Product thinking, implemented with care.
+          </h1>
+        </div>
+
+        <div class="grid gap-6 text-base leading-relaxed text-pretty">
+          <p>
+            I'm {siteConfig.name}, a product engineer based in
+            {siteConfig.location.city}, {siteConfig.location.country}. I work at {
+              siteConfig.currentRole.company
+            } as a {siteConfig.currentRole.title}, building browser agent
+            experiences and chat interfaces that make ambient AI useful in
+            everyday workflows.
+          </p>
+          <p>
+            My strongest work sits between product judgment and implementation
+            discipline. I care about the problem a feature solves, the system
+            that supports it, the words that make it understandable, and the
+            interaction details that make it feel trustworthy. I build with
+            React, TypeScript, design systems, motion, and increasingly agentic
+            flows where software can help people complete meaningful work rather
+            than merely generate output.
+          </p>
+          <p>
+            This site is a durable record of that work: products, talks,
+            writing, experiments, and practical code. It is also designed to be
+            legible to people and machines. The developer portal, OpenAPI
+            contract, JSON profile, and LLM context files provide direct paths
+            for agents that need accurate identity, experience, or contact
+            information.
+          </p>
+          <p>
+            For professional conversations, send a specific note through the
+            <a href="/contact" class="underline"> contact page</a>. I am open to
+            thoughtful product engineering, design engineering, and AI interface
+            work with teams that value craft and clarity.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

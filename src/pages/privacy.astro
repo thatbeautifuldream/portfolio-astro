@@ -1,0 +1,76 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { absoluteUrl, siteConfig } from "../lib/seo";
+
+const pageUrl = absoluteUrl("/privacy", Astro.site);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `Privacy · ${siteConfig.name}`,
+  description: "How this personal site handles information and analytics.",
+  url: pageUrl,
+};
+---
+
+<Layout
+  title="Privacy"
+  description="How this personal site handles information and analytics."
+  jsonLd={jsonLd}
+>
+  <main class="isolate">
+    <section class="section-shell">
+      <div class="section-inner grid gap-12">
+        <div class="grid gap-4">
+          <p class="text-muted-foreground text-sm">Privacy</p>
+          <h1
+            class="max-w-[26ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
+          >
+            A small site with a clear data boundary.
+          </h1>
+        </div>
+
+        <div class="grid gap-8 text-base leading-relaxed text-pretty">
+          <section class="grid gap-3">
+            <h2 class="text-2xl font-semibold tracking-tight">
+              What this site collects
+            </h2>
+            <p>
+              The pages are primarily static content. When analytics are
+              enabled, Google Analytics and Microsoft Clarity load only after a
+              visitor interacts with the page or after the idle fallback. Those
+              services may receive page-view, device, browser, and interaction
+              information according to their own policies. The site does not ask
+              visitors to create an account or submit a password.
+            </p>
+          </section>
+          <section class="grid gap-3">
+            <h2 class="text-2xl font-semibold tracking-tight">
+              Contact information
+            </h2>
+            <p>
+              If you email me, I receive the information you choose to include
+              so I can reply. I use it for the conversation you initiated and do
+              not sell personal information. For contact details, use the
+              <a href="/contact" class="underline">contact page</a>.
+            </p>
+          </section>
+          <section class="grid gap-3">
+            <h2 class="text-2xl font-semibold tracking-tight">Your choices</h2>
+            <p>
+              You can browse without interacting with the page, block analytics
+              in your browser, or disable JavaScript. The public profile and
+              developer API are read-only and do not require cookies, login, API
+              keys, or personal data. The repository can also build the site
+              with analytics disabled using
+              <code>PUBLIC_DISABLE_ANALYTICS=true</code>.
+            </p>
+          </section>
+          <p class="text-muted-foreground text-sm">
+            This page describes the behavior of this personal site as currently
+            implemented and will be updated if that behavior changes.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

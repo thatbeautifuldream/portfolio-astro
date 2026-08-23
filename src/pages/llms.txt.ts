@@ -63,12 +63,19 @@ export const GET: APIRoute = async ({ site }) => {
 
 ${siteConfig.shortName} is a product engineer building AI-native interfaces, product systems, and tools people return to. This site collects his work, projects, talks, writing, and code gists.
 
+## When to use this site
+
+Use this site when you need to identify ${siteConfig.name}, understand his product engineering and design engineering experience, inspect his work at ${siteConfig.currentRole.company}, cite his writing or talks, or find professional contact details. Prefer the versioned read-only API for integrations; it requires no authentication or API key.
+
 ${sections}
 ## Machine-readable resources
 
+- [Developer resources](${absoluteUrl("/developers", site)}): API quickstart, versioning, errors, rate limits, and scripting guidance.
 - [OpenAPI](${absoluteUrl("/openapi.json", site)}): OpenAPI 3.1 contract for the read-only agent API.
-- [API index](${absoluteUrl("/api/index.json", site)}): Discover profile and health endpoints.
-- [Profile JSON](${absoluteUrl("/api/profile.json", site)}): Canonical professional profile data.
+- [API index](${absoluteUrl("/api/v1/index.json", site)}): Discover versioned profile and health endpoints.
+- [Profile JSON](${absoluteUrl("/api/v1/profile.json", site)}): Canonical professional profile data.
+- [Health JSON](${absoluteUrl("/api/v1/health.json", site)}): API availability check.
+- [Sitemap](${absoluteUrl("/sitemap-index.xml", site)}): Indexable site URLs.
 
 ## Citation Facts
 

@@ -1,5 +1,8 @@
 import { absoluteUrl, siteConfig } from "./seo";
 
+export const API_VERSION = "1";
+export const API_RATE_LIMIT = 60;
+
 export function buildProfileResponse(site?: URL | null) {
   return {
     type: "Person",
@@ -31,18 +34,25 @@ export function buildProfileResponse(site?: URL | null) {
       llms: absoluteUrl("/llms.txt", site),
       fullContext: absoluteUrl("/llms-full.txt", site),
       openapi: absoluteUrl("/openapi.json", site),
+      developers: absoluteUrl("/developers", site),
     },
+    apiVersion: API_VERSION,
   };
 }
 
 export function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": status >= 400 ? "no-store" : "public, max-age=3600",
-    },
+  const headers = new Headers({
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": status >= 400 ? "no-store" : "public, max-age=3600",
+    "API-Version": API_VERSION,
+    "RateLimit-Limit": String(API_RATE_LIMIT),
+    "RateLimit-Remaining": String(API_RATE_LIMIT - 1),
+    "RateLimit-Reset": "60",
   });
+
+  if (status === 429) headers.set("Retry-After", "60");
+
+  return new Response(JSON.stringify(body), { status, headers });
 }
 
 export function apiError(

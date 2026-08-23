@@ -17,6 +17,7 @@ const COMPRESSIBLE = new Set([
   ".svg",
   ".xml",
   ".txt",
+  ".md",
 ]);
 
 const TYPES: Record<string, string> = {
@@ -33,6 +34,7 @@ const TYPES: Record<string, string> = {
   ".ico": "image/x-icon",
   ".woff2": "font/woff2",
   ".xml": "application/xml; charset=utf-8",
+  ".md": "text/markdown; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
 };
 
@@ -84,16 +86,38 @@ export function startServer(opts: ServerOptions = {}): Promise<ServerHandle> {
     const pathname = decodeURIComponent(
       new URL(req.url ?? "/", "http://x").pathname,
     );
-    let filePath = normalize(join(dist, pathname));
+    const acceptsMarkdown = (req.headers.accept ?? "")
+      .toLowerCase()
+      .includes("text/markdown");
+    const markdownPath =
+      pathname === "/"
+        ? join(dist, "index.md")
+        : join(dist, `${pathname.replace(/^\/+|\/+$/g, "")}.md`);
+    const wantsMarkdown =
+      acceptsMarkdown &&
+      (pathname === "/" ||
+        (!pathname.startsWith("/api/") &&
+          !pathname.startsWith("/_astro/") &&
+          !extname(pathname) &&
+          existsSync(markdownPath)));
+    let filePath = wantsMarkdown
+      ? markdownPath
+      : normalize(join(dist, pathname));
+    let status = pathname.endsWith("/error.json") ? 404 : 200;
     if (!filePath.startsWith(dist)) {
       res.writeHead(403).end();
       return;
     }
-    if (pathname.endsWith("/")) filePath = join(filePath, "index.html");
+    if (!wantsMarkdown && pathname.endsWith("/"))
+      filePath = join(filePath, "index.html");
     if (!existsSync(filePath) && existsSync(filePath + ".html"))
       filePath += ".html";
     if (!existsSync(filePath) && existsSync(join(filePath, "index.html")))
       filePath = join(filePath, "index.html");
+    if (!existsSync(filePath) && pathname.startsWith("/api/")) {
+      filePath = join(dist, "api/error.json");
+      status = 404;
+    }
 
     try {
       let body = await readFile(filePath);
@@ -109,9 +133,11 @@ export function startServer(opts: ServerOptions = {}): Promise<ServerHandle> {
       ) {
         body = gzipSync(body);
         headers["Content-Encoding"] = "gzip";
-        headers["Vary"] = "Accept-Encoding";
+        headers["Vary"] = headers["Vary"]
+          ? `${headers["Vary"]}, Accept-Encoding`
+          : "Accept-Encoding";
       }
-      res.writeHead(200, headers).end(body);
+      res.writeHead(status, headers).end(body);
     } catch {
       const notFound = join(dist, "404.html");
       if (existsSync(notFound)) {

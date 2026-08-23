@@ -9,6 +9,7 @@ import IframeDialog from "../components/IframeDialog.astro";
 import EmailLink from "../components/EmailLink.astro";
 import { siteLinks, heroStats } from "../data/portfolio";
 import {
+  buildOrganizationSchema,
   buildPersonSchema,
   buildProfilePageSchema,
   buildWebsiteSchema,
@@ -29,6 +30,7 @@ const products = (await getCollection("products")).sort(
 const jsonLd = [
   buildProfilePageSchema(Astro.site),
   buildPersonSchema(Astro.site),
+  buildOrganizationSchema(Astro.site),
   buildWebsiteSchema(Astro.site),
 ];
 ---
@@ -113,8 +115,10 @@ const jsonLd = [
           </div>
 
           <div class="grid gap-10">
-            <div class="flex items-baseline justify-between gap-4">
-              <p class="text-muted-foreground text-sm">Products</p>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <h2 class="text-muted-foreground text-sm font-medium">
+                Products
+              </h2>
             </div>
 
             <ul role="list" class="divide-border/40 grid divide-y">
@@ -194,15 +198,18 @@ const jsonLd = [
             </div>
 
             <div class="grid gap-4 text-sm">
-              <p class="text-muted-foreground">Quick navigation</p>
-              <div class="flex flex-wrap gap-x-6 gap-y-2" id="quick-nav">
-                <a href="/work" class="font-medium" data-nav-label="work"
-                  >View my work experience</a
-                >
-                <a href="/talks" data-nav-label="talks">See my talks</a>
-                <a href="/blog" data-nav-label="blog">Read my blog</a>
-                <a href="/contact" data-nav-label="contact">Get in touch</a>
-              </div>
+              <h2 class="text-muted-foreground text-sm font-medium">
+                Quick navigation
+              </h2>
+              <a href="/work" class="font-medium" data-nav-label="work"
+                >View my work experience</a
+              >
+              <a href="/talks" data-nav-label="talks">See my talks</a>
+              <a href="/blog" data-nav-label="blog">Read my blog</a>
+              <a href="/developers" data-nav-label="developers"
+                >Developer API docs</a
+              >
+              <a href="/contact" data-nav-label="contact">Get in touch</a>
             </div>
           </div>
         </div>

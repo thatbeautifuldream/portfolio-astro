@@ -61,7 +61,10 @@ export const sitePages = [
   { path: "/blog", changefreq: "weekly", priority: 0.8 },
   { path: "/gist", changefreq: "weekly", priority: 0.8 },
   { path: "/talks", changefreq: "monthly", priority: 0.7 },
+  { path: "/developers", changefreq: "monthly", priority: 0.7 },
+  { path: "/about", changefreq: "monthly", priority: 0.6 },
   { path: "/contact", changefreq: "monthly", priority: 0.6 },
+  { path: "/privacy", changefreq: "monthly", priority: 0.4 },
 ] satisfies SitePage[];
 
 export const defaultKeywords = [
@@ -189,6 +192,32 @@ export function buildPersonSchema(site?: URL | null) {
   };
 }
 
+export function buildOrganizationSchema(site?: URL | null) {
+  const origin = getSiteOrigin(site);
+  const { city, region, country } = siteConfig.location;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${origin}/#organization`,
+    name: siteConfig.name,
+    url: `${origin}/`,
+    description: siteConfig.description,
+    sameAs: [...siteConfig.sameAs],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: siteConfig.email,
+      contactType: "professional inquiries",
+      availableLanguage: ["English"],
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: city,
+      addressRegion: region,
+      addressCountry: country,
+    },
+  };
+}
 export function buildWebsiteSchema(site?: URL | null) {
   const origin = getSiteOrigin(site);
 
