@@ -1,5 +1,7 @@
-import { GET } from "../profile.json";
+import type { APIRoute } from "astro";
+import { buildProfileResponse, jsonResponse } from "../../../lib/agent-api";
 
 export const prerender = true;
 
-export { GET };
+export const GET: APIRoute = ({ site }) =>
+  jsonResponse(buildProfileResponse(site));

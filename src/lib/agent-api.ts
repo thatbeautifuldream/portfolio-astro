@@ -40,7 +40,11 @@ export function buildProfileResponse(site?: URL | null) {
   };
 }
 
-export function jsonResponse(body: unknown, status = 200) {
+export function jsonResponse(
+  body: unknown,
+  status = 200,
+  options: { deprecated?: boolean; successor?: string } = {},
+) {
   const headers = new Headers({
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": status >= 400 ? "no-store" : "public, max-age=3600",
@@ -50,6 +54,12 @@ export function jsonResponse(body: unknown, status = 200) {
     "RateLimit-Reset": "60",
   });
 
+  if (options.deprecated) {
+    headers.set("Deprecation", "true");
+    if (options.successor) {
+      headers.set("Link", `<${options.successor}>; rel="successor-version"`);
+    }
+  }
   if (status === 429) headers.set("Retry-After", "60");
 
   return new Response(JSON.stringify(body), { status, headers });

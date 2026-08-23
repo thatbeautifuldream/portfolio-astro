@@ -55,6 +55,9 @@
           "value": "text/markdown.*"
         }
       ],
+      "headers": {
+        "Vary": "Accept, Accept-Encoding"
+      },
       "dest": "/index.md"
     },
     {
@@ -66,6 +69,9 @@
           "value": "text/markdown.*"
         }
       ],
+      "headers": {
+        "Vary": "Accept, Accept-Encoding"
+      },
       "dest": "/$1.md"
     },
     {

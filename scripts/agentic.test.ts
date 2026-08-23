@@ -87,6 +87,18 @@ test("OpenAPI contract documents typed versioned operations and errors", async (
   }
 });
 
+test("legacy API aliases advertise their versioned successors", async () => {
+  const [index, profile, health] = await Promise.all([
+    readRoot("src/pages/api/index.json.ts"),
+    readRoot("src/pages/api/profile.json.ts"),
+    readRoot("src/pages/api/health.json.ts"),
+  ]);
+
+  assert.match(index, /successor: "\/api\/v1\/index\.json"/);
+  assert.match(profile, /successor: "\/api\/v1\/profile\.json"/);
+  assert.match(health, /successor: "\/api\/v1\/health\.json"/);
+});
+
 test("public API files contain versioned machine-readable payloads", async () => {
   const index = JSON.parse(await readDist("api/v1/index.json"));
   const profile = JSON.parse(await readDist("api/v1/profile.json"));
