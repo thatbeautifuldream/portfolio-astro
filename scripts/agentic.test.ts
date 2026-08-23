@@ -70,6 +70,31 @@ test("OpenAPI contract documents typed versioned operations and errors", async (
   assert.equal(openapi["x-api-versioning"].canonicalPrefix, "/api/v1/");
   assert.ok(openapi.paths["/api/v1/profile.json"].get.operationId);
   assert.ok(openapi.paths["/api/v1/health.json"].get.operationId);
+  assert.deepEqual(
+    openapi.paths["/api/v1/profile.json"].get.responses["200"].content[
+      "application/json"
+    ].schema,
+    { $ref: "#/components/schemas/Profile" },
+  );
+  assert.equal(
+    openapi.paths["/api/v1/profile.json"].get.responses["404"].content[
+      "application/json"
+    ].schema.$ref,
+    "#/components/schemas/Error",
+  );
+  assert.equal(openapi.paths["/api/profile.json"].get.deprecated, true);
+  assert.equal(
+    openapi.paths["/api/profile.json"].get.responses["200"].content[
+      "application/json"
+    ].schema.$ref,
+    "#/components/schemas/Profile",
+  );
+  assert.equal(
+    openapi.paths["/api/v1/profile.json"].get.responses["429"].headers[
+      "Retry-After"
+    ].schema.type,
+    "integer",
+  );
   assert.equal(
     openapi.components.schemas.Error.properties.error.properties.code.type,
     "string",

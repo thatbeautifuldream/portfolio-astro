@@ -55,11 +55,29 @@ const response = (description: string, schema: object, status = "200") => ({
   },
 });
 
-const standardResponses = (description: string, schema: object) => ({
-  ...response(description, schema),
+const schemaRef = (name: string) => ({
+  $ref: `#/components/schemas/${name}`,
+});
+
+const standardResponses = (description: string, schemaName: string) => ({
+  ...response(description, schemaRef(schemaName)),
   ...response("The requested resource does not exist.", errorRef, "404"),
   ...response("Rate limit exceeded.", errorRef, "429"),
   ...response("Unexpected API error.", errorRef, "500"),
+});
+
+const operation = (
+  operationId: string,
+  summary: string,
+  description: string,
+  schemaName: string,
+) => ({
+  get: {
+    operationId,
+    summary,
+    description,
+    responses: standardResponses(summary, schemaName),
+  },
 });
 
 const profileSchema = {
@@ -177,20 +195,6 @@ const healthSchema = {
   },
 } as const;
 
-const operation = (
-  operationId: string,
-  summary: string,
-  description: string,
-  schema: object,
-) => ({
-  get: {
-    operationId,
-    summary,
-    description,
-    responses: standardResponses(summary, schema),
-  },
-});
-
 export const GET: APIRoute = ({ site }) => {
   const origin = getSiteOrigin(site);
   const legacy = (path: string) => `${origin}${path}`;
@@ -223,19 +227,19 @@ export const GET: APIRoute = ({ site }) => {
           "getApiIndexV1",
           "Discover the public API",
           "Returns versioned endpoint URLs and the documented error response shape.",
-          indexSchema,
+          "ApiIndex",
         ),
         "/api/v1/profile.json": operation(
           "getProfileV1",
           "Get Milind Mishra's professional profile",
           "Returns identity, role, expertise, contact, and canonical resource links.",
-          profileSchema,
+          "Profile",
         ),
         "/api/v1/health.json": operation(
           "getHealthV1",
           "Check API availability",
           "Returns a small status payload when the API is available.",
-          healthSchema,
+          "Health",
         ),
         "/api/v1/error.json": {
           get: {
@@ -255,7 +259,7 @@ export const GET: APIRoute = ({ site }) => {
               "getApiIndexLegacy",
               "Discover the public API through a legacy alias",
               "Compatibility alias for the versioned API index.",
-              indexSchema,
+              "ApiIndex",
             ).get,
             deprecated: true,
           },
@@ -266,7 +270,7 @@ export const GET: APIRoute = ({ site }) => {
               "getProfileLegacy",
               "Get the profile through a legacy alias",
               "Compatibility alias for the versioned profile endpoint.",
-              profileSchema,
+              "Profile",
             ).get,
             deprecated: true,
           },
@@ -277,7 +281,7 @@ export const GET: APIRoute = ({ site }) => {
               "getHealthLegacy",
               "Check availability through a legacy alias",
               "Compatibility alias for the versioned health endpoint.",
-              healthSchema,
+              "Health",
             ).get,
             deprecated: true,
           },
