@@ -142,6 +142,13 @@ test("markdown representation and discovery guidance are published", async () =>
   assert.match(llms, /\/docs/);
   assert.match(docs, /Scalar/);
 });
+test("resume is available as direct Markdown content", async () => {
+  const resume = await readDist("resume.md");
+
+  assert.match(resume, /^# Milind Kumar Mishra/m);
+  assert.match(resume, /Work Experience/);
+  assert.doesNotMatch(resume, /^```/m);
+});
 
 test("trust anchor pages contain substantive content", async () => {
   for (const path of ["about/index.html", "privacy/index.html"]) {
@@ -178,6 +185,14 @@ test("Vercel routing declares Markdown negotiation and JSON API fallback", async
           (condition: { key?: string; value?: string }) =>
             condition.key === "accept" && condition.value === "text/markdown.*",
         ),
+    ),
+  );
+  assert.ok(
+    config.routes.some(
+      (route: { src: string; dest?: string }) =>
+        route.src === "^/resume/?$" &&
+        route.dest ===
+          "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf",
     ),
   );
   assert.ok(

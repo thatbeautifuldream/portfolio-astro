@@ -75,6 +75,10 @@
       "dest": "/$1.md"
     },
     {
+      "src": "^/resume/?$",
+      "dest": "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf"
+    },
+    {
       "src": "^/api/(?!v1/(index|profile|health|error)\\.json$).*$",
       "headers": {
         "Vary": "Accept, Accept-Encoding",
