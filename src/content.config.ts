@@ -57,6 +57,13 @@ const products = defineCollection({
       icon: image().optional(),
       coverImage: image().optional(),
       screenshotUrls: z.array(z.string()).default([]),
+      /**
+       * Intrinsic pixel size of the `screenshotUrls`, used to reserve the right
+       * aspect ratio in the carousel. Defaults to an iPhone 15 Pro capture.
+       */
+      screenshotSize: z
+        .object({ width: z.number(), height: z.number() })
+        .default({ width: 1290, height: 2796 }),
       features: z
         .array(
           z.object({

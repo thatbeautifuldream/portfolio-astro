@@ -25,7 +25,13 @@ platforms:
 appStoreUrl: ""
 downloadRepo: "thatbeautifuldream/intent"
 downloadTarget: "android"
-screenshotUrls: []
+screenshotUrls:
+  - "https://raw.githubusercontent.com/thatbeautifuldream/intent/main/assets/screenshots/list.png"
+  - "https://raw.githubusercontent.com/thatbeautifuldream/intent/main/assets/screenshots/actions.png"
+  - "https://raw.githubusercontent.com/thatbeautifuldream/intent/main/assets/screenshots/pinned.png"
+screenshotSize:
+  width: 1080
+  height: 2340
 publishedAt: "2026-09-11"
 features:
   - title: "Every app as a line of text"
