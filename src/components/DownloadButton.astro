@@ -1,22 +1,29 @@
 ---
 import { Icon } from "astro-icon/components";
-import type { GithubRelease } from "../lib/releases";
+import {
+  downloadTargets,
+  type DownloadTarget,
+  type GithubRelease,
+} from "../lib/releases";
 
 interface Props {
   href: string;
   release?: GithubRelease | null;
+  target?: DownloadTarget;
   cta?: string;
-  /** Override the default "Download for macOS" label (e.g. fallback copy). */
+  /** Override the target's default label (e.g. fallback copy). */
   label?: string;
 }
 
 const {
   href,
   release = null,
+  target = "macos",
   cta = "download",
-  label = "Download for macOS",
+  label,
 } = Astro.props;
 
+const { icon, label: defaultLabel } = downloadTargets[target];
 const version = release?.version ? `v${release.version}` : null;
 ---
 
@@ -26,8 +33,8 @@ const version = release?.version ? `v${release.version}` : null;
   class="bg-foreground text-background inline-flex w-fit items-center gap-2 justify-self-start rounded-full px-5 py-2.5 font-semibold no-underline transition-opacity hover:opacity-90"
   data-cta={cta}
 >
-  <Icon name="ri:apple-fill" class="size-4" />
-  {label}
+  <Icon name={icon} class="size-4 shrink-0" />
+  {label ?? defaultLabel}
   {
     version && (
       <span class="text-background/70 font-mono text-xs font-normal">

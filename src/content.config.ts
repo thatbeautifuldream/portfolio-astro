@@ -43,12 +43,17 @@ const products = defineCollection({
       appStoreUrl: z.string().optional(),
       /**
        * GitHub "owner/repo" for products distributed as native downloads.
-       * When set, the product page shows a macOS download button and a
+       * When set, the product page shows a download button and a
        * `/{product}/download` route is generated that redirects to the
-       * newest release's `.dmg` asset (resolved at build time, pre-releases
+       * newest release's installer asset (resolved at build time, pre-releases
        * included). Falls back to the releases page if the API is unreachable.
        */
       downloadRepo: z.string().optional(),
+      /**
+       * Which installer the `downloadRepo` release ships, which decides the
+       * asset extension to resolve (`.dmg` vs `.apk`) and the button label.
+       */
+      downloadTarget: z.enum(["macos", "android"]).default("macos"),
       icon: image().optional(),
       coverImage: image().optional(),
       screenshotUrls: z.array(z.string()).default([]),

@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import DownloadButton from "../../components/DownloadButton.astro";
 import { absoluteUrl, siteConfig } from "../../lib/seo";
 import {
+  downloadTargets,
   getLatestRelease,
   repoReleasesUrl,
   repoTagUrl,
@@ -23,23 +24,26 @@ const { product } = Astro.props;
 const data = product.data;
 
 const downloadRepo = data.downloadRepo!;
-const release = await getLatestRelease(downloadRepo);
+const release = await getLatestRelease(downloadRepo, data.downloadTarget);
+const { label: downloadLabel, extension } =
+  downloadTargets[data.downloadTarget];
+const platformName = data.downloadTarget === "android" ? "Android" : "macOS";
 
 const marketingPath = `/${product.id}`;
 const downloadPath = `/${product.id}/download`;
 const downloadUrl = absoluteUrl(downloadPath, Astro.site);
 
-// Prefer the resolved `.dmg` asset; if the build-time fetch was rate limited or
-// the release had no `.dmg`, fall back to the releases index so the user still
-// lands somewhere useful instead of a dead link.
-const target = release?.dmgUrl ?? repoReleasesUrl(downloadRepo);
-const isFallback = !release?.dmgUrl;
+// Prefer the resolved installer asset; if the build-time fetch was rate limited
+// or the release shipped no matching installer, fall back to the releases index
+// so the user still lands somewhere useful instead of a dead link.
+const target = release?.assetUrl ?? repoReleasesUrl(downloadRepo);
+const isFallback = !release?.assetUrl;
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: `Download · ${data.name}`,
-  description: `Download the latest build of ${data.name} for macOS.`,
+  description: `Download the latest build of ${data.name} for ${platformName}.`,
   url: downloadUrl,
   isPartOf: {
     "@type": "SoftwareApplication",
@@ -51,9 +55,14 @@ const jsonLd = {
 
 <Layout
   title={`Download · ${data.name}`}
-  description={`Download the latest build of ${data.name} for macOS.`}
+  description={`Download the latest build of ${data.name} for ${platformName}.`}
   canonical={downloadUrl}
-  keywords={[...data.keywords, "download", "macos", "dmg"]}
+  keywords={[
+    ...data.keywords,
+    "download",
+    platformName.toLowerCase(),
+    extension.slice(1),
+  ]}
   image={`/og/product/${product.id}.png`}
   jsonLd={jsonLd}
 >
@@ -81,7 +90,8 @@ const jsonLd = {
           <p
             class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
           >
-            Your Mac should start pulling down{" "}
+            Your {data.downloadTarget === "android" ? "device" : "Mac"} should start
+            pulling down{" "}
             <span class="text-foreground font-medium">{data.name}</span> in a moment.
             If nothing happens, use the link below.
           </p>
@@ -91,10 +101,9 @@ const jsonLd = {
           <DownloadButton
             href={target}
             release={release}
+            target={data.downloadTarget}
             cta="download-direct"
-            label={isFallback
-              ? "View releases on GitHub"
-              : "Download for macOS"}
+            label={isFallback ? "View releases on GitHub" : downloadLabel}
           />
 
           <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
