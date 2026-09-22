@@ -179,6 +179,26 @@ html:not(.theme-transition)::view-transition-new(root) {
     both;
 }
 
+/* The back link stays put across navigations: it gets its own snapshot that
+   swaps instantly instead of riding the page blur. Theme wipes drop the name
+   so the wipe sweeps it with the rest of the page. */
+[data-back-link] {
+  view-transition-name: back-link;
+}
+
+html.theme-transition [data-back-link] {
+  view-transition-name: none;
+}
+
+::view-transition-group(back-link),
+::view-transition-new(back-link) {
+  animation: none;
+}
+
+::view-transition-old(back-link) {
+  display: none;
+}
+
 /* Theme toggle (html.theme-transition, set by the footer toggle): the old
    snapshot holds still underneath while the new theme is revealed through an
    oversized gradient mask sweeping from the bottom-left corner to the
