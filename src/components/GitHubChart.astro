@@ -50,39 +50,41 @@ const height = 7 * (cell + gap) - gap;
 
 {
   weeks.length > 0 && (
-    <section class="grid min-w-0 gap-4">
+    <section class="@container grid min-w-0 gap-4">
       <h2 class="section-title">GitHub</h2>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        class="h-auto w-full"
-        role="img"
-        aria-label={`${total} contributions in the last year`}
-      >
-        {weeks.map((week, col) =>
-          week.map(
-            (day, row) =>
-              day && (
-                <rect
-                  x={col * (cell + gap)}
-                  y={row * (cell + gap)}
-                  width={cell}
-                  height={cell}
-                  rx="2"
-                  class={opacity[day.level]}
-                >
-                  <title>{day.label || day.date}</title>
-                </rect>
-              ),
-          ),
-        )}
-      </svg>
+      <div class="flex justify-end overflow-hidden @max-[33.75rem]:[mask-image:linear-gradient(to_right,transparent,black_3rem)]">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          class="h-auto w-full min-w-135 shrink-0"
+          role="img"
+          aria-label={`${total} contributions in the last year`}
+        >
+          {weeks.map((week, col) =>
+            week.map(
+              (day, row) =>
+                day && (
+                  <rect
+                    x={col * (cell + gap)}
+                    y={row * (cell + gap)}
+                    width={cell}
+                    height={cell}
+                    rx="2"
+                    class={opacity[day.level]}
+                  >
+                    <title>{day.label || day.date}</title>
+                  </rect>
+                ),
+            ),
+          )}
+        </svg>
+      </div>
       <p class="text-faint flex items-center justify-between gap-4">
         <span class="tabular-nums">{total} contributions in the last year</span>
         <a
           href={siteLinks.github.href}
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-foreground no-underline"
+          class="hover:text-foreground no-underline @max-[30rem]:hidden"
         >
           @{username}
         </a>
