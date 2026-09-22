@@ -30,16 +30,10 @@ const version = release?.version ? `v${release.version}` : null;
 <a
   href={href}
   data-no-dialog
-  class="bg-foreground text-background inline-flex w-fit items-center gap-2 justify-self-start rounded-full px-5 py-2.5 font-semibold no-underline transition-opacity hover:opacity-90"
+  class="inline-flex w-fit items-center gap-1.5"
   data-cta={cta}
 >
-  <Icon name={icon} class="size-4 shrink-0" />
+  <Icon name={icon} class="size-5 shrink-0 sm:size-4" />
   {label ?? defaultLabel}
-  {
-    version && (
-      <span class="text-background/70 font-mono text-xs font-normal">
-        {version}
-      </span>
-    )
-  }
+  {version && <span class="text-faint tabular-nums">{version}</span>}
 </a>

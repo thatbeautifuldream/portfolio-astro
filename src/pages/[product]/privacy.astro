@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import Annotate from "../../components/Annotate.astro";
-import { absoluteUrl, siteConfig } from "../../lib/seo";
+import PageHeader from "../../components/PageHeader.astro";
+import { absoluteUrl } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -28,24 +28,7 @@ const policyDate = data.policyUpdatedAt
     })
   : null;
 
-// The privacy H1 can carry one underlined fragment. Split the configured
-// headline around the highlight so the Annotate underline lands on the right
-// word. When a product sets no headline, fall back to a generic one.
 const privacyHeadline = data.privacyHeadline ?? "Private by design.";
-const privacyHighlight =
-  data.privacyHeadlineHighlight ?? (data.privacyHeadline ? null : "by design");
-type HeadlinePart = { text: string; highlight: boolean };
-const headlineParts: HeadlinePart[] =
-  privacyHighlight && privacyHeadline.includes(privacyHighlight)
-    ? (() => {
-        const [before, after = ""] = privacyHeadline.split(privacyHighlight);
-        return [
-          { text: before, highlight: false },
-          { text: privacyHighlight, highlight: true },
-          { text: after, highlight: false },
-        ];
-      })()
-    : [{ text: privacyHeadline, highlight: false }];
 
 const privacyOverview =
   data.privacyOverview ??
@@ -78,183 +61,122 @@ const jsonLd = {
   image={`/og/product/${product.id}.png`}
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-12">
-        <header class="grid gap-4">
-          <div class="text-muted-foreground flex items-center gap-2 text-sm">
-            <a href="/" class="no-underline">{siteConfig.shortName}</a>
-            <span aria-hidden="true">/</span>
-            <a href={marketingPath} class="no-underline">{data.name}</a>
-            <span aria-hidden="true">/</span>
-            <span class="text-foreground font-medium">Privacy</span>
-          </div>
-          <p class="text-muted-foreground text-sm">Privacy policy</p>
-          <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-          >
-            {
-              headlineParts.map((part) =>
-                part.highlight ? (
-                  <Annotate type="underline">{part.text}</Annotate>
-                ) : (
-                  part.text
-                ),
-              )
-            }
-          </h1>
-          <p
-            class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
-          >
-            {data.description}
-          </p>
-          {
-            policyDate && (
-              <p class="text-muted-foreground font-mono text-xs tracking-wide uppercase">
-                Last updated · {policyDate}
-              </p>
-            )
-          }
-        </header>
+  <main class="stagger grid gap-12">
+    <div class="grid gap-4">
+      <PageHeader
+        title={privacyHeadline}
+        meta={policyDate
+          ? `Privacy policy · Updated ${policyDate}`
+          : "Privacy policy"}
+      />
+      <p class="text-pretty">{data.description}</p>
+    </div>
 
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">Overview</h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            {privacyOverview}
-          </p>
-        </section>
+    <section class="grid gap-4">
+      <h2 class="section-title">Overview</h2>
+      <p class="text-pretty">{privacyOverview}</p>
+    </section>
 
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">Data we collect</h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            {
-              data.dataCollected ??
-                "None. This app does not collect, transmit, or share any personal data."
-            }
-          </p>
-        </section>
-
+    <section class="grid gap-4">
+      <h2 class="section-title">Data we collect</h2>
+      <p class="text-pretty">
         {
-          data.privacyPoints.length > 0 && (
-            <section class="grid gap-3">
-              <h2 class="text-lg font-semibold tracking-tight">
-                How your data is processed
-              </h2>
-              <ul role="list" class="grid max-w-[60ch] gap-2">
-                {data.privacyPoints.map((point) => (
-                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )
+          data.dataCollected ??
+            "None. This app does not collect, transmit, or share any personal data."
         }
+      </p>
+    </section>
 
-        {
-          data.permissions.length > 0 && (
-            <section class="grid gap-3">
-              <h2 class="text-lg font-semibold tracking-tight">Permissions</h2>
-              <ul role="list" class="grid max-w-[60ch] gap-2">
-                {data.permissions.map((perm) => (
-                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
-                    {perm}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )
-        }
-
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">
-            Third-party services
-          </h2>
-          {
-            data.thirdParties.length > 0 ? (
-              <ul role="list" class="grid max-w-[60ch] gap-3">
-                {data.thirdParties.map((party) => (
-                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
-                    {party}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-                {data.name} does not use any third-party services. No analytics,
-                no crash reporting, no advertising SDKs, no servers.
-              </p>
-            )
-          }
-        </section>
-
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">
-            Children's privacy
-          </h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            {data.name} does not collect any data from anyone, including children.
-            There are no accounts, no sign-up flows, and no age-gated features.
-          </p>
-        </section>
-
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">
-            Data retention and deletion
-          </h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            {privacyRetention}
-          </p>
-        </section>
-
-        <section class="grid gap-3">
-          <h2 class="text-lg font-semibold tracking-tight">
-            Changes to this policy
-          </h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            If {data.name} ever starts doing something new with your data, this page
-            will be updated before that change ships, and the "last updated" date
-            above will reflect it.
-          </p>
-        </section>
-
-        <section class="border-border/60 grid gap-4 border-t pt-8">
-          <h2 class="text-lg font-semibold tracking-tight">Questions</h2>
-          <p class="text-muted-foreground max-w-[60ch] text-base text-pretty">
-            If anything here is unclear, email and you'll get a real reply from
-            a real person.
-          </p>
-          <div class="grid gap-2 text-sm">
-            {
-              data.supportEmail && (
-                <a
-                  href={`mailto:${data.supportEmail}?subject=${encodeURIComponent(`${data.name} privacy question`)}`}
-                  class="font-medium"
-                  data-contact="email"
-                >
-                  {data.supportEmail}
-                </a>
-              )
-            }
-            <a
-              href={supportPath}
-              class="text-muted-foreground font-medium no-underline"
-            >
-              Read the support page
-            </a>
-            <a
-              href={marketingPath}
-              class="text-muted-foreground font-medium no-underline"
-            >
-              Back to {data.name}
-            </a>
+    {
+      data.privacyPoints.length > 0 && (
+        <section class="grid gap-4">
+          <h2 class="section-title">How your data is processed</h2>
+          <div class="prose">
+            <ul>
+              {data.privacyPoints.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
           </div>
         </section>
+      )
+    }
 
-        <footer class="text-muted-foreground text-sm text-pretty">
-          Built by{" "}
-          <a href="/" class="font-medium no-underline">{siteConfig.name}</a>.
-        </footer>
+    {
+      data.permissions.length > 0 && (
+        <section class="grid gap-4">
+          <h2 class="section-title">Permissions</h2>
+          <div class="prose">
+            <ul>
+              {data.permissions.map((perm) => (
+                <li>{perm}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="grid gap-4">
+      <h2 class="section-title">Third-party services</h2>
+      {
+        data.thirdParties.length > 0 ? (
+          <div class="prose">
+            <ul>
+              {data.thirdParties.map((party) => (
+                <li>{party}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p class="text-pretty">
+            {data.name} does not use any third-party services. No analytics, no
+            crash reporting, no advertising SDKs, no servers.
+          </p>
+        )
+      }
+    </section>
+
+    <section class="grid gap-4">
+      <h2 class="section-title">Children's privacy</h2>
+      <p class="text-pretty">
+        {data.name} does not collect any data from anyone, including children. There
+        are no accounts, no sign-up flows, and no age-gated features.
+      </p>
+    </section>
+
+    <section class="grid gap-4">
+      <h2 class="section-title">Data retention and deletion</h2>
+      <p class="text-pretty">{privacyRetention}</p>
+    </section>
+
+    <section class="grid gap-4">
+      <h2 class="section-title">Changes to this policy</h2>
+      <p class="text-pretty">
+        If {data.name} ever starts doing something new with your data, this page will
+        be updated before that change ships, and the "last updated" date above will
+        reflect it.
+      </p>
+    </section>
+
+    <section class="grid gap-4">
+      <h2 class="section-title">Questions</h2>
+      <p class="text-pretty">
+        If anything here is unclear, email and you'll get a real reply from a
+        real person.
+      </p>
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {
+          data.supportEmail && (
+            <a
+              href={`mailto:${data.supportEmail}?subject=${encodeURIComponent(`${data.name} privacy question`)}`}
+              data-contact="email"
+            >
+              {data.supportEmail}
+            </a>
+          )
+        }
+        <a href={supportPath}>Read the support page</a>
       </div>
     </section>
   </main>

@@ -80,7 +80,6 @@ const products = defineCollection({
        * generic, product-agnostic copy so every product gets a sane policy.
        */
       privacyHeadline: z.string().optional(),
-      privacyHeadlineHighlight: z.string().optional(),
       privacyOverview: z.string().optional(),
       privacyRetention: z.string().optional(),
       dataCollected: z.string().optional(),

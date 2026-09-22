@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import DownloadButton from "../../components/DownloadButton.astro";
-import { absoluteUrl, siteConfig } from "../../lib/seo";
+import PageHeader from "../../components/PageHeader.astro";
+import { absoluteUrl } from "../../lib/seo";
 import {
   downloadTargets,
   getLatestRelease,
@@ -71,93 +72,53 @@ const jsonLd = {
     <meta http-equiv="refresh" content={`0; url=${target}`} />
   </Fragment>
 
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-8">
-        <header class="grid gap-4">
-          <div class="text-muted-foreground flex items-center gap-2 text-sm">
-            <a href="/" class="no-underline">{siteConfig.shortName}</a>
-            <span aria-hidden="true">/</span>
-            <a href={marketingPath} class="no-underline">{data.name}</a>
-            <span aria-hidden="true">/</span>
-            <span class="text-foreground font-medium">Download</span>
-          </div>
-          <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-          >
-            Starting your download.
-          </h1>
-          <p
-            class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
-          >
-            Your {data.downloadTarget === "android" ? "device" : "Mac"} should start
-            pulling down{" "}
-            <span class="text-foreground font-medium">{data.name}</span> in a moment.
-            If nothing happens, use the link below.
-          </p>
-        </header>
-
-        <section class="grid gap-4">
-          <DownloadButton
-            href={target}
-            release={release}
-            target={data.downloadTarget}
-            cta="download-direct"
-            label={isFallback ? "View releases on GitHub" : downloadLabel}
-          />
-
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            {
-              release?.prerelease && (
-                <span class="ring-border/60 rounded-full px-2.5 py-1 text-xs font-medium tracking-wide uppercase ring-1">
-                  Pre-release
-                </span>
-              )
-            }
-            {
-              release && (
-                <span class="text-muted-foreground">
-                  {release.tag}
-                  <span class="text-muted-foreground/40"> · </span>
-                  {new Date(release.publishedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              )
-            }
-            <a
-              href={release
-                ? repoTagUrl(downloadRepo, release.tag)
-                : repoReleasesUrl(downloadRepo)}
-              data-no-dialog
-              class="text-muted-foreground font-medium no-underline"
-            >
-              Release notes
-            </a>
-          </div>
-        </section>
-
-        {
-          data.platforms.length > 0 && (
-            <p class="text-muted-foreground max-w-[60ch] text-sm text-pretty">
-              Built for {data.platforms.join(" · ")}.{" "}
-              {data.downloadRepo && "Open source on GitHub."}
-            </p>
-          )
-        }
-
-        <footer class="border-border/60 grid gap-2 border-t pt-6 text-sm">
-          <a
-            href={marketingPath}
-            class="text-muted-foreground font-medium no-underline"
-          >
-            Back to {data.name}
-          </a>
-        </footer>
+  <main class="stagger grid gap-12">
+    <div class="grid gap-4">
+      <PageHeader title="Starting your download" meta={data.name} />
+      <p class="text-pretty">
+        Your {data.downloadTarget === "android" ? "device" : "Mac"} should start pulling
+        down {data.name} in a moment. If nothing happens, use the link below.
+      </p>
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <DownloadButton
+          href={target}
+          release={release}
+          target={data.downloadTarget}
+          cta="download-direct"
+          label={isFallback ? "View releases on GitHub" : downloadLabel}
+        />
+        <a
+          href={release
+            ? repoTagUrl(downloadRepo, release.tag)
+            : repoReleasesUrl(downloadRepo)}
+          data-no-dialog
+        >
+          Release notes
+        </a>
       </div>
-    </section>
+      {
+        release && (
+          <p class="text-faint tabular-nums">
+            {release.tag} ·{" "}
+            {new Date(release.publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            {release.prerelease && " · Pre-release"}
+          </p>
+        )
+      }
+    </div>
+
+    {
+      data.platforms.length > 0 && (
+        <p class="text-muted-foreground text-pretty">
+          Built for {data.platforms.join(" · ")}.{" "}
+          {data.downloadRepo && "Open source on GitHub."}
+        </p>
+      )
+    }
   </main>
 </Layout>
 

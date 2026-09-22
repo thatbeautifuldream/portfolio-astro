@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import IndexList from "../../components/IndexList.astro";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 
 function gistDate(data: { datePublished?: Date; date?: Date }): Date {
@@ -10,14 +12,6 @@ function gistDate(data: { datePublished?: Date; date?: Date }): Date {
 const gists = (await getCollection("gists")).sort(
   (a, b) => gistDate(b.data).getTime() - gistDate(a.data).getTime(),
 );
-
-function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -34,37 +28,26 @@ const jsonLd = {
   description="Code snippets and quick solutions."
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-12">
-        <div class="grid gap-4">
-          <p class="text-muted-foreground text-sm">Gists</p>
-          <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-          >
-            Code snippets and quick solutions.
-          </h1>
-        </div>
-
-        <div class="divide-border/40 grid gap-0 divide-y">
-          {
-            gists.map((gist, index) => {
-              const tag = gist.data.tags?.split(",")[0]?.trim() ?? "Gist";
-              return (
-                <div class="grid gap-1 py-5 first:pt-0 last:pb-0">
-                  <h2 class="text-lg font-semibold tracking-tight">
-                    <a href={`/gist/${gist.id}`}>{gist.data.title}</a>
-                  </h2>
-                  <p class="text-muted-foreground font-mono text-sm tracking-wide uppercase">
-                    {tag} · {formatDate(gistDate(gist.data))}
-                  </p>
-                </div>
-              );
-            })
-          }
-        </div>
-      </div>
-    </section>
+  <main class="stagger grid gap-12">
+    <PageHeader title="Gists" meta="Code snippets and quick solutions." />
+    <IndexList
+      title="Snippets"
+      items={gists.map((gist) => {
+        const date = gist.data.datePublished ?? gist.data.date;
+        return {
+          href: `/gist/${gist.id}`,
+          title: gist.data.title,
+          meta: date
+            ? date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+              })
+            : gist.data.tags?.split(",")[0]?.trim(),
+          group: date ? String(date.getFullYear()) : undefined,
+          attrs: { "data-gist-title": gist.data.title },
+        };
+      })}
+    />
   </main>
 </Layout>
 
@@ -73,7 +56,7 @@ const jsonLd = {
     link.addEventListener("click", () => {
       window.posthog?.capture("gist_clicked", {
         gist_slug: link.getAttribute("href").replace("/gist/", ""),
-        gist_title: link.textContent?.trim() ?? null,
+        gist_title: link.dataset.gistTitle ?? null,
       });
     });
   });

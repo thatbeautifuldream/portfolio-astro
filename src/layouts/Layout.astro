@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import { Font } from "astro:assets";
-import Navigation from "../components/Navigation.astro";
+import { Icon } from "astro-icon/components";
 import Footer from "../components/Footer.astro";
 import GlobalIframeDialog from "../components/GlobalIframeDialog.astro";
 import Analytics from "../components/Analytics.astro";
@@ -21,6 +21,7 @@ interface Props {
   keywords?: string[];
   image?: string;
   jsonLd?: unknown;
+  back?: { href: string; label: string } | false;
 }
 
 const {
@@ -30,7 +31,17 @@ const {
   keywords,
   image = siteConfig.defaultImage,
   jsonLd,
+  back: backProp,
 } = Astro.props;
+
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+const parent = segments.at(-2);
+const back =
+  backProp ??
+  (segments.length > 0 && {
+    href: parent ? `/${segments.slice(0, -1).join("/")}` : "/",
+    label: parent ? parent[0]!.toUpperCase() + parent.slice(1) : "Index",
+  });
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // Name-first so the installed PWA window doesn't repeat it: Chrome prefixes
@@ -77,8 +88,6 @@ const structuredData = jsonLd
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <Font cssVariable="--font-inter" />
-    <Font cssVariable="--font-google-sans-code" />
-    <Font cssVariable="--font-libre-baskerville" />
     <script
       type="speculationrules"
       is:inline
@@ -149,17 +158,33 @@ const structuredData = jsonLd
     <Analytics />
     <PostHog />
   </head>
-  <body class="bg-background text-foreground min-h-svh font-sans">
+  <body class="bg-background text-foreground min-h-svh">
     <div
-      class="mx-auto flex w-full max-w-[68rem] justify-center px-3 sm:px-4 xl:gap-6"
+      aria-hidden="true"
+      class="top-fade pointer-events-none fixed inset-x-0 top-0 z-10 h-10 md:h-32"
     >
-      <Navigation />
-      <div class="flex min-h-svh max-w-3xl min-w-0 flex-1 flex-col">
-        <div class="grow">
-          <slot />
-        </div>
-        <Footer />
+    </div>
+    <div
+      class="isolate mx-auto flex min-h-svh max-w-[36.375rem] flex-col gap-10 px-6 pt-8 md:px-4 md:pt-20"
+    >
+      {
+        back && (
+          <a
+            href={back.href}
+            class="text-faint hover:text-foreground relative z-20 inline-flex w-fit items-center gap-1.5 no-underline xl:fixed xl:top-20 xl:left-20"
+          >
+            <Icon
+              name="ri:arrow-go-back-line"
+              class="size-5 shrink-0 sm:size-4"
+            />
+            {back.label}
+          </a>
+        )
+      }
+      <div class="grow">
+        <slot />
       </div>
+      <Footer />
     </div>
     <GlobalIframeDialog />
     <script is:inline>

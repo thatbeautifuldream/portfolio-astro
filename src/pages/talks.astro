@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Annotate from "../components/Annotate.astro";
+import PageHeader from "../components/PageHeader.astro";
+import IndexList from "../components/IndexList.astro";
 import { talks, contributions } from "../data/portfolio";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../lib/seo";
 
@@ -31,91 +32,52 @@ const jsonLd = {
   description="Talks on React, motion systems, interface architecture, and AI for frontend engineers."
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-12">
-        <div class="grid gap-4">
-          <p class="text-muted-foreground text-sm">Talks</p>
-          <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-          >
-            I share what I learn because it forces me to <Annotate
-              type="underline">learn it deeper</Annotate
-            >.
-          </h1>
-          <p class="text-muted-foreground max-w-[56ch] text-pretty">
-            These talks come from things I ran into firsthand and couldn't stop
-            thinking about. Sharing them publicly keeps me honest, helps others
-            experiment sooner, and sharpens my own understanding in a way that
-            building alone never could.
-          </p>
-        </div>
+  <main class="stagger grid gap-12">
+    <article class="grid gap-4">
+      <PageHeader
+        title="Talks"
+        meta="I share what I learn because it forces me to learn it deeper."
+      />
+      <p class="text-pretty">
+        These talks come from things I ran into firsthand and couldn't stop
+        thinking about. Sharing them publicly keeps me honest, helps others
+        experiment sooner, and sharpens my own understanding in a way that
+        building alone never could.
+      </p>
+    </article>
 
-        <div class="grid gap-8">
-          {
-            talks.map((talk, index) => (
-              <div class="grid gap-2">
-                <p class="text-muted-foreground font-mono text-sm tracking-wide uppercase">
-                  {talk.event} · {talk.date}
-                </p>
-                <h2 class="text-xl font-semibold tracking-tight">
-                  {talk.title}
-                </h2>
-                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-                  {talk.description}
-                </p>
-                <a
-                  href={talk.href}
-                  class="text-sm"
-                  data-talk-title={talk.title}
-                  data-talk-event={talk.event}
-                >
-                  View talk
-                </a>
-              </div>
-            ))
-          }
-        </div>
+    <IndexList
+      title="Talks"
+      items={talks.map((talk) => ({
+        href: talk.href,
+        title: talk.title,
+        meta: talk.event,
+        group: talk.date.slice(-4),
+        external: true,
+        attrs: { "data-talk-title": talk.title, "data-talk-event": talk.event },
+      }))}
+    />
 
-        <hr class="border-border/60" />
-
-        <div class="grid gap-4">
-          <p class="text-muted-foreground text-sm">Open source</p>
-          <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight">
-            Contributions that started as problems I hit at work.
-          </h2>
-          <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-            While building AI chat interfaces at Merlin, the core challenge was
-            rendering streamed markdown responses cleanly. That led me to
-            Streamdown, Vercel's open source markdown renderer built for AI
-            streaming. These contributions came from real product gaps, not side
-            quests.
-          </p>
-        </div>
-
-        <div class="grid gap-6">
-          {
-            contributions.map((item, index) => (
-              <div class="grid gap-2">
-                <h3 class="text-lg font-semibold tracking-tight">
-                  {item.title}
-                </h3>
-                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-                  {item.context}
-                </p>
-                <a
-                  href={item.href}
-                  class="text-sm"
-                  data-contribution-title={item.title}
-                >
-                  Open contribution
-                </a>
-              </div>
-            ))
-          }
-        </div>
-      </div>
+    <section class="grid gap-4">
+      <h2 class="section-title">Open source</h2>
+      <p class="text-pretty">
+        While building AI chat interfaces at Merlin, the core challenge was
+        rendering streamed markdown responses cleanly. That led me to
+        Streamdown, Vercel's open source markdown renderer built for AI
+        streaming. These contributions came from real product gaps, not side
+        quests.
+      </p>
     </section>
+
+    <IndexList
+      title="Contributions"
+      items={contributions.map((item) => ({
+        href: item.href,
+        title: item.title,
+        external: true,
+        attrs: { "data-contribution-title": item.title },
+      }))}
+    />
   </main>
 </Layout>
 

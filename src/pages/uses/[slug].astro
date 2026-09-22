@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import { hostname } from "../../data/portfolio";
 import { absoluteUrl, buildPersonRef } from "../../lib/seo";
 
@@ -33,57 +34,35 @@ const jsonLd = {
   canonical={absoluteUrl(`/uses/${item.id}`, Astro.site)}
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid min-w-0 gap-12">
-        <article class="grid min-w-0 gap-8">
-          {
-            item.data.coverImage && (
-              <div class="border-border/60 bg-muted overflow-hidden rounded-2xl border ring-1 ring-white/5 ring-inset">
-                <Image
-                  src={item.data.coverImage}
-                  alt={item.data.title}
-                  class="block w-full"
-                />
-              </div>
-            )
-          }
-          <header class="grid gap-2">
-            <p
-              class="text-muted-foreground font-mono text-sm tracking-wide uppercase"
-            >
-              <a href="/uses" class="hover:text-foreground">Uses</a> · {
-                item.data.category
-              }
+  <main>
+    <article class="stagger grid min-w-0 gap-8">
+      <PageHeader title={item.data.title} meta={item.data.category} />
+      <div class="grid gap-4">
+        <p class="text-muted-foreground text-pretty">
+          {item.data.description}
+        </p>
+        {
+          item.data.url && (
+            <p>
+              <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                {hostname(item.data.url)}
+              </a>
             </p>
-            <h1
-              class="max-w-[24ch] text-3xl font-semibold tracking-tight text-pretty md:text-5xl"
-            >
-              {item.data.title}
-            </h1>
-            <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-              {item.data.description}
-            </p>
-            {
-              item.data.url && (
-                <p class="font-mono text-sm">
-                  <a
-                    href={item.data.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {hostname(item.data.url)} ↗
-                  </a>
-                </p>
-              )
-            }
-          </header>
-
-          <div class="prose max-w-none overflow-x-hidden">
-            <Content />
-          </div>
-        </article>
+          )
+        }
       </div>
-    </section>
+      {
+        item.data.coverImage && (
+          <Image
+            src={item.data.coverImage}
+            alt=""
+            class="w-full rounded-lg outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10"
+          />
+        )
+      }
+      <div class="prose min-w-0">
+        <Content />
+      </div>
+    </article>
   </main>
 </Layout>

@@ -40,38 +40,10 @@ export default defineConfig({
 
   fonts: [
     {
-      provider: fontProviders.local(),
+      provider: fontProviders.google(),
       name: "Inter",
       cssVariable: "--font-inter",
-      options: {
-        variants: [
-          {
-            weight: "100 900",
-            style: "normal",
-            src: ["./src/assets/fonts/InterVariable.subset.woff2"],
-            featureSettings: '"cv02", "cv03", "cv04", "cv11", "ss01"',
-          },
-          {
-            weight: "100 900",
-            style: "italic",
-            src: ["./src/assets/fonts/InterVariable-Italic.subset.woff2"],
-            featureSettings: '"cv02", "cv03", "cv04", "cv11", "ss01"',
-          },
-        ],
-      },
-    },
-    {
-      provider: fontProviders.google(),
-      name: "Google Sans Code",
-      cssVariable: "--font-google-sans-code",
-      weights: ["300 800"],
-      styles: ["normal", "italic"],
-    },
-    {
-      provider: fontProviders.google(),
-      name: "Libre Baskerville",
-      cssVariable: "--font-libre-baskerville",
-      weights: [400, 700],
+      weights: ["100 900"],
       styles: ["normal", "italic"],
     },
   ],

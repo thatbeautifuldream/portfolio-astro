@@ -41,7 +41,6 @@ privacyPoints:
   - "Transcripts are pasted straight into the frontmost app and are not stored by Murmur."
   - "Apple's Speech framework may process recognition requests according to Apple's own privacy policy; Murmur adds no server of its own."
 privacyHeadline: "Your voice stays on your Mac."
-privacyHeadlineHighlight: "on your Mac"
 privacyOverview: "Murmur is built privacy-first. Audio is captured by a local Swift speech daemon and transcribed on your Mac, and the transcript is pasted straight into the frontmost app and never stored. Murmur runs no server of its own. The one external dependency is Apple's Speech framework, which may handle recognition requests according to Apple's own privacy policy."
 privacyRetention: "Murmur does not persist transcripts. Audio is captured momentarily by the speech daemon to produce the transcript that is typed into whichever app is frontmost, and it is not written to disk by Murmur. Uninstalling Murmur removes the app and its bundled daemon immediately. There is no server-side copy to delete because Murmur does not run a server."
 dataCollected: "None. Murmur does not collect, transmit, or share any personal data, and runs no analytics. Audio is captured locally by the Swift speech daemon and the resulting transcript is typed into whichever app is frontmost. The speech daemon talks only to the desktop app over a loopback address."

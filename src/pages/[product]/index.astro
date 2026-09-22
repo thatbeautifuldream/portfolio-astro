@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import Layout from "../../layouts/Layout.astro";
-import Annotate from "../../components/Annotate.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import Carousel from "../../components/Carousel.astro";
 import DownloadButton from "../../components/DownloadButton.astro";
 import { absoluteUrl, siteConfig } from "../../lib/seo";
@@ -83,157 +83,110 @@ const jsonLd = [
   image={`/og/product/${product.id}.png`}
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-12">
-        <header class="grid gap-4">
-          <div class="text-muted-foreground flex items-center gap-2 text-sm">
-            <a href="/" class="no-underline">{siteConfig.shortName}</a>
-            <span aria-hidden="true">/</span>
-            <span class="text-foreground font-medium">{data.name}</span>
-          </div>
-          <h1
-            class="max-w-[20ch] font-serif text-4xl font-normal tracking-tight text-balance italic md:text-6xl"
-          >
-            {data.name}
-          </h1>
-          <p
-            class="text-foreground max-w-[44ch] text-xl font-medium tracking-tight text-pretty md:text-2xl"
-          >
-            <Annotate type="underline">{data.tagline}</Annotate>
-          </p>
-          <p
-            class="text-muted-foreground max-w-[60ch] text-base text-pretty md:text-lg"
-          >
-            {data.description}
-          </p>
-          <div class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            {
-              data.appStoreUrl && (
-                <a
-                  href={data.appStoreUrl}
-                  data-no-dialog
-                  class="bg-foreground text-background inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-semibold no-underline transition-opacity hover:opacity-90"
-                  data-cta="app-store"
-                >
-                  <Icon name="ri:apple-fill" class="size-4" />
-                  Download on the App Store
-                </a>
-              )
-            }
-            {
-              data.downloadRepo && (
-                <>
-                  <DownloadButton
-                    href={downloadPath}
-                    release={release}
-                    target={data.downloadTarget}
-                    cta="download"
-                  />
-                  {release?.prerelease && (
-                    <span class="ring-border/60 rounded-full px-2.5 py-1 text-xs font-medium tracking-wide uppercase ring-1">
-                      Pre-release
-                    </span>
-                  )}
-                </>
-              )
-            }
-            <a
-              href={supportPath}
-              class="font-medium no-underline"
-              data-cta="support"
-            >
-              Support
-            </a>
-            <span class="text-muted-foreground">
-              {data.pricing} · {data.platforms.join(" · ")}
-            </span>
-          </div>
-        </header>
-
+  <main class="stagger grid gap-12">
+    <div class="grid gap-4">
+      <PageHeader title={data.name} meta={data.tagline} />
+      <p class="text-pretty">{data.description}</p>
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
         {
-          data.screenshotUrls.length > 0 && (
-            <Carousel
-              slides={data.screenshotUrls.map((src) => ({
-                src,
-                alt: `${data.name} screenshot`,
-                width: data.screenshotSize.width,
-                height: data.screenshotSize.height,
-              }))}
+          data.appStoreUrl && (
+            <a
+              href={data.appStoreUrl}
+              data-no-dialog
+              class="inline-flex items-center gap-1.5"
+              data-cta="app-store"
+            >
+              <Icon name="ri:apple-fill" class="size-5 shrink-0 sm:size-4" />
+              Download on the App Store
+            </a>
+          )
+        }
+        {
+          data.downloadRepo && (
+            <DownloadButton
+              href={downloadPath}
+              release={release}
+              target={data.downloadTarget}
+              cta="download"
             />
           )
         }
-
-        {
-          data.features.length > 0 && (
-            <section class="grid gap-8">
-              <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
-                What it does
-              </h2>
-              <ul role="list" class="grid gap-6 sm:grid-cols-2">
-                {data.features.map((feature) => (
-                  <li class="border-border/60 grid gap-2 border-t pt-5">
-                    <h3 class="text-base font-semibold tracking-tight">
-                      {feature.title}
-                    </h3>
-                    <p class="text-muted-foreground text-sm text-pretty">
-                      {feature.description}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )
-        }
-
-        {
-          data.privacyPoints.length > 0 && (
-            <section class="grid gap-4">
-              <h2 class="max-w-[24ch] text-2xl font-semibold tracking-tight md:text-3xl">
-                Private by design
-              </h2>
-              <ul role="list" class="grid max-w-[60ch] gap-2.5">
-                {data.privacyPoints.map((point) => (
-                  <li class="text-muted-foreground before:text-muted-foreground/40 relative pl-5 text-base text-pretty before:absolute before:left-0 before:content-['•']">
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )
-        }
-
-        <div class="prose max-w-none overflow-x-hidden">
-          <Content />
-        </div>
-
-        <footer class="border-border/60 grid gap-4 border-t pt-8 text-sm">
-          <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {
-              data.downloadRepo && (
-                <a
-                  href={downloadPath}
-                  class="font-medium"
-                  data-cta="download-footer"
-                >
-                  {downloadLabel}
-                </a>
-              )
-            }
-            <a href={supportPath} class="font-medium" data-cta="support-footer">
-              Support and documentation
-            </a>
-            <a href="/" class="text-muted-foreground no-underline">
-              Back to {siteConfig.shortName}
-            </a>
-          </div>
-          <p class="text-muted-foreground text-pretty">
-            Built by {siteConfig.name}. {data.pricing}. No ads, no tracking, no
-            account.
-          </p>
-        </footer>
+        <a href={supportPath} data-cta="support">Support</a>
       </div>
-    </section>
+      <p class="text-faint">
+        {data.pricing} · {data.platforms.join(" · ")}
+        {release?.prerelease && " · Pre-release"}
+      </p>
+    </div>
+
+    {
+      data.screenshotUrls.length > 0 && (
+        <Carousel
+          slides={data.screenshotUrls.map((src) => ({
+            src,
+            alt: `${data.name} screenshot`,
+            width: data.screenshotSize.width,
+            height: data.screenshotSize.height,
+          }))}
+        />
+      )
+    }
+
+    {
+      data.features.length > 0 && (
+        <section class="grid gap-4">
+          <h2 class="section-title">What it does</h2>
+          <ul role="list" class="grid gap-6">
+            {data.features.map((feature) => (
+              <li class="grid gap-1">
+                <h3 class="font-semibold">{feature.title}</h3>
+                <p class="text-muted-foreground text-pretty">
+                  {feature.description}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      data.privacyPoints.length > 0 && (
+        <section class="grid gap-4">
+          <h2 class="section-title">Private by design</h2>
+          <div class="prose">
+            <ul>
+              {data.privacyPoints.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+
+    <div class="prose min-w-0">
+      <Content />
+    </div>
+
+    <footer class="grid gap-2">
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {
+          data.downloadRepo && (
+            <a href={downloadPath} data-cta="download-footer">
+              {downloadLabel}
+            </a>
+          )
+        }
+        <a href={supportPath} data-cta="support-footer">
+          Support and documentation
+        </a>
+      </div>
+      <p class="text-faint text-pretty">
+        Built by {siteConfig.name}. {data.pricing}. No ads, no tracking, no
+        account.
+      </p>
+    </footer>
   </main>
 </Layout>
 

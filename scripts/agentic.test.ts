@@ -24,7 +24,7 @@ test("homepage exposes semantic content without JavaScript", async () => {
 
   assert.match(html, /<h1\b/);
   assert.match(html, /<h2[^>]*>\s*Products\s*<\/h2>/);
-  assert.match(html, /Quick navigation/);
+  assert.match(html, /<h2[^>]*>\s*More\s*<\/h2>/);
   assert.ok(content.length >= 500);
 });
 

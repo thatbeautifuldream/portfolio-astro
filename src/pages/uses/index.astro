@@ -1,7 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import Annotate from "../../components/Annotate.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import IndexList from "../../components/IndexList.astro";
 import { hostname } from "../../data/portfolio";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 
@@ -42,53 +43,25 @@ const jsonLd = {
   description="The hardware, software, and services I use every day to build products."
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-12">
-        <div class="grid gap-4">
-          <p class="text-muted-foreground text-sm">Uses</p>
-          <h1
-            class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-          >
-            The <Annotate type="underline">tools I reach for</Annotate> every day.
-          </h1>
-          <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-            Hardware, software, and services that survived long enough to become
-            defaults. Each one links to why it stuck.
-          </p>
-        </div>
-
-        <div class="grid gap-12">
-          {
-            grouped.map(({ category, items: categoryItems }) => (
-              <section class="grid gap-4 sm:grid-cols-[140px_1fr] sm:gap-6">
-                <h2 class="text-muted-foreground pt-5 font-mono text-xs tracking-wide uppercase">
-                  {category}
-                </h2>
-                <div class="divide-border/40 border-border/40 grid divide-y border-t">
-                  {categoryItems.map((item) => (
-                    <article class="group grid gap-1.5 py-5">
-                      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <h3 class="text-base font-semibold tracking-tight sm:text-lg">
-                          <a href={`/uses/${item.id}`}>{item.data.title}</a>
-                        </h3>
-                        {item.data.url && (
-                          <p class="text-muted-foreground font-mono text-xs tracking-wide">
-                            {hostname(item.data.url)}
-                          </p>
-                        )}
-                      </div>
-                      <p class="text-muted-foreground max-w-[56ch] text-base text-pretty sm:text-sm">
-                        {item.data.description}
-                      </p>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))
-          }
-        </div>
-      </div>
-    </section>
+  <main class="stagger grid gap-12">
+    <article class="grid gap-4">
+      <PageHeader title="Uses" meta="The tools I reach for every day." />
+      <p class="text-pretty">
+        Hardware, software, and services that survived long enough to become
+        defaults. Each one links to why it stuck.
+      </p>
+    </article>
+    {
+      grouped.map(({ category, items: categoryItems }) => (
+        <IndexList
+          title={category}
+          items={categoryItems.map((item) => ({
+            href: `/uses/${item.id}`,
+            title: item.data.title,
+            meta: item.data.url ? hostname(item.data.url) : undefined,
+          }))}
+        />
+      ))
+    }
   </main>
 </Layout>

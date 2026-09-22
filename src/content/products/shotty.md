@@ -49,7 +49,6 @@ privacyPoints:
   - "No analytics, no tracking, no account."
   - "Shotty only reads the screenshots you let it see."
 privacyHeadline: "Your screenshots stay on your device."
-privacyHeadlineHighlight: "on your device"
 privacyOverview: "Shotty is built privacy-first. Everything the app does, reading screenshots, recognizing text, suggesting tags, storing the index, happens locally on your device."
 privacyRetention: "The index Shotty builds lives only on your device, inside the app's local SwiftData store. Deleting a screenshot from inside Shotty or from Photos removes it from the index. Uninstalling Shotty deletes the entire index immediately. There is no server-side copy to delete because nothing was ever uploaded."
 dataCollected: "None. Shotty does not collect, transmit, or share any personal data. There is no server, no cloud, no account, no API, and no analytics. Your screenshots and the index built from them never leave your device."

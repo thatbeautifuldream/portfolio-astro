@@ -1,13 +1,10 @@
 ---
-import { Image } from "astro:assets";
+import { execSync } from "node:child_process";
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
-import FullSign from "../components/FullSign.astro";
-import Annotate from "../components/Annotate.astro";
-import IframeDialog from "../components/IframeDialog.astro";
-import EmailLink from "../components/EmailLink.astro";
-import { siteLinks, heroStats } from "../data/portfolio";
+import PageHeader from "../components/PageHeader.astro";
+import IndexList from "../components/IndexList.astro";
+import { contactEmail, roles, siteLinks, talks } from "../data/portfolio";
 import {
   buildOrganizationSchema,
   buildPersonSchema,
@@ -15,14 +12,30 @@ import {
   buildWebsiteSchema,
   siteConfig,
 } from "../lib/seo";
-import wavingHand from "../assets/emojis/waving-hand.webp";
-import merlin from "../assets/emojis/merlin.webp";
 
 // Products are sourced from the same collection that powers /shotty and
 // /murmur, so the homepage list never drifts from the product pages.
 const products = (await getCollection("products")).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const gists = await getCollection("gists");
+
+let updated = new Date();
+try {
+  updated = new Date(execSync("git log -1 --format=%cI").toString().trim());
+} catch {}
+
+const dayMonth = (date: Date) =>
+  date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" });
+const years = (period: string) => {
+  const [from, to] = period.split(" to ");
+  const start = from!.slice(-4);
+  const end = to === "present" ? "now" : to!.slice(-4);
+  return start === end ? start : `${start} – ${end}`;
+};
 
 // Homepage uses the ProfilePage + Person + WebSite trio — Google's
 // recommended combo for personal sites, which drives the Knowledge Panel
@@ -40,186 +53,103 @@ const jsonLd = [
   description={siteConfig.description}
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-16">
-        <div class="grid gap-12">
-          <div class="grid gap-4">
-            <div class="grid gap-6">
-              <p class="text-muted-foreground text-sm">
-                {siteConfig.location.city}, {siteConfig.location.country}.
-                Product engineer.
-              </p>
-              <h1
-                class="max-w-[22ch] text-4xl leading-[1.25] font-semibold tracking-tight text-balance select-none md:text-6xl md:leading-[1.2]"
-              >
-                <span class="text-muted-foreground">Hi,</span>
-                <Image
-                  src={wavingHand}
-                  alt="Waving hand"
-                  width="96"
-                  height="96"
-                  quality={60}
-                  class="inline-block size-[0.74em] align-baseline"
-                />
-                <span class="text-muted-foreground">I'm</span>
-                <span class="text-foreground">Milind.</span>
-                <span class="text-muted-foreground">I'm a</span>
-                <span class="text-foreground">Product Engineer</span>
-                <span class="text-muted-foreground">at</span>
-                <Image
-                  src={merlin}
-                  alt="Merlin AI"
-                  width="128"
-                  height="128"
-                  class="ring-border/70 inline-block size-[0.74em] cursor-pointer rounded-[0.2em] object-cover align-baseline ring-1 transition-transform duration-300 ease-out hover:-rotate-[15deg] dark:ring-white/10"
-                />
-                <span class="text-foreground">Merlin AI.</span>
-              </h1>
-              <p
-                class="text-muted-foreground max-w-[52ch] text-base text-pretty md:text-lg"
-              >
-                Working across the browser agent extension and Merlin's chat
-                interface, where ambient AI meets everyday workflows.
-              </p>
-              <p
-                class="text-muted-foreground max-w-[52ch] text-base text-pretty md:text-lg"
-              >
-                Always happy to talk shop with people building thoughtful
-                products.
-              </p>
-              <EmailLink
-                class="mt-2"
-                emailClass="text-2xl sm:text-3xl md:text-4xl"
-              />
-            </div>
-          </div>
+  <main class="stagger grid gap-12">
+    <article class="grid gap-4">
+      <PageHeader
+        title={siteConfig.name}
+        meta={`Updated ${updated.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
+      />
+      <p class="text-pretty">
+        I live in {siteConfig.location.city}, {siteConfig.location.country}, and
+        work as a product engineer at <a
+          href="https://www.getmerlin.in/chat"
+          target="_blank"
+          rel="noopener noreferrer">Merlin AI</a
+        >, across the browser agent extension and Merlin's chat interface, where
+        ambient AI meets everyday workflows.
+      </p>
+      <p class="text-pretty">
+        I'm moving toward design engineering, where craft and code meet at the
+        surface. I build agentic flows, design systems, and interaction-heavy
+        surfaces, and I'm sharpening my design intuition through close study of
+        the people and work I admire.
+      </p>
+      <p class="text-pretty">
+        So far that's meant products used by 2m+ people, five of them shipped
+        from 0 to 1, and a few <a href="/talks">talks</a> at React communities.
+      </p>
+      <p class="text-pretty">
+        You can find me on <a
+          href={siteLinks.github.href}
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >, <a
+          href={siteLinks.linkedin.href}
+          target="_blank"
+          rel="noopener noreferrer">LinkedIn</a
+        > and <a
+          href={siteLinks.x.href}
+          target="_blank"
+          rel="noopener noreferrer">X</a
+        >, read my <a href={siteLinks.resume.pdf}>résumé</a>, <a
+          href="https://cal.com/milind/15min">book 15 minutes</a
+        >, or reach me via <a href={`mailto:${contactEmail}`}>email</a>.
+      </p>
+    </article>
 
-          <div class="grid gap-3">
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <IframeDialog
-                id="book"
-                label="Book 15 minutes"
-                title="Book 15 minutes"
-                src="https://cal.com/milind/15min"
-                triggerClass="font-medium"
-              />
-              <IframeDialog
-                id="resume"
-                label={siteLinks.resume.label}
-                title="Milind's Resume"
-                src={siteLinks.resume.pdf}
-              />
-              <a href="/blog">Read the blog</a>
-            </div>
-          </div>
+    <IndexList
+      title="Writing"
+      items={posts.map((post) => ({
+        href: `/blog/${post.id}`,
+        title: post.data.title,
+        meta: dayMonth(post.data.date),
+        group: String(post.data.date.getFullYear()),
+      }))}
+    />
 
-          <div class="grid gap-10">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-              <h2 class="text-muted-foreground text-sm font-medium">
-                Products
-              </h2>
-            </div>
+    <IndexList
+      title="Products"
+      items={products.map((product) => ({
+        href: `/${product.id}`,
+        title: product.data.name,
+        meta: product.data.platforms.join(" · "),
+        attrs: {
+          "data-product-id": product.id,
+          "data-product-name": product.data.name,
+        },
+      }))}
+    />
 
-            <ul role="list" class="divide-border/40 grid divide-y">
-              {
-                products.map((product) => (
-                  <li class="py-8 first:pt-0 last:pb-0">
-                    <a
-                      href={`/${product.id}`}
-                      class="group grid gap-2 no-underline"
-                      data-product-id={product.id}
-                      data-product-name={product.data.name}
-                    >
-                      <h2 class="text-foreground font-serif text-xl font-normal tracking-tight italic sm:text-2xl">
-                        {product.data.name}
-                      </h2>
-                      <p class="text-muted-foreground max-w-[56ch] text-sm text-pretty sm:text-base">
-                        {product.data.tagline}
-                      </p>
-                      <span class="text-muted-foreground group-hover:text-foreground mt-1 inline-flex items-center gap-1 font-mono text-xs transition-colors">
-                        {product.data.platforms.join(" · ")}
-                        <Icon name="ri:arrow-right-line" class="size-3.5" />
-                      </span>
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
+    <IndexList
+      title="Work"
+      items={roles.map((role) => ({
+        href: "/work",
+        title: role.company,
+        meta: years(role.period),
+      }))}
+    />
 
-          <div class="md:divide-border/40 md:grid md:grid-cols-3 md:divide-x">
-            {
-              heroStats.map((stat, index) => (
-                <div
-                  class:list={[
-                    "grid gap-1 py-6 md:py-0",
-                    index === 0
-                      ? "md:pr-6"
-                      : index === heroStats.length - 1
-                        ? "md:pl-6"
-                        : "md:px-6",
-                  ]}
-                >
-                  <p class="text-4xl font-semibold tracking-tight tabular-nums">
-                    {stat.value}
-                  </p>
-                  <p class="text-muted-foreground text-sm text-pretty">
-                    {stat.label}
-                  </p>
-                </div>
-              ))
-            }
-          </div>
-        </div>
+    <IndexList
+      title="Talks"
+      items={talks.map((talk) => ({
+        href: talk.href,
+        title: talk.title,
+        meta: talk.date.slice(-4),
+        external: true,
+      }))}
+    />
 
-        <div class="grid gap-4">
-          <div class="grid gap-8">
-            <div class="grid gap-4">
-              <p class="text-muted-foreground text-sm">Where I'm headed</p>
-              <h2
-                class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-4xl"
-              >
-                Toward design engineering, where <Annotate type="underline"
-                  >craft and code</Annotate
-                > meet at the surface.
-              </h2>
-              <p
-                class="text-muted-foreground max-w-[56ch] text-base text-pretty"
-              >
-                I started as a product engineer who kept caring too much about
-                how things looked and moved. Now I'm making that the focus. I
-                build agentic flows, design systems, and interaction-heavy
-                surfaces, and I'm sharpening my design intuition through close
-                study of the people and work I admire, with AI accelerating how
-                fast I can ship polished work.
-              </p>
-              <FullSign class="h-12 w-auto sm:h-14" />
-            </div>
-
-            <div class="grid gap-4 text-sm">
-              <h2 class="text-muted-foreground text-sm font-medium">
-                Quick navigation
-              </h2>
-              <a href="/work" class="font-medium" data-nav-label="work"
-                >View my work experience</a
-              >
-              <a href="/talks" data-nav-label="talks">See my talks</a>
-              <a href="/blog" data-nav-label="blog">Read my blog</a>
-              <a href="/docs" data-nav-label="docs">API documentation</a>
-              <a href="/openapi.json" data-nav-label="openapi"
-                >OpenAPI contract</a
-              >
-              <a href="/api/v1/profile.json" data-nav-label="profile-api"
-                >Profile JSON API</a
-              >
-              <a href="/llms.txt" data-nav-label="llms">Agent context</a>
-              <a href="/contact" data-nav-label="contact">Get in touch</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <IndexList
+      title="More"
+      items={[
+        { href: "/gist", title: "Gists", meta: `${gists.length} snippets` },
+        { href: "/uses", title: "Uses", meta: "Tools I rely on" },
+        { href: "/about", title: "About", meta: "The longer version" },
+        { href: "/contact", title: "Contact", meta: "Say hello" },
+        { href: "/docs", title: "API", meta: "OpenAPI docs" },
+        { href: "/llms.txt", title: "Agent context", meta: "llms.txt" },
+      ]}
+    />
   </main>
 </Layout>
 
@@ -229,14 +159,6 @@ const jsonLd = [
       window.posthog?.capture("product_clicked", {
         product_id: link.dataset.productId,
         product_name: link.dataset.productName,
-      });
-    });
-  });
-
-  document.querySelectorAll("#quick-nav [data-nav-label]").forEach((link) => {
-    link.addEventListener("click", () => {
-      window.posthog?.capture("quick_nav_link_clicked", {
-        destination: link.dataset.navLabel,
       });
     });
   });

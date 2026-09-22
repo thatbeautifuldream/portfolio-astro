@@ -1,5 +1,4 @@
 export const siteLinks = {
-  primaryCta: { href: "/contact#book", label: "Book time" },
   resume: {
     href: "/resume",
     label: "View resume",
@@ -12,12 +11,6 @@ export const siteLinks = {
   },
   x: { href: "https://x.com/milindmishra_", label: "X/Twitter" },
 };
-
-export const heroStats = [
-  { label: "users across shipped products", value: "2m+" },
-  { label: "products shipped from 0→1", value: "5+" },
-  { label: "talks at React communities", value: "4*" },
-];
 
 export const roles = [
   {
@@ -235,16 +228,6 @@ export const contactLinks = [
     href: "https://x.com/milindmishra_",
     copy: "Thoughts, links, and occasional product or interface observations.",
   },
-];
-
-export const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/work", label: "Work" },
-  { href: "/talks", label: "Talks" },
-  { href: "/blog", label: "Blog" },
-  { href: "/gist", label: "Gist" },
-  { href: "/uses", label: "Uses" },
-  { href: "/contact", label: "Contact" },
 ];
 
 // Derived from the central identity config so the contact email stays in

@@ -48,7 +48,6 @@ privacyPoints:
   - "Pinned apps are stored in a local database."
   - "No runtime permissions are requested."
 privacyHeadline: "Your home screen stays on your phone."
-privacyHeadlineHighlight: "on your phone"
 privacyOverview: "Intent reads your installed apps from Android and keeps your pinned apps in a local database. There is no server, no account, and no analytics, and the app requests no runtime permissions."
 privacyRetention: "The only thing Intent stores is your pin order, in a local database inside the app's private storage. Uninstalling Intent deletes it. There is no server-side copy because nothing is uploaded."
 dataCollected: "None. Intent collects, transmits, and shares nothing. The app list is read locally to draw the home screen, and your pin order is written to a local database."

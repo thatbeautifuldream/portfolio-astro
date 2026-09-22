@@ -1,29 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import IndexList from "../components/IndexList.astro";
 ---
 
 <Layout title="Not found" description="This page could not be found.">
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid gap-6">
-        <p
-          class="text-muted-foreground font-mono text-sm tracking-wide uppercase"
-        >
-          404
-        </p>
-        <h1
-          class="max-w-[24ch] font-serif text-3xl font-normal tracking-tight text-balance italic md:text-5xl"
-        >
-          This page wandered off.
-        </h1>
-        <p class="text-muted-foreground max-w-[52ch] text-base text-pretty">
-          The page you're looking for doesn't exist or has moved. Let's get you
-          back on track.
-        </p>
-        <div class="grid gap-3 text-sm">
-          <h2 class="text-lg font-semibold">Agent recovery links</h2>
-          <pre
-            class="bg-muted overflow-x-auto rounded-lg p-4 text-xs"><code># Not found
+  <main class="stagger grid gap-12">
+    <article class="grid gap-4">
+      <PageHeader title="This page wandered off." meta="404" />
+      <p class="text-pretty">
+        The page you're looking for doesn't exist or has moved. Let's get you
+        back on track.
+      </p>
+    </article>
+    <section class="grid min-w-0 gap-4">
+      <h2 class="section-title">Agent recovery links</h2>
+      <div class="prose min-w-0">
+        <pre><code># Not found
 
 Try the homepage, sitemap, Markdown content, or API docs:
 
@@ -31,13 +24,15 @@ Try the homepage, sitemap, Markdown content, or API docs:
 - [Sitemap](/sitemap-index.xml)
 - [Machine-readable context](/llms.txt)
 - [API documentation](/docs)</code></pre>
-        </div>
-        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <a href="/" class="font-medium">Back home</a>
-          <a href="/blog">Read the blog</a>
-          <a href="/docs">API documentation</a>
-        </div>
       </div>
     </section>
+    <IndexList
+      title="Go somewhere"
+      items={[
+        { href: "/", title: "Home" },
+        { href: "/blog", title: "Read the blog" },
+        { href: "/docs", title: "API documentation" },
+      ]}
+    />
   </main>
 </Layout>

@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
-import { Icon } from "astro-icon/components";
 import Layout from "../../layouts/Layout.astro";
 import CodeCopy from "../../components/CodeCopy.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import { absoluteUrl, buildPersonRef } from "../../lib/seo";
 
 export async function getStaticPaths() {
@@ -22,7 +22,7 @@ const tag = gist.data.tags?.split(",")[0]?.trim() ?? "Gist";
 function formatDate(date: Date): string {
   return date.toLocaleDateString("en-US", {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
   });
 }
@@ -45,45 +45,30 @@ const jsonLd = {
   image={`/og/gist/${gist.id}.png`}
   jsonLd={jsonLd}
 >
-  <main class="isolate">
-    <section class="section-shell">
-      <div class="section-inner grid min-w-0 gap-12">
-        <article class="grid min-w-0 gap-8">
-          <header class="grid gap-2">
-            <p
-              class="text-muted-foreground font-mono text-sm tracking-wide uppercase"
-            >
-              {tag} · {formatDate(date)}
+  <main>
+    <article class="stagger grid min-w-0 gap-8">
+      <PageHeader
+        title={gist.data.title}
+        meta={`${tag} · ${formatDate(date)}`}
+      />
+      <div class="grid gap-4">
+        {
+          gist.data.description && (
+            <p class="text-muted-foreground text-pretty">
+              {gist.data.description}
             </p>
-            <h1
-              class="max-w-[24ch] text-3xl font-semibold tracking-tight text-pretty md:text-5xl"
-            >
-              {gist.data.title}
-            </h1>
-            {
-              gist.data.description && (
-                <p class="text-muted-foreground max-w-[56ch] text-base text-pretty">
-                  {gist.data.description}
-                </p>
-              )
-            }
-            <a
-              href={gist.data.gistUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-muted-foreground hover:text-foreground mt-2 inline-flex w-fit items-center gap-1 text-sm"
-            >
-              View on GitHub
-              <Icon name="ri:arrow-right-up-line" class="size-4" />
-            </a>
-          </header>
-
-          <div class="prose max-w-none overflow-x-hidden">
-            <Content />
-          </div>
-        </article>
+          )
+        }
+        <p>
+          <a href={gist.data.gistUrl} target="_blank" rel="noopener noreferrer"
+            >View on GitHub</a
+          >
+        </p>
       </div>
-    </section>
+      <div class="prose min-w-0">
+        <Content />
+      </div>
+    </article>
   </main>
   <CodeCopy />
 </Layout>
