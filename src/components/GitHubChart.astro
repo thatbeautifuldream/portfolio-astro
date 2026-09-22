@@ -1,0 +1,92 @@
+---
+import { siteLinks } from "../data/portfolio";
+
+const username = siteLinks.github.href.split("/").pop();
+const opacity = [
+  "fill-foreground/6",
+  "fill-foreground/25",
+  "fill-foreground/45",
+  "fill-foreground/70",
+  "fill-foreground",
+];
+
+type Day = { date: string; level: number; label: string };
+let weeks: Day[][] = [];
+let total = "";
+
+// A failed fetch drops the chart rather than failing the build.
+try {
+  const html = await (
+    await fetch(`https://github.com/users/${username}/contributions`)
+  ).text();
+  const labels = new Map(
+    [
+      ...html.matchAll(
+        /for="(contribution-day-component-\d+-\d+)"[^>]*>([^<]+)/g,
+      ),
+    ].map(([, id, text]) => [id, text.trim()]),
+  );
+  for (const [td] of html.matchAll(/<td[^>]*ContributionCalendar-day[^>]*>/g)) {
+    const [, row, col] = td.match(/contribution-day-component-(\d+)-(\d+)/)!;
+    (weeks[+col] ??= [])[+row] = {
+      date: td.match(/data-date="([^"]+)"/)![1]!,
+      level: Number(td.match(/data-level="(\d)"/)![1]),
+      label: labels.get(`contribution-day-component-${row}-${col}`) ?? "",
+    };
+  }
+  total =
+    html
+      .replace(/\s+/g, " ")
+      .match(/([\d,]+) contributions? in the last year/)?.[1] ?? "";
+} catch {
+  weeks = [];
+}
+
+const cell = 10;
+const gap = 3;
+const width = weeks.length * (cell + gap) - gap;
+const height = 7 * (cell + gap) - gap;
+---
+
+{
+  weeks.length > 0 && (
+    <section class="grid min-w-0 gap-4">
+      <h2 class="section-title">GitHub</h2>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        class="h-auto w-full"
+        role="img"
+        aria-label={`${total} contributions in the last year`}
+      >
+        {weeks.map((week, col) =>
+          week.map(
+            (day, row) =>
+              day && (
+                <rect
+                  x={col * (cell + gap)}
+                  y={row * (cell + gap)}
+                  width={cell}
+                  height={cell}
+                  rx="2"
+                  class={opacity[day.level]}
+                >
+                  <title>{day.label || day.date}</title>
+                </rect>
+              ),
+          ),
+        )}
+      </svg>
+      <p class="text-faint flex items-center justify-between gap-4">
+        <span class="tabular-nums">{total} contributions in the last year</span>
+        <a
+          href={siteLinks.github.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-foreground no-underline"
+        >
+          @{username}
+        </a>
+      </p>
+    </section>
+  )
+}
