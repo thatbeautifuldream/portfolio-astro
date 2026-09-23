@@ -140,8 +140,11 @@ const jsonLd = {
     <section class="grid gap-4">
       <h2 class="section-title">Children's privacy</h2>
       <p class="text-pretty">
-        {data.name} does not collect any data from anyone, including children. There
-        are no accounts, no sign-up flows, and no age-gated features.
+        {
+          data.analytics
+            ? `${data.name} is not directed at children and does not knowingly collect personal data from anyone under 13. There are no accounts, no sign-up flows, and no age-gated features.`
+            : `${data.name} does not collect any data from anyone, including children. There are no accounts, no sign-up flows, and no age-gated features.`
+        }
       </p>
     </section>
 

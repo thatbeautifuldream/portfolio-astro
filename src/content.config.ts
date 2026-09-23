@@ -41,6 +41,8 @@ const products = defineCollection({
       pricing: z.string().default("Free"),
       platforms: z.array(z.string()).default([]),
       appStoreUrl: z.string().optional(),
+      websiteUrl: z.string().optional(),
+      analytics: z.boolean().default(false),
       /**
        * GitHub "owner/repo" for products distributed as native downloads.
        * When set, the product page shows a download button and a

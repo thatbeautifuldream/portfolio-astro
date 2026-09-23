@@ -47,6 +47,7 @@ const jsonLd = [
       price: "0",
       priceCurrency: "USD",
     },
+    ...(data.websiteUrl ? { sameAs: data.websiteUrl } : {}),
     ...(data.appStoreUrl
       ? { downloadUrl: data.appStoreUrl }
       : release?.assetUrl
@@ -88,6 +89,22 @@ const jsonLd = [
       <PageHeader title={data.name} meta={data.tagline} />
       <p class="text-pretty">{data.description}</p>
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {
+          data.websiteUrl && (
+            <a
+              href={data.websiteUrl}
+              data-no-dialog
+              class="inline-flex items-center gap-1.5"
+              data-cta="website"
+            >
+              Open {data.name}
+              <Icon
+                name="ri:arrow-right-up-line"
+                class="size-5 shrink-0 sm:size-4"
+              />
+            </a>
+          )
+        }
         {
           data.appStoreUrl && (
             <a
@@ -172,6 +189,13 @@ const jsonLd = [
     <footer class="grid gap-2">
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
         {
+          data.websiteUrl && (
+            <a href={data.websiteUrl} data-no-dialog data-cta="website-footer">
+              Open {data.name}
+            </a>
+          )
+        }
+        {
           data.downloadRepo && (
             <a href={downloadPath} data-cta="download-footer">
               {downloadLabel}
@@ -183,8 +207,8 @@ const jsonLd = [
         </a>
       </div>
       <p class="text-faint text-pretty">
-        Built by {siteConfig.name}. {data.pricing}. No ads, no tracking, no
-        account.
+        Built by {siteConfig.name}. {data.pricing}. No ads,
+        {data.analytics ? " no account." : " no tracking, no account."}
       </p>
     </footer>
   </main>
