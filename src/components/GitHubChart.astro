@@ -1,7 +1,6 @@
 ---
 import { siteLinks } from "../data/portfolio";
 
-const username = siteLinks.github.href.split("/").pop();
 const opacity = [
   "fill-foreground/6",
   "fill-foreground/25",
@@ -10,15 +9,20 @@ const opacity = [
   "fill-foreground",
 ];
 
-type Day = { date: string; level: number; label: string };
-let weeks: Day[][] = [];
-let total = "";
+type Day = { date: string; count: number; when: string };
 
-// A failed fetch drops the chart rather than failing the build.
-try {
-  const html = await (
-    await fetch(`https://github.com/users/${username}/contributions`)
-  ).text();
+const handles = [siteLinks.github.href, "https://github.com/milind-foyer"];
+const days = new Map<string, Day & { row: number; col: number }>();
+let total = 0;
+
+// A failed fetch leaves that account out rather than failing the build.
+for (const html of await Promise.all(
+  handles.map((href) =>
+    fetch(`https://github.com/users/${href.split("/").pop()}/contributions`)
+      .then((res) => res.text())
+      .catch(() => ""),
+  ),
+)) {
   const labels = new Map(
     [
       ...html.matchAll(
@@ -27,24 +31,46 @@ try {
     ].map(([, id, text]) => [id, text.trim()]),
   );
   for (const [td] of html.matchAll(/<td[^>]*ContributionCalendar-day[^>]*>/g)) {
-    const [, row, col] = td.match(/contribution-day-component-(\d+)-(\d+)/)!;
-    (weeks[+col] ??= [])[+row] = {
-      date: td.match(/data-date="([^"]+)"/)![1]!,
-      level: Number(td.match(/data-level="(\d)"/)![1]),
-      label: labels.get(`contribution-day-component-${row}-${col}`) ?? "",
+    const [id, row, col] = td.match(/contribution-day-component-(\d+)-(\d+)/)!;
+    const date = td.match(/data-date="([^"]+)"/)![1]!;
+    const [, count = "", when = ""] =
+      labels.get(id)?.match(/^(\S+) contributions? (.*)$/) ?? [];
+    const day = days.get(date) ?? {
+      date,
+      count: 0,
+      when,
+      row: +row!,
+      col: +col!,
     };
+    day.count += Number(count.replace(/,/g, "")) || 0;
+    days.set(date, day);
   }
-  total =
+  total += Number(
     html
       .replace(/\s+/g, " ")
-      .match(/([\d,]+) contributions? in the last year/)?.[1] ?? "";
-} catch {
-  weeks = [];
+      .match(/([\d,]+) contributions? in the last year/)?.[1]
+      ?.replace(/,/g, "") ?? 0,
+  );
+}
+
+// GitHub-style levels: quartiles of the non-zero days.
+const sorted = [...days.values()]
+  .map((day) => day.count)
+  .filter(Boolean)
+  .sort((a, b) => a - b);
+const quartiles = [0.25, 0.5, 0.75].map(
+  (q) => sorted[Math.floor(q * (sorted.length - 1))]!,
+);
+const level = (count: number) =>
+  count && 1 + quartiles.filter((q) => count > q).length;
+
+const weeks: Day[][] = [];
+for (const { row, col, ...day } of days.values()) {
+  (weeks[col] ??= [])[row] = day;
 }
 
 const cell = 10;
 const gap = 3;
-const width = weeks.length * (cell + gap) - gap;
 const height = 7 * (cell + gap) - gap;
 ---
 
@@ -54,10 +80,10 @@ const height = 7 * (cell + gap) - gap;
       <h2 class="section-title">GitHub</h2>
       <div class="flex justify-end overflow-hidden @max-[33.75rem]:[mask-image:linear-gradient(to_right,transparent,black_3rem)]">
         <svg
-          viewBox={`0 0 ${width} ${height}`}
+          viewBox={`0 0 ${weeks.length * (cell + gap) - gap} ${height}`}
           class="h-auto w-full min-w-135 shrink-0"
           role="img"
-          aria-label={`${total} contributions in the last year`}
+          aria-label={`${total.toLocaleString("en-US")} contributions in the last year across personal and work accounts`}
         >
           {weeks.map((week, col) =>
             week.map(
@@ -69,25 +95,33 @@ const height = 7 * (cell + gap) - gap;
                     width={cell}
                     height={cell}
                     rx="2"
-                    class={opacity[day.level]}
+                    class={opacity[level(day.count)]}
                   >
-                    <title>{day.label || day.date}</title>
+                    <title>
+                      {`${day.count || "No"} contribution${day.count === 1 ? "" : "s"} ${day.when}`}
+                    </title>
                   </rect>
                 ),
             ),
           )}
         </svg>
       </div>
-      <p class="text-faint flex items-center justify-between gap-4">
-        <span class="tabular-nums">{total} contributions in the last year</span>
-        <a
-          href={siteLinks.github.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hover:text-foreground no-underline @max-[30rem]:hidden"
-        >
-          @{username}
-        </a>
+      <p class="text-faint flex items-baseline justify-between gap-4">
+        <span class="tabular-nums">
+          {total.toLocaleString("en-US")} contributions in the last year
+        </span>
+        <span class="flex shrink-0 gap-3 max-sm:hidden">
+          {handles.map((href) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-foreground no-underline"
+            >
+              @{href.split("/").pop()}
+            </a>
+          ))}
+        </span>
       </p>
     </section>
   )
