@@ -9,7 +9,7 @@ const opacity = [
   "fill-foreground",
 ];
 
-type Day = { date: string; count: number; when: string };
+type Day = { date: string; count: number };
 
 const handles = [siteLinks.github.href, "https://github.com/milind-foyer"];
 const days = new Map<string, Day & { row: number; col: number }>();
@@ -33,15 +33,8 @@ for (const html of await Promise.all(
   for (const [td] of html.matchAll(/<td[^>]*ContributionCalendar-day[^>]*>/g)) {
     const [id, row, col] = td.match(/contribution-day-component-(\d+)-(\d+)/)!;
     const date = td.match(/data-date="([^"]+)"/)![1]!;
-    const [, count = "", when = ""] =
-      labels.get(id)?.match(/^(\S+) contributions? (.*)$/) ?? [];
-    const day = days.get(date) ?? {
-      date,
-      count: 0,
-      when,
-      row: +row!,
-      col: +col!,
-    };
+    const count = labels.get(id)?.match(/^\S+/)?.[0] ?? "";
+    const day = days.get(date) ?? { date, count: 0, row: +row!, col: +col! };
     day.count += Number(count.replace(/,/g, "")) || 0;
     days.set(date, day);
   }
@@ -69,6 +62,14 @@ for (const { row, col, ...day } of days.values()) {
   (weeks[col] ??= [])[row] = day;
 }
 
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
 const cell = 10;
 const gap = 3;
 const height = 7 * (cell + gap) - gap;
@@ -78,33 +79,43 @@ const height = 7 * (cell + gap) - gap;
   weeks.length > 0 && (
     <section class="@container grid min-w-0 gap-4">
       <h2 class="section-title">GitHub</h2>
-      <div class="flex justify-end overflow-hidden @max-[33.75rem]:[mask-image:linear-gradient(to_right,transparent,black_3rem)]">
-        <svg
-          viewBox={`0 0 ${weeks.length * (cell + gap) - gap} ${height}`}
-          class="h-auto w-full min-w-135 shrink-0"
-          role="img"
-          aria-label={`${total.toLocaleString("en-US")} contributions in the last year across personal and work accounts`}
+      <div class="gh-chart relative">
+        <div class="flex justify-end overflow-hidden @max-[33.75rem]:[mask-image:linear-gradient(to_right,transparent,black_3rem)]">
+          <svg
+            viewBox={`0 0 ${weeks.length * (cell + gap) - gap} ${height}`}
+            class="h-auto w-full min-w-135 shrink-0"
+            role="img"
+            aria-label={`${total.toLocaleString("en-US")} contributions in the last year across personal and work accounts`}
+          >
+            {weeks.map((week, col) =>
+              week.map(
+                (day, row) =>
+                  day && (
+                    <rect
+                      x={col * (cell + gap)}
+                      y={row * (cell + gap)}
+                      width={cell}
+                      height={cell}
+                      rx="2"
+                      class={opacity[level(day.count)]}
+                      data-count={`${day.count ? day.count.toLocaleString("en-US") : "No"} contribution${day.count === 1 ? "" : "s"}`}
+                      data-date={formatDate(day.date)}
+                    />
+                  ),
+              ),
+            )}
+          </svg>
+        </div>
+        <div
+          class="gh-tip bg-foreground text-background pointer-events-none absolute top-0 left-0 overflow-hidden rounded-md px-2 py-1 text-sm whitespace-nowrap"
+          aria-hidden="true"
+          data-show="false"
         >
-          {weeks.map((week, col) =>
-            week.map(
-              (day, row) =>
-                day && (
-                  <rect
-                    x={col * (cell + gap)}
-                    y={row * (cell + gap)}
-                    width={cell}
-                    height={cell}
-                    rx="2"
-                    class={opacity[level(day.count)]}
-                  >
-                    <title>
-                      {`${day.count || "No"} contribution${day.count === 1 ? "" : "s"} ${day.when}`}
-                    </title>
-                  </rect>
-                ),
-            ),
-          )}
-        </svg>
+          <span class="gh-tip-inner flex w-max items-baseline gap-1">
+            <span class="gh-tip-count font-medium tabular-nums" />
+            <span class="gh-tip-date tabular-nums opacity-60" />
+          </span>
+        </div>
       </div>
       <p class="text-faint flex items-baseline justify-between gap-4">
         <span class="tabular-nums">
@@ -126,3 +137,101 @@ const height = 7 * (cell + gap) - gap;
     </section>
   )
 }
+
+<style>
+  .gh-tip {
+    translate: var(--tip-x, 0px) var(--tip-y, 0px);
+    scale: 0.96;
+    transform-origin: var(--tip-origin, 50%) 100%;
+    opacity: 0;
+    filter: blur(2px);
+    transition:
+      opacity 60ms ease-out,
+      scale 60ms ease-out,
+      filter 60ms ease-out,
+      translate 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gh-tip[data-show="true"] {
+    opacity: 1;
+    scale: 1;
+    filter: blur(0);
+    transition:
+      opacity 140ms ease-out,
+      scale 140ms cubic-bezier(0.34, 1.36, 0.64, 1),
+      filter 140ms ease-out,
+      translate 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gh-chart rect {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: scale 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gh-chart rect.is-active {
+    scale: 1.35;
+    transition-duration: 80ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gh-tip,
+    .gh-chart rect {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll(".gh-chart").forEach((chart) => {
+    const svg = chart.querySelector("svg");
+    const tip = chart.querySelector(".gh-tip");
+    const count = tip.querySelector(".gh-tip-count");
+    const date = tip.querySelector(".gh-tip-date");
+    const inner = tip.querySelector(".gh-tip-inner");
+    let active;
+
+    const hide = () => {
+      tip.dataset.show = "false";
+      active?.classList.remove("is-active");
+      active = undefined;
+    };
+
+    svg.addEventListener("pointerover", (event) => {
+      const rect = event.target.closest("rect");
+      if (!rect || rect === active) return;
+      active?.classList.remove("is-active");
+      active = rect;
+      rect.classList.add("is-active");
+
+      count.textContent = rect.dataset.count;
+      date.textContent = rect.dataset.date;
+      const style = getComputedStyle(tip);
+      const width = Math.ceil(
+        inner.offsetWidth +
+          parseFloat(style.paddingLeft) +
+          parseFloat(style.paddingRight),
+      );
+      const bounds = chart.getBoundingClientRect();
+      const cell = rect.getBoundingClientRect();
+      const center = cell.left - bounds.left + cell.width / 2;
+      const x = Math.min(Math.max(center - width / 2, 0), bounds.width - width);
+      const y = cell.top - bounds.top - tip.offsetHeight - 8;
+
+      const place = () => {
+        tip.style.width = `${width}px`;
+        tip.style.setProperty("--tip-x", `${x}px`);
+        tip.style.setProperty("--tip-y", `${y}px`);
+        tip.style.setProperty("--tip-origin", `${center - x}px`);
+      };
+      if (tip.dataset.show === "true") {
+        place();
+      } else {
+        tip.style.transition = "none";
+        place();
+        void tip.offsetWidth;
+        tip.style.transition = "";
+      }
+      tip.dataset.show = "true";
+    });
+    svg.addEventListener("pointerleave", hide);
+  });
+</script>
