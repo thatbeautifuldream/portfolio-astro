@@ -79,8 +79,8 @@ const height = 7 * (cell + gap) - gap;
   weeks.length > 0 && (
     <section class="@container grid min-w-0 gap-4">
       <h2 class="section-title">GitHub</h2>
-      <div class="gh-chart relative">
-        <div class="flex justify-end overflow-hidden @max-[33.75rem]:[mask-image:linear-gradient(to_right,transparent,black_3rem)]">
+      <div class="gh-chart relative min-w-0">
+        <div class="flex justify-end overflow-hidden @max-[33.75rem]:block @max-[33.75rem]:overflow-x-auto">
           <svg
             viewBox={`0 0 ${weeks.length * (cell + gap) - gap} ${height}`}
             class="h-auto w-full min-w-135 shrink-0"
