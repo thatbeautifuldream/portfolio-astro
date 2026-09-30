@@ -123,6 +123,40 @@ test("public API files contain versioned machine-readable payloads", async () =>
   assert.match(error.error.hint, /openapi/);
 });
 
+test("content API publishes posts and gists with HTML and Markdown", async () => {
+  const openapi = JSON.parse(await readDist("openapi.json"));
+  const posts = JSON.parse(await readDist("api/v1/posts.json"));
+  const gists = JSON.parse(await readDist("api/v1/gists.json"));
+
+  assert.ok(posts.total > 0);
+  assert.equal(posts.items.length, posts.total);
+  assert.ok(gists.total > 0);
+  assert.equal(gists.items.length, gists.total);
+  assert.ok(openapi.paths["/api/v1/posts/{slug}.json"].get.parameters);
+  assert.equal(
+    openapi.paths["/api/v1/posts/{slug}.json"].get.responses["200"].content[
+      "application/json"
+    ].schema.$ref,
+    "#/components/schemas/Post",
+  );
+  for (const name of ["PostList", "Post", "GistList", "Gist", "Content"]) {
+    assert.ok(openapi.components.schemas[name], `${name} schema missing`);
+  }
+
+  for (const summary of [...posts.items, ...gists.items]) {
+    assert.match(summary.apiUrl, /^https:\/\/.+\/api\/v1\/(posts|gists)\//);
+    const path = new URL(summary.apiUrl).pathname.slice(1);
+    const item = JSON.parse(await readDist(path));
+
+    assert.equal(item.slug, summary.slug);
+    assert.ok(item.content.html.length > 0);
+    assert.ok(item.content.markdown.length > 0);
+    assert.doesNotMatch(item.content.html, /__ASTRO_IMAGE_/);
+    assert.doesNotMatch(item.content.html, /\s(src|href)="\/[^/]/);
+    assert.doesNotMatch(item.content.markdown, /\]\(\.\//);
+  }
+});
+
 test("markdown representation and discovery guidance are published", async () => {
   const markdown = await readDist("index.md");
   const pages = await Promise.all(
@@ -200,12 +234,14 @@ test("Vercel routing declares Markdown negotiation and JSON API fallback", async
           "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf",
     ),
   );
-  assert.ok(
-    config.routes.some(
-      (route: { src: string; status?: number }) =>
-        route.src.includes("/api/") && route.status === 404,
-    ),
+  const filesystem = config.routes.findIndex(
+    (route: { handle?: string }) => route.handle === "filesystem",
   );
+  const apiFallback = config.routes.findIndex(
+    (route: { src?: string; status?: number }) =>
+      route.src?.includes("/api/") && route.status === 404,
+  );
+  assert.ok(filesystem >= 0 && apiFallback > filesystem);
   assert.ok(
     config.headers.some(
       (rule: { source: string }) => rule.source === "/api/(.*)",

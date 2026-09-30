@@ -32,7 +32,7 @@ function staticPage(path: string, site?: URL | null): string | null {
     ),
     "/docs": page(
       `API documentation · ${siteConfig.name}`,
-      `This is the public API documentation for ${siteConfig.name}. It provides stable, read-only access to professional identity, current role, expertise, and canonical links.\n\n## Quickstart\n\nNo authentication or API key is required.\n\n\`\`\`sh\ncurl -s ${absoluteUrl("/api/v1/index.json", site)}\ncurl -s ${absoluteUrl("/api/v1/profile.json", site)}\n\`\`\`\n\n## Resources\n\n- ${link("OpenAPI", "/openapi.json", site)}\n- ${link("API index", "/api/v1/index.json", site)}\n- ${link("Profile JSON", "/api/v1/profile.json", site)}\n\nUse \/api\/v1\/ for integrations. JSON errors expose stable \`code\`, \`message\`, and \`hint\` fields.`,
+      `This is the public API documentation for ${siteConfig.name}. It provides stable, read-only access to professional identity, current role, expertise, blog posts, gists, and canonical links.\n\n## Quickstart\n\nNo authentication or API key is required.\n\n\`\`\`sh\ncurl -s ${absoluteUrl("/api/v1/index.json", site)}\ncurl -s ${absoluteUrl("/api/v1/profile.json", site)}\n\`\`\`\n\n## Resources\n\n- ${link("OpenAPI", "/openapi.json", site)}\n- ${link("API index", "/api/v1/index.json", site)}\n- ${link("Profile JSON", "/api/v1/profile.json", site)}\n- ${link("Posts JSON", "/api/v1/posts.json", site)}\n- ${link("Gists JSON", "/api/v1/gists.json", site)}\n\nUse \/api\/v1\/ for integrations. JSON errors expose stable \`code\`, \`message\`, and \`hint\` fields.`,
       site,
     ),
     "/privacy": page(

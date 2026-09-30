@@ -16,6 +16,14 @@ export const GET: APIRoute = ({ site }) =>
         url: absoluteUrl("/api/v1/profile.json", site),
       },
       {
+        name: "Posts",
+        url: absoluteUrl("/api/v1/posts.json", site),
+      },
+      {
+        name: "Gists",
+        url: absoluteUrl("/api/v1/gists.json", site),
+      },
+      {
         name: "Health",
         url: absoluteUrl("/api/v1/health.json", site),
       },

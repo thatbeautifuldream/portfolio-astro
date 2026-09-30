@@ -45,6 +45,7 @@ export function jsonResponse(body: unknown, status = 200) {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": status >= 400 ? "no-store" : "public, max-age=3600",
     "API-Version": API_VERSION,
+    "Access-Control-Allow-Origin": "*",
     "RateLimit-Limit": String(API_RATE_LIMIT),
     "RateLimit-Remaining": String(API_RATE_LIMIT - 1),
     "RateLimit-Reset": "60",

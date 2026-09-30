@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { API_VERSION } from "../lib/agent-api";
+import { contentJsonSchemas } from "../lib/content-api";
 import { getSiteOrigin, siteConfig } from "../lib/seo";
 
 export const prerender = true;
@@ -71,13 +72,23 @@ const operation = (
   summary: string,
   description: string,
   schemaName: string,
+  parameters?: object[],
 ) => ({
   get: {
     operationId,
     summary,
     description,
+    ...(parameters ? { parameters } : {}),
     responses: standardResponses(summary, schemaName),
   },
+});
+
+const slugParameter = (description: string) => ({
+  name: "slug",
+  in: "path",
+  required: true,
+  description,
+  schema: { type: "string", pattern: "^[a-z0-9-]+$" },
 });
 
 const profileSchema = {
@@ -205,7 +216,7 @@ export const GET: APIRoute = ({ site }) => {
         title: `${siteConfig.name} Agent API`,
         version: API_VERSION,
         description:
-          "Read-only, machine-readable profile and availability endpoints for agents and developers.",
+          "Read-only, machine-readable profile, blog post, gist, and availability endpoints for agents and developers.",
         contact: { name: siteConfig.name, email: siteConfig.email },
       },
       servers: [{ url: origin }],
@@ -237,6 +248,32 @@ export const GET: APIRoute = ({ site }) => {
           "Returns a small status payload when the API is available.",
           "Health",
         ),
+        "/api/v1/posts.json": operation(
+          "listPostsV1",
+          "List blog posts",
+          "Returns every blog post, newest first, without content.",
+          "PostList",
+        ),
+        "/api/v1/posts/{slug}.json": operation(
+          "getPostV1",
+          "Get a blog post",
+          "Returns one blog post with its content as rendered HTML and source Markdown.",
+          "Post",
+          [slugParameter("Post slug from `listPostsV1`.")],
+        ),
+        "/api/v1/gists.json": operation(
+          "listGistsV1",
+          "List public gists",
+          "Returns every public gist, newest first, without content.",
+          "GistList",
+        ),
+        "/api/v1/gists/{slug}.json": operation(
+          "getGistV1",
+          "Get a gist",
+          "Returns one public gist with its content as rendered HTML and source Markdown.",
+          "Gist",
+          [slugParameter("Gist slug from `listGistsV1`.")],
+        ),
         "/api/v1/error.json": {
           get: {
             operationId: "getApiErrorExampleV1",
@@ -256,6 +293,7 @@ export const GET: APIRoute = ({ site }) => {
           Profile: profileSchema,
           ApiIndex: indexSchema,
           Health: healthSchema,
+          ...contentJsonSchemas(),
         },
       },
     }),

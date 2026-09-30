@@ -30,6 +30,7 @@
       "source": "/api/(.*)",
       "headers": [
         { "key": "API-Version", "value": "1" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "RateLimit-Limit", "value": "60" },
         { "key": "RateLimit-Remaining", "value": "59" },
         { "key": "RateLimit-Reset", "value": "60" }
@@ -78,8 +79,9 @@
       "src": "^/resume/?$",
       "dest": "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf"
     },
+    { "handle": "filesystem" },
     {
-      "src": "^/api/(?!v1/(index|profile|health|error)\\.json$).*$",
+      "src": "^/api/.*$",
       "headers": {
         "Vary": "Accept, Accept-Encoding",
         "Cache-Control": "no-store"
