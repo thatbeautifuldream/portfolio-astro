@@ -41,6 +41,8 @@ Then a new Xcode and iOS release changed the rules on how apps start up. Get it 
 
 The Android emulator kept dying. Everything looked like the app was crashing. It wasn't the app. The emulator just didn't have the resources to run it. I lost real hours to that before I learned to read the logs first and panic second.
 
+Eventually I just got myself a Pixel 7 Pro. Not because anyone asked me to. I cared too much about how the app felt on Android to keep judging it through an emulator.
+
 And the small ones. The thread jumping when you selected text. Blocks that kept remounting. My disk filling up mid build.
 
 Some things I built, loved, and cut. Chat branching, editing a prompt to fork a thread, was one of my favourite features. It made the app heavier than it was worth, so we dropped it. Knowing what to cut is part of it too.
