@@ -2,6 +2,7 @@
 title: "You Don't Know You Can Do It, Until You Do"
 description: How I led the migration of the Merlin AI mobile app from Flutter to a native feeling React Native app for iOS and Android. The crests, the troughs, the late nights and a lot of love for the craft.
 category: Journey
+coverImage: ./you-dont-know-you-can-do-it.jpg
 date: "2026-09-30"
 ---
 
