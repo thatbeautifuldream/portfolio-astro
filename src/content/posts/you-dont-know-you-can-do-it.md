@@ -8,7 +8,7 @@ date: "2026-09-30"
 
 Not long ago I had never shipped a mobile app.
 
-Today the new Merlin app is in testers' hands on iOS and Android. In a bunch of languages, on phones and tablets, looking and feeling like it belongs on your phone.
+Today the new Merlin app is on a phased rollout in iOS and Android. In a bunch of languages, on phones and tablets, looking and feeling like it belongs on your phone.
 
 I still can't fully believe I'm the one who got to lead it.
 
@@ -16,7 +16,7 @@ I still can't fully believe I'm the one who got to lead it.
 
 [Merlin AI](https://x.com/MerlinAIByFoyer) already had a mobile app, written in Flutter. It worked. But every feature we shipped on the website had to be built a second time, in a different language, with a different mental model.
 
-The plan was simple to say and scary to do. Rebuild the whole thing in React Native with Expo. Match the website feature for feature. Make it feel native on both platforms. And don't log a single existing user out.
+The plan was simple to say and scary to do. Rebuild the whole thing in React Native with Expo. Match the website features. Make it feel native on both platforms. And don't log a single existing user out.
 
 I'm a web person. React, design systems, motion, browser extensions. I knew React. I did not know Xcode build phases, Gradle, provisioning profiles, or why an Android emulator would randomly decide to die.
 
@@ -28,7 +28,7 @@ It started as a prototype. A chat screen, a drawer, some liquid glass. Mock resp
 
 So I started with login. Then sign up. Then loading real chat history.
 
-Those first few weeks were pure energy. The real Merlin chat client. Streaming that stuttered, then streaming that didn't. Attachments. Voice dictation with a waveform. Citations. A model picker. Image and video generation.
+The first weekend was pure energy. The real Merlin chat client. Streaming that stuttered, then streaming that didn't. Attachments. Voice dictation with a waveform. Web citation sources. A model picker. Image and video generation.
 
 Somewhere in there I generated a typed client for our backend straight from its API spec, so the app could never drift from it. Boring on a changelog. But every screen after that inherited from it.
 
@@ -36,7 +36,7 @@ Somewhere in there I generated a typed client for our backend straight from its 
 
 Then mobile humbled me.
 
-Keeping existing users signed in was the scariest part. If the new app handled auth differently from the Flutter one, everyone would open the update and find themselves logged out. So I rebuilt auth to pick up exactly where the old app left off, and tested it the only honest way: install the old app, sign in, install the new one right over it, and pray. It kept the session. I think I said something out loud to an empty room.
+Keeping existing users signed in was the scariest part. If the new app handled auth differently from the Flutter one, everyone would open the update and find themselves logged out. So I rebuilt auth wiring to pick up exactly where the old app left off, and tested it the only honest way: install the old app, sign in, install the new one right over it, and pray. It kept the session. I think I said something out loud to an empty room.
 
 Then a new Xcode and iOS release changed the rules on how apps start up. Get it wrong and the app crashes at launch. Get it half right and you get a blank white screen, which is somehow worse. That one took a lot of reading.
 
@@ -52,13 +52,13 @@ Some things I built, loved, and cut. Chat branching, editing a prompt to fork a 
 
 And then the good days. So many good days.
 
-[Aakarsh](#) joined and the whole thing changed pace. Aakarsh took the feel of the thread, the composer and the drawer and just kept going. A composer glow that blooms and brightens when you focus it. Thinking and search blocks that fold away when they're done. Menus on real glass. A drawer that stays smooth while you switch chats.
+[Aakarsh](#) joined and the whole thing changed pace. Aakarsh took the feel of the thread, the composer and the drawer and just kept going. A composer glow that blooms and brightens when you focus it. Thinking and search blocks that fold away when they're done. Menus on liquid glass. A drawer that stays smooth while you switch chats.
 
-I went deep on everything around it. Projects. Vault. Crafts. Folders. Sign in with Apple. Subscriptions and paywalls. Analytics that match the website. Crash reporting. Translating the whole app. Fitting it to iPads.
+I went deep on everything around it. Projects. Vault. Crafts. Folders. Sign in with Apple. Subscriptions and paywalls. Analytics. Crash reporting. Translating the whole app. Fitting it to iPads.
 
-Then came the first TestFlight build. Seeing Merlin, our Merlin, installed on my own phone felt unreal.
+Then came the first TestFlight build. Seeing Merlin, our Merlin, installed on team members' phones felt unreal.
 
-Then another build. And another. Each with release notes written for testers, not developers. "The send button shows white in dark mode." That kind of thing.
+Then another build. And another. Each with release notes written for testers, not developers. "The send button shows white in dark mode." That kind of thing 🤣.
 
 ## Building With Agents
 
