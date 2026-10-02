@@ -36,16 +36,12 @@ const groups = items.reduce<{ label?: string; items: Item[] }[]>(
     {
       groups.map((group) => (
         <li>
-          <ul role="list">
-            {group.items.map((item, index) => (
-              <li
-                class:list={[
-                  "after:border-border relative not-last:after:absolute not-last:after:right-0 not-last:after:bottom-0 not-last:after:border-b",
-                  grouped
-                    ? "not-last:after:left-12 sm:not-last:after:left-27"
-                    : "not-last:after:left-0",
-                ]}
-              >
+          {grouped && group.label && (
+            <p class="text-faint pt-6 pb-1 tabular-nums">{group.label}</p>
+          )}
+          <ul role="list" class="divide-border divide-y">
+            {group.items.map((item) => (
+              <li>
                 <a
                   href={item.href}
                   {...(item.external && {
@@ -53,16 +49,8 @@ const groups = items.reduce<{ label?: string; items: Item[] }[]>(
                     rel: "noopener noreferrer",
                   })}
                   {...item.attrs}
-                  class:list={[
-                    "group flex items-center justify-between gap-4 py-3 no-underline",
-                    grouped && "pl-12 sm:pl-27",
-                  ]}
+                  class="group flex items-center justify-between gap-4 py-3 no-underline"
                 >
-                  {index === 0 && group.label && (
-                    <span class="text-faint absolute left-0 tabular-nums">
-                      {group.label}
-                    </span>
-                  )}
                   <span class="inline-flex min-w-0 items-center gap-1.5">
                     <span class="min-w-0 truncate">{item.title}</span>
                     {item.external && (
