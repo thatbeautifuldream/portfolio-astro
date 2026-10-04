@@ -34,6 +34,34 @@
       "continue": true
     },
     {
+      "src": "^/about\\.md$",
+      "status": 308,
+      "headers": {
+        "Location": "/index.md"
+      }
+    },
+    {
+      "src": "^/markdown-visualizer(?:/.*)?/?$",
+      "status": 308,
+      "headers": {
+        "Location": "/project/markdown-visualizer"
+      }
+    },
+    {
+      "src": "^/json-visualiser(?:/.*)?/?$",
+      "status": 308,
+      "headers": {
+        "Location": "/project/json-visualiser"
+      }
+    },
+    {
+      "src": "^/about/?$",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
       "src": "^/$",
       "has": [
         {
@@ -60,27 +88,6 @@
         "Vary": "Accept, Accept-Encoding"
       },
       "dest": "/$1.md"
-    },
-    {
-      "src": "^/markdown-visualizer(?:/.*)?/?$",
-      "status": 308,
-      "headers": {
-        "Location": "/project/markdown-visualizer"
-      }
-    },
-    {
-      "src": "^/json-visualiser(?:/.*)?/?$",
-      "status": 308,
-      "headers": {
-        "Location": "/project/json-visualiser"
-      }
-    },
-    {
-      "src": "^/about/?$",
-      "status": 308,
-      "headers": {
-        "Location": "/"
-      }
     },
     {
       "src": "^/resume/?$",
