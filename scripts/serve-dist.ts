@@ -43,23 +43,24 @@ interface HeaderRule {
   headers: Record<string, string>;
 }
 
-// Parse vercel.json `headers` into [{ test(path), headers }] so the local
-// server mirrors the response headers Vercel serves in production.
+// Parse the vercel.json `continue` routes that carry headers into
+// [{ test(path), headers }] so the local server mirrors production.
 function parseHeaders(root: string): HeaderRule[] {
   const file = join(root, "vercel.json");
   if (!existsSync(file)) return [];
   const cfg = JSON.parse(readFileSync(file, "utf8")) as {
-    headers?: { source: string; headers: { key: string; value: string }[] }[];
+    routes?: {
+      src: string;
+      headers?: Record<string, string>;
+      continue?: boolean;
+    }[];
   };
-  return (cfg.headers ?? []).map((rule) => {
-    const re = new RegExp(
-      "^" + rule.source.replace(/\(\.\*\)/g, ".*").replace(/\/$/, "/?") + "$",
-    );
-    const headers = Object.fromEntries(
-      rule.headers.map((h) => [h.key, h.value]),
-    );
-    return { test: (p: string) => re.test(p), headers };
-  });
+  return (cfg.routes ?? [])
+    .filter((route) => route.continue && route.headers)
+    .map((route) => {
+      const re = new RegExp(`^${route.src}$`);
+      return { test: (p: string) => re.test(p), headers: route.headers! };
+    });
 }
 
 export interface ServerHandle {
