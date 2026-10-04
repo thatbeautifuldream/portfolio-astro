@@ -64,7 +64,6 @@ export const sitePages = [
   { path: "/talks", changefreq: "monthly", priority: 0.7 },
   { path: "/uses", changefreq: "monthly", priority: 0.6 },
   { path: "/docs", changefreq: "monthly", priority: 0.7 },
-  { path: "/about", changefreq: "monthly", priority: 0.6 },
   { path: "/contact", changefreq: "monthly", priority: 0.6 },
   { path: "/privacy", changefreq: "monthly", priority: 0.4 },
 ] satisfies SitePage[];

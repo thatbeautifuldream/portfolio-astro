@@ -76,6 +76,13 @@
       }
     },
     {
+      "src": "^/about/?$",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
       "src": "^/resume/?$",
       "dest": "https://cdn.jsdelivr.net/gh/thatbeautifuldream/resume-tex/resume.pdf"
     },

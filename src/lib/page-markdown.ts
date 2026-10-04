@@ -20,11 +20,6 @@ function page(title: string, body: string, site?: URL | null) {
 
 function staticPage(path: string, site?: URL | null): string | null {
   const pages: Record<string, string> = {
-    "/about": page(
-      `About ${siteConfig.name}`,
-      `I'm ${siteConfig.name}, a product engineer based in ${siteConfig.location.city}, ${siteConfig.location.country}. I work at ${siteConfig.currentRole.company} as a ${siteConfig.currentRole.title}, building browser agent experiences and chat interfaces that make ambient AI useful in everyday workflows.\n\nMy strongest work sits between product judgment and implementation discipline. I care about the problem a feature solves, the system that supports it, the words that make it understandable, and the interaction details that make it feel trustworthy. I build with React, TypeScript, design systems, motion, and increasingly agentic flows where software can help people complete meaningful work rather than merely generate output.\n\nThis site is a durable record of that work: products, talks, writing, experiments, and practical code.`,
-      site,
-    ),
     "/contact": page(
       `Contact ${siteConfig.name}`,
       `I'm most responsive on email and LinkedIn. If you have something interesting to discuss, send a detailed message rather than a generic introduction.\n\nEmail: ${siteConfig.email}\n\nBased in ${siteConfig.location.city}, ${siteConfig.location.country} (${siteConfig.location.timezoneLabel}). I keep a 3–4 hour overlap with US mornings and most of the European workday, and I'm open to remote roles, B2B contractor, or EOR arrangements.\n\n${list(contactLinks.map((item) => `[${item.label}](${item.href}) — ${item.copy}`))}`,
@@ -222,7 +217,7 @@ ${projects.map((project) => `- ${link(project.data.title, `/project/${project.id
 
 ## Navigation
 
-${list(["Work", "Talks", "Blog", "Gists", "About", "Contact"].map((label) => link(label, `/${label.toLowerCase() === "gists" ? "gist" : label.toLowerCase()}`, site)))}`,
+${list(["Work", "Talks", "Blog", "Gists", "Contact"].map((label) => link(label, `/${label.toLowerCase() === "gists" ? "gist" : label.toLowerCase()}`, site)))}`,
       site,
     );
   }

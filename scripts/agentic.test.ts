@@ -160,18 +160,17 @@ test("content API publishes posts and gists with HTML and Markdown", async () =>
 test("markdown representation and discovery guidance are published", async () => {
   const markdown = await readDist("index.md");
   const pages = await Promise.all(
-    ["about.md", "blog.md", "gist.md", "uses.md", "docs.md"].map(readDist),
+    ["blog.md", "gist.md", "uses.md", "docs.md"].map(readDist),
   );
   const llms = await readDist("llms.txt");
   const docs = await readDist("docs/index.html");
 
   assert.match(markdown, /^# Milind Kumar Mishra/m);
   assert.match(markdown, /\/api\/v1\/profile\.json/);
-  assert.match(pages[0], /^# About Milind Kumar Mishra/m);
-  assert.match(pages[1], /^# Blog/m);
-  assert.match(pages[2], /^# Gists/m);
-  assert.match(pages[3], /^# Uses/m);
-  assert.match(pages[4], /\/api\/v1\/profile\.json/);
+  assert.match(pages[0], /^# Blog/m);
+  assert.match(pages[1], /^# Gists/m);
+  assert.match(pages[2], /^# Uses/m);
+  assert.match(pages[3], /\/api\/v1\/profile\.json/);
   assert.match(llms, /When to use this site/);
   assert.match(llms, /\/docs/);
   assert.match(docs, /Scalar/);
@@ -190,7 +189,7 @@ test("resume is available as direct Markdown content", async () => {
 });
 
 test("trust anchor pages contain substantive content", async () => {
-  for (const path of ["about/index.html", "privacy/index.html"]) {
+  for (const path of ["index.html", "privacy/index.html"]) {
     const html = await readDist(path);
     const text = html
       .replace(/<script[\s\S]*?<\/script>/g, " ")
