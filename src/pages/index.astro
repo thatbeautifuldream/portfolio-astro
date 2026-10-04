@@ -5,7 +5,13 @@ import Layout from "../layouts/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import IndexList from "../components/IndexList.astro";
 import GitHubChart from "../components/GitHubChart.astro";
-import { contactEmail, roles, siteLinks, talks } from "../data/portfolio";
+import {
+  contactEmail,
+  hostname,
+  roles,
+  siteLinks,
+  talks,
+} from "../data/portfolio";
 import {
   buildOrganizationSchema,
   buildPersonSchema,
@@ -14,10 +20,8 @@ import {
   siteConfig,
 } from "../lib/seo";
 
-// Products are sourced from the same collection that powers /shotty and
-// /murmur, so the homepage list never drifts from the product pages.
-const products = (await getCollection("products")).sort(
-  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+const projects = (await getCollection("projects")).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
 );
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
@@ -71,6 +75,9 @@ const jsonLd = [
       </p>
       <p class="text-pretty">
         My work has reached 2m+ people, with five products shipped from 0 to 1.
+        I also build tools I use every day, like <a
+          href="/project/json-visualiser">JSON Visualiser</a
+        > and <a href="/project/markdown-visualizer">Markdown Visualizer</a>.
         Next, I'm heading into design engineering.
       </p>
       <p class="text-pretty">
@@ -92,7 +99,14 @@ const jsonLd = [
       </p>
     </article>
 
-    <GitHubChart />
+    <IndexList
+      title="Projects"
+      items={projects.map((project) => ({
+        href: `/project/${project.id}`,
+        title: project.data.title,
+        meta: hostname(project.data.url),
+      }))}
+    />
 
     <IndexList
       title="Writing"
@@ -105,19 +119,6 @@ const jsonLd = [
     />
 
     <IndexList
-      title="Products"
-      items={products.map((product) => ({
-        href: `/${product.id}`,
-        title: product.data.name,
-        meta: product.data.platforms.join(" · "),
-        attrs: {
-          "data-product-id": product.id,
-          "data-product-name": product.data.name,
-        },
-      }))}
-    />
-
-    <IndexList
       title="Work"
       items={roles.map((role) => ({
         href: "/work",
@@ -125,6 +126,8 @@ const jsonLd = [
         meta: years(role.period),
       }))}
     />
+
+    <GitHubChart />
 
     <IndexList
       title="Talks"
@@ -149,14 +152,3 @@ const jsonLd = [
     />
   </main>
 </Layout>
-
-<script is:inline>
-  document.querySelectorAll("[data-product-id]").forEach((link) => {
-    link.addEventListener("click", () => {
-      window.posthog?.capture("product_clicked", {
-        product_id: link.dataset.productId,
-        product_name: link.dataset.productName,
-      });
-    });
-  });
-</script>

@@ -60,7 +60,9 @@ export const sitePages = [
   { path: "/work", changefreq: "monthly", priority: 0.9 },
   { path: "/blog", changefreq: "weekly", priority: 0.8 },
   { path: "/gist", changefreq: "weekly", priority: 0.8 },
+  { path: "/project", changefreq: "monthly", priority: 0.8 },
   { path: "/talks", changefreq: "monthly", priority: 0.7 },
+  { path: "/uses", changefreq: "monthly", priority: 0.6 },
   { path: "/docs", changefreq: "monthly", priority: 0.7 },
   { path: "/about", changefreq: "monthly", priority: 0.6 },
   { path: "/contact", changefreq: "monthly", priority: 0.6 },
@@ -88,28 +90,8 @@ export function getSitePage(path: string) {
     return { path: normalized, changefreq: "monthly", priority: 0.7 } as const;
   if (normalized.startsWith("/gist/"))
     return { path: normalized, changefreq: "monthly", priority: 0.6 } as const;
-  const segments = normalized.split("/").filter(Boolean);
-  if (
-    segments.length === 1 &&
-    !sitePages.some((p) => p.path === `/${segments[0]}`)
-  ) {
-    return {
-      path: normalized,
-      changefreq: "monthly",
-      priority: 0.9,
-    } as const;
-  }
-  if (
-    segments.length === 2 &&
-    (segments[1] === "support" || segments[1] === "privacy") &&
-    !sitePages.some((p) => p.path === `/${segments[0]}`)
-  ) {
-    return {
-      path: normalized,
-      changefreq: "monthly",
-      priority: 0.6,
-    } as const;
-  }
+  if (normalized.startsWith("/project/"))
+    return { path: normalized, changefreq: "monthly", priority: 0.8 } as const;
   return sitePages.find((page) => page.path === normalized);
 }
 

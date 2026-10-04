@@ -371,6 +371,18 @@ html.theme-transition::view-transition-new(root) {
     border: 1px solid var(--color-rule);
     border-radius: var(--radius-lg);
   }
+  & :where(figcaption) {
+    margin-top: --spacing(3);
+    color: var(--color-faint);
+    text-wrap: pretty;
+  }
+  & > :where([data-wide]) {
+    @variant md {
+      width: min(64rem, 100vw - --spacing(12));
+      margin-inline: 50% 0;
+      translate: -50%;
+    }
+  }
   & :where(.table-wrap),
   & > :where(pre, [data-code-block]) {
     @variant md {

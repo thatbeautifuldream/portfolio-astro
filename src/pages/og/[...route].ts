@@ -3,14 +3,19 @@ import { getCollection } from "astro:content";
 import { ogImageOptions } from "../../lib/og";
 
 const posts = await getCollection("posts");
+const projects = await getCollection("projects");
 
-// Map each blog post id -> the data the card needs.
-const pages = Object.fromEntries(
-  posts.map((post) => [
+// Map each blog post id and `project/<id>` -> the data the card needs.
+const pages = Object.fromEntries([
+  ...posts.map((post) => [
     post.id,
     { title: post.data.title, description: post.data.description },
   ]),
-);
+  ...projects.map((project) => [
+    `project/${project.id}`,
+    { title: project.data.title, description: project.data.description },
+  ]),
+]);
 
 export const { getStaticPaths, GET } = await OGImageRoute({
   param: "route",

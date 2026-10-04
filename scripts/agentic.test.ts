@@ -23,7 +23,7 @@ test("homepage exposes semantic content without JavaScript", async () => {
     .trim();
 
   assert.match(html, /<h1\b/);
-  assert.match(html, /<h2[^>]*>\s*Products\s*<\/h2>/);
+  assert.match(html, /<h2[^>]*>\s*Projects\s*<\/h2>/);
   assert.match(html, /<h2[^>]*>\s*More\s*<\/h2>/);
   assert.ok(content.length >= 500);
 });
@@ -243,16 +243,16 @@ test("Vercel routing declares Markdown negotiation and JSON API fallback", async
   );
   assert.ok(filesystem >= 0 && apiFallback > filesystem);
   assert.ok(
-    config.headers.some(
-      (rule: { source: string }) => rule.source === "/api/(.*)",
+    config.routes.some(
+      (route: { src?: string; continue?: boolean }) =>
+        route.src === "/api/(.*)" && route.continue,
     ),
   );
-  assert.ok(
-    config.headers
-      .find((rule: { source: string }) => rule.source === "/(.*)")
-      .headers.some(
-        (header: { key: string; value: string }) =>
-          header.key === "Vary" && header.value === "Accept, Accept-Encoding",
-      ),
+  assert.equal(
+    config.routes.find(
+      (route: { src?: string; continue?: boolean }) =>
+        route.src === "/(.*)" && route.continue,
+    )?.headers?.Vary,
+    "Accept, Accept-Encoding",
   );
 });

@@ -1,0 +1,108 @@
+---
+title: JSON Visualiser
+description: A JSON editor I built in a day, grew for a year, and then made smaller.
+url: https://jsonvisualiser.com
+date: "2026-10-04"
+---
+
+import Embed from "../../components/Embed.astro";
+
+JSON Visualiser is the tab I keep open for JSON. Paste an API response, a config file, or something a logger mangled, and it tells you whether it is valid, formats it, and lets you walk it as a tree.
+
+I built the first version in a day, on 27 July 2025. It has been my default JSON tool ever since.
+
+<Embed
+  src="https://jsonvisualiser.com/?demo=true"
+  title="JSON Visualiser"
+  caption="The live app. Paste any JSON into the editor and switch to the tree."
+/>
+
+## Day one
+
+The first version was an editor, a tree, and a status bar. Most of that day went into small things: VS Code shortcuts for folding, matching the tree's colours to the editor theme, and a status bar where the line count and file size roll to their new values as you type.
+
+The status bar still leads with one of two words, Valid or Invalid. It is the first thing I look at.
+
+## Growing it
+
+Over the next few months it picked up a file sidebar backed by IndexedDB, a force-directed graph view, and analytics. Each one made sense on its own.
+
+Together they turned a quick tool into an app you had to manage.
+
+## Making it smaller
+
+In March 2026 I rewrote the workspace and deleted the file system, sidebar and all. Now each tab holds one document and saves it on its own, so a refresh never loses your work and there is nothing to organise.
+
+The same month I removed analytics and wrote a privacy policy instead. In July the graph view went too. Most of the best changes in the history of this app are deletions.
+
+## Unescape
+
+Loggers love to double encode. You copy a payload out of a log line and get a wall of backslashes:
+
+```text
+{\"id\":42,\"name\":\"Ada\",\"roles\":[\"admin\",\"editor\"]}
+```
+
+Unescape turns that back into JSON you can format and read. It is one regular expression over the seven escape sequences JSON defines:
+
+```ts
+const JSON_UNESCAPE_PATTERN = /\\([bfnrt"\\])/g;
+
+export function unescapeJsonText(input: string) {
+  let replacementCount = 0;
+
+  const value = input.replace(JSON_UNESCAPE_PATTERN, (_, sequence: string) => {
+    replacementCount += 1;
+    return JSON_UNESCAPE_SEQUENCES[sequence] ?? _;
+  });
+
+  return { value, replacementCount };
+}
+```
+
+## Types from a payload
+
+Generate Types reads the document and writes the TypeScript for it. This payload:
+
+```json
+{
+  "id": 42,
+  "name": "Ada",
+  "roles": ["admin", "editor"],
+  "profile": { "city": "London", "verified": true }
+}
+```
+
+Becomes:
+
+```ts
+type RootObject = {
+  id: number;
+  name: string;
+  roles: string[];
+  profile: Profile;
+}
+
+type Profile = {
+  city: string;
+  verified: boolean;
+}
+```
+
+The heavy lifting is [json-to-ts](https://github.com/MariusAlch/json-to-ts). The only thing I added is a rewrite from `interface` to `type`, because that is what I would have written by hand.
+
+## The Chrome extension
+
+I built the extension in a day too, on 13 March 2026. It replaces raw JSON pages in the browser with the same editor, tree, and type generator, bundled inside the extension. A page counts as raw JSON when it is served as JSON, or its body is a single `<pre>`, and the text actually parses.
+
+It can also hand a response over to the web app. The first bug was a race: the extension sent the payload before the page was listening. The fix was a handshake. The page says it is ready, and only then does the data flow.
+
+Large responses were the next problem, so they are streamed across in chunks and formatted as they land, instead of arriving as one message that freezes the tab.
+
+## Everything stays local
+
+Parsing, validation, the tree, and type generation all run in your browser. There is no account, no analytics, and no server that ever sees your JSON. It installs as a progressive web app and keeps working offline.
+
+The editor was Monaco for almost a year. In June 2026 I replaced it with CodeMirror 6, which runs the editor and the linter today.
+
+[Open JSON Visualiser](https://jsonvisualiser.com/) and paste the next payload that confuses you.

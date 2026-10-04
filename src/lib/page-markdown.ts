@@ -78,8 +78,8 @@ async function collectionPages(site?: URL | null) {
         (b.data.datePublished ?? b.data.date ?? new Date(0)).getTime() -
         (a.data.datePublished ?? a.data.date ?? new Date(0)).getTime(),
     );
-  const products = (await getCollection("products")).sort((a, b) =>
-    a.data.name.localeCompare(b.data.name),
+  const projects = (await getCollection("projects")).sort((a, b) =>
+    a.data.title.localeCompare(b.data.title),
   );
   const uses = (await getCollection("uses")).sort((a, b) =>
     a.data.title.localeCompare(b.data.title),
@@ -147,29 +147,25 @@ async function collectionPages(site?: URL | null) {
       ),
     );
   }
-  for (const product of products) {
-    const data = product.data;
+  pages.set(
+    "/project",
+    page(
+      "Projects",
+      `Tools I build and use every day.\n\n${projects
+        .map(
+          (project) =>
+            `- ${link(project.data.title, `/project/${project.id}`, site)} — ${project.data.description}`,
+        )
+        .join("\n")}`,
+      site,
+    ),
+  );
+  for (const project of projects) {
     pages.set(
-      `/${product.id}`,
+      `/project/${project.id}`,
       page(
-        data.name,
-        `**${data.tagline}**\n\n${data.description}\n\nPlatforms: ${data.platforms.join(", ")}\nPricing: ${data.pricing}\n\n## Features\n\n${data.features.map((feature) => `- **${feature.title}** — ${feature.description}`).join("\n")}\n\n${product.body?.trim() ?? ""}`,
-        site,
-      ),
-    );
-    pages.set(
-      `/${product.id}/support`,
-      page(
-        `Support · ${data.name}`,
-        `${data.description}\n\n## Frequently asked questions\n\n${data.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join("\n\n")}\n\n## Permissions\n\n${list(data.permissions)}\n\n## Requirements\n\n${list(data.requirements)}`,
-        site,
-      ),
-    );
-    pages.set(
-      `/${product.id}/privacy`,
-      page(
-        `Privacy · ${data.name}`,
-        `${data.description}\n\n## Overview\n\n${data.privacyOverview ?? `${data.name} is built privacy-first.`}\n\n## Data we collect\n\n${data.dataCollected ?? "None. This app does not collect, transmit, or share personal data."}\n\n## Retention\n\n${data.privacyRetention ?? `Anything ${data.name} stores locally lives only on your device.`}\n\n## Third parties\n\n${list(data.thirdParties)}`,
+        project.data.title,
+        `${project.data.description}\n\n[${project.data.url}](${project.data.url})\n\n${project.body?.trim() ?? ""}`,
         site,
       ),
     );
@@ -202,8 +198,8 @@ export async function getMarkdownPaths() {
 export async function buildPageMarkdown(path: string, site?: URL | null) {
   const normalized = path === "/" ? "/" : `/${path.replace(/^\/+|\/+$/g, "")}`;
   if (normalized === "/") {
-    const products = (await getCollection("products")).sort(
-      (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+    const projects = (await getCollection("projects")).sort((a, b) =>
+      a.data.title.localeCompare(b.data.title),
     );
     return page(
       siteConfig.name,
@@ -213,9 +209,9 @@ ${siteConfig.name} is a product engineer building AI-native interfaces, product 
 
 Based in ${siteConfig.location.city}, ${siteConfig.location.country}. Current role: ${siteConfig.currentRole.title} at ${siteConfig.currentRole.company}.
 
-## Products
+## Projects
 
-${products.map((product) => `- ${link(product.data.name, `/${product.id}`, site)} — ${product.data.tagline}`).join("\n")}
+${projects.map((project) => `- ${link(project.data.title, `/project/${project.id}`, site)} — ${project.data.description}`).join("\n")}
 
 ## Resources
 

@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import IndexList from "../../components/IndexList.astro";
+import { hostname } from "../../data/portfolio";
+import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
+
+const projects = (await getCollection("projects")).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${siteConfig.shortName} - Projects`,
+  description: "Tools I build and use every day.",
+  url: absoluteUrl("/project", Astro.site),
+  author: buildPersonRef(Astro.site),
+};
+---
+
+<Layout
+  title="Projects"
+  description="Tools I build and use every day."
+  jsonLd={jsonLd}
+>
+  <main class="stagger grid gap-12">
+    <PageHeader title="Projects" meta="Tools I build and use every day." />
+    <IndexList
+      title="Projects"
+      items={projects.map((project) => ({
+        href: `/project/${project.id}`,
+        title: project.data.title,
+        meta: hostname(project.data.url),
+      }))}
+    />
+  </main>
+</Layout>

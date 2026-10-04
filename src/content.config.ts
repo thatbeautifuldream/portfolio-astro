@@ -29,86 +29,14 @@ const gists = defineCollection({
   }),
 });
 
-const products = defineCollection({
-  loader: glob({ pattern: "*.md", base: "./src/content/products" }),
-  schema: ({ image }) =>
-    z.object({
-      name: z.string(),
-      tagline: z.string(),
-      description: z.string(),
-      category: z.string(),
-      keywords: z.array(z.string()).default([]),
-      pricing: z.string().default("Free"),
-      platforms: z.array(z.string()).default([]),
-      appStoreUrl: z.string().optional(),
-      websiteUrl: z.string().optional(),
-      analytics: z.boolean().default(false),
-      /**
-       * GitHub "owner/repo" for products distributed as native downloads.
-       * When set, the product page shows a download button and a
-       * `/{product}/download` route is generated that redirects to the
-       * newest release's installer asset (resolved at build time, pre-releases
-       * included). Falls back to the releases page if the API is unreachable.
-       */
-      downloadRepo: z.string().optional(),
-      /**
-       * Which installer the `downloadRepo` release ships, which decides the
-       * asset extension to resolve (`.dmg` vs `.apk`) and the button label.
-       */
-      downloadTarget: z.enum(["macos", "android"]).default("macos"),
-      icon: image().optional(),
-      coverImage: image().optional(),
-      screenshotUrls: z.array(z.string()).default([]),
-      /**
-       * Intrinsic pixel size of the `screenshotUrls`, used to reserve the right
-       * aspect ratio in the carousel. Defaults to an iPhone 15 Pro capture.
-       */
-      screenshotSize: z
-        .object({ width: z.number(), height: z.number() })
-        .default({ width: 1290, height: 2796 }),
-      features: z
-        .array(
-          z.object({
-            title: z.string(),
-            description: z.string(),
-          }),
-        )
-        .default([]),
-      privacyPoints: z.array(z.string()).default([]),
-      /**
-       * Optional privacy-policy narrative. Each product can carry its own
-       * accurate posture (shotty is fully on-device; murmur has an Apple
-       * Speech framework caveat). When omitted, the template falls back to
-       * generic, product-agnostic copy so every product gets a sane policy.
-       */
-      privacyHeadline: z.string().optional(),
-      privacyOverview: z.string().optional(),
-      privacyRetention: z.string().optional(),
-      dataCollected: z.string().optional(),
-      thirdParties: z.array(z.string()).default([]),
-      policyUpdatedAt: z.coerce.date().optional(),
-      faq: z
-        .array(
-          z.object({
-            question: z.string(),
-            answer: z.string(),
-          }),
-        )
-        .default([]),
-      permissions: z.array(z.string()).default([]),
-      requirements: z.array(z.string()).default([]),
-      supportEmail: z.string().optional(),
-      supportLinks: z
-        .array(
-          z.object({
-            label: z.string(),
-            href: z.string(),
-          }),
-        )
-        .default([]),
-      publishedAt: z.coerce.date(),
-      updatedAt: z.coerce.date().optional(),
-    }),
+const projects = defineCollection({
+  loader: glob({ pattern: "*.mdx", base: "./src/content/projects" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    url: z.string(),
+    date: z.coerce.date(),
+  }),
 });
 
 const uses = defineCollection({
@@ -124,4 +52,4 @@ const uses = defineCollection({
     }),
 });
 
-export const collections = { posts, gists, products, uses };
+export const collections = { posts, gists, projects, uses };
