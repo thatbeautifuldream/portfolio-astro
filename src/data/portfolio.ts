@@ -216,17 +216,17 @@ export const contactLinks = [
   {
     label: "GitHub",
     href: "https://github.com/thatbeautifuldream",
-    copy: "Open source work, side projects, and product experiments.",
+    copy: "Code and side projects",
   },
   {
     label: "LinkedIn",
     href: "https://linkedin.com/in/mishramilind",
-    copy: "Professional profile and current work context.",
+    copy: "Work and career",
   },
   {
     label: "X/Twitter",
     href: "https://x.com/milindmishra_",
-    copy: "Thoughts, links, and occasional product or interface observations.",
+    copy: "Thoughts and links",
   },
 ];
 
