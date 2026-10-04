@@ -136,13 +136,7 @@ const jsonLd =
             </a>
           )
         }
-        {
-          data.supportLinks.map((link) => (
-            <a href={link.href} data-no-dialog>
-              {link.label}
-            </a>
-          ))
-        }
+        {data.supportLinks.map((link) => <a href={link.href}>{link.label}</a>)}
       </div>
     </section>
   </main>

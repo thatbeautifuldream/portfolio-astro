@@ -93,7 +93,6 @@ const jsonLd = [
           data.websiteUrl && (
             <a
               href={data.websiteUrl}
-              data-no-dialog
               class="inline-flex items-center gap-1.5"
               data-cta="website"
             >
@@ -109,7 +108,6 @@ const jsonLd = [
           data.appStoreUrl && (
             <a
               href={data.appStoreUrl}
-              data-no-dialog
               class="inline-flex items-center gap-1.5"
               data-cta="app-store"
             >
@@ -190,7 +188,7 @@ const jsonLd = [
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
         {
           data.websiteUrl && (
-            <a href={data.websiteUrl} data-no-dialog data-cta="website-footer">
+            <a href={data.websiteUrl} data-cta="website-footer">
               Open {data.name}
             </a>
           )

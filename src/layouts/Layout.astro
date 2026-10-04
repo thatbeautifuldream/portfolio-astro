@@ -3,7 +3,6 @@ import "../styles/global.css";
 import { Font } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Footer from "../components/Footer.astro";
-import GlobalIframeDialog from "../components/GlobalIframeDialog.astro";
 import Analytics from "../components/Analytics.astro";
 import PostHog from "../components/posthog.astro";
 import {
@@ -187,7 +186,18 @@ const structuredData = jsonLd
       </div>
       <Footer />
     </div>
-    <GlobalIframeDialog />
+    <script is:inline>
+      for (const link of document.querySelectorAll("a[href]")) {
+        if (
+          link.protocol.startsWith("http") &&
+          link.origin !== location.origin &&
+          !link.hasAttribute("download")
+        ) {
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+        }
+      }
+    </script>
     <script is:inline>
       document.addEventListener("keydown", (e) => {
         if (
