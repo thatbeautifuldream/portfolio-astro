@@ -9,6 +9,25 @@ import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
 
 import { getSitePage } from "./src/lib/seo";
 
+function rehypeWrapTables() {
+  /** @param {{ children?: any[] }} node */
+  const wrap = (node) => {
+    node.children?.forEach((child, i, children) => {
+      if (child.tagName === "table") {
+        children[i] = {
+          type: "element",
+          tagName: "div",
+          properties: { className: ["table-wrap"] },
+          children: [child],
+        };
+      } else {
+        wrap(child);
+      }
+    });
+  };
+  return wrap;
+}
+
 const changefreqMap = {
   weekly: ChangeFreqEnum.WEEKLY,
   monthly: ChangeFreqEnum.MONTHLY,
@@ -49,6 +68,7 @@ export default defineConfig({
   ],
 
   markdown: {
+    rehypePlugins: [rehypeWrapTables],
     shikiConfig: {
       themes: {
         light: "github-light",
