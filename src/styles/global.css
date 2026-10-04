@@ -89,6 +89,61 @@ html {
   border-bottom: 1px solid var(--color-border);
 }
 
+@utility chip {
+  display: inline-block;
+  padding: 0 0.4em 0 0.25em;
+  line-height: 1.375;
+  white-space: nowrap;
+  text-decoration: none;
+  background-color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  & :where(img, svg) {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.3em;
+    vertical-align: -0.125em;
+  }
+  & :where(img) {
+    border-radius: 0.25em;
+  }
+  & :where(svg) {
+    color: var(--color-muted-foreground);
+  }
+  &:where(a:hover) {
+    background-color: var(--color-accent);
+  }
+}
+
+@utility wave {
+  transform-origin: 70% 70%;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: wave 1.6s ease-in-out 0.4s;
+  }
+}
+
+@keyframes wave {
+  0%,
+  60%,
+  100% {
+    rotate: 0deg;
+  }
+  10%,
+  30% {
+    rotate: 14deg;
+  }
+  20% {
+    rotate: -8deg;
+  }
+  40% {
+    rotate: -4deg;
+  }
+  50% {
+    rotate: 10deg;
+  }
+}
+
 @utility index-list {
   & a {
     transition: opacity 140ms ease;

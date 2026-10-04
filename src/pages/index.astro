@@ -2,7 +2,13 @@
 import { execSync } from "node:child_process";
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import PageHeader from "../components/PageHeader.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import wavingHand from "../assets/emojis/waving-hand.webp";
+import merlin from "../assets/emojis/merlin.webp";
+import cityscape from "../assets/emojis/cityscape.png";
+import jsonVisualiser from "../assets/icons/json-visualiser.png";
+import markdownVisualizer from "../assets/icons/markdown-visualizer.png";
 import IndexList from "../components/IndexList.astro";
 import GitHubChart from "../components/GitHubChart.astro";
 import {
@@ -59,44 +65,70 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <main class="stagger grid gap-12">
-    <article class="grid gap-4">
-      <PageHeader
-        title={siteConfig.name}
-        meta={`Updated ${updated.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
-      />
-      <p class="text-pretty">
-        I'm a product engineer at <a
-          href="https://www.getmerlin.in/chat"
-          target="_blank"
-          rel="noopener noreferrer">Merlin AI</a
-        > in {siteConfig.location.city}, shipping it across mobile, desktop and
-        the browser: 130+ releases, and a coding agent from zero to v1.0 in two
-        weeks.
-      </p>
-      <p class="text-pretty">
-        My work has reached 2m+ people, with five products shipped from 0 to 1.
-        I also build tools I use every day, like <a
-          href="/project/json-visualiser">JSON Visualiser</a
-        > and <a href="/project/markdown-visualizer">Markdown Visualizer</a>.
-        Next, I'm heading into design engineering.
-      </p>
-      <p class="text-pretty">
-        You can find me on <a
-          href={siteLinks.github.href}
-          target="_blank"
-          rel="noopener noreferrer">GitHub</a
-        >, <a
-          href={siteLinks.linkedin.href}
-          target="_blank"
-          rel="noopener noreferrer">LinkedIn</a
-        > and <a
-          href={siteLinks.x.href}
-          target="_blank"
-          rel="noopener noreferrer">X</a
-        >, read my <a href={siteLinks.resume.pdf}>résumé</a>, <a
-          href="https://cal.com/milind/15min">book 15 minutes</a
-        >, or reach me via <a href={`mailto:${contactEmail}`}>email</a>.
-      </p>
+    <article class="grid gap-8">
+      <header class="grid gap-4">
+        <p class="text-faint">
+          Updated {
+            updated.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          }
+        </p>
+        <h1 class="text-3xl font-medium tracking-tight text-pretty sm:text-4xl">
+          <span class="text-faint">Hi</span>
+          <Image
+            src={wavingHand}
+            alt=""
+            width={96}
+            class="wave inline-block size-[0.9em] align-[-0.1em]"
+          />
+          <span class="text-faint">I'm</span> Milind.
+          <span class="text-faint">I build the part of software</span> a person actually
+          feels.
+        </h1>
+      </header>
+      <div class="grid gap-4 text-base/7 sm:text-sm/6">
+        <p class="text-pretty">
+          Product engineer at <a
+            href="https://www.getmerlin.in/chat"
+            class="chip"><Image src={merlin} alt="" width={40} />Merlin AI</a
+          > in <span class="chip"
+            ><Image src={cityscape} alt="" width={40} />{
+              siteConfig.location.city
+            }</span
+          >. 130+ releases across mobile, desktop and web, and a coding agent
+          from zero to v1.0 in two weeks.
+        </p>
+        <p class="text-pretty">
+          My work has reached 2m+ people across five 0-to-1 products, and I
+          build tools I use every day, like <a
+            href="/project/json-visualiser"
+            class="chip"
+            ><Image src={jsonVisualiser} alt="" width={40} />JSON Visualiser</a
+          > and <a href="/project/markdown-visualizer" class="chip"
+            ><Image src={markdownVisualizer} alt="" width={40} />Markdown
+            Visualizer</a
+          >.
+        </p>
+        <p class="text-pretty">
+          Next, I'm heading into design engineering. Find me on <a
+            href={siteLinks.github.href}
+            class="chip"><Icon name="ri:github-fill" />GitHub</a
+          >, <a href={siteLinks.linkedin.href} class="chip"
+            ><Icon name="ri:linkedin-box-fill" />LinkedIn</a
+          > and <a href={siteLinks.x.href} class="chip"
+            ><Icon name="ri:twitter-x-fill" />X</a
+          >, read my <a href={siteLinks.resume.pdf} class="chip"
+            ><Icon name="ri:file-text-line" />résumé</a
+          >, <a href="https://cal.com/milind/15min" class="chip"
+            ><Icon name="ri:calendar-line" />book 15 minutes</a
+          >, or <a href={`mailto:${contactEmail}`} class="chip"
+            ><Icon name="ri:mail-line" />email me</a
+          >.
+        </p>
+      </div>
     </article>
 
     <IndexList
