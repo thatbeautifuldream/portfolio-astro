@@ -1,5 +1,6 @@
 ---
 import { execSync } from "node:child_process";
+import { Icon } from "astro-icon/components";
 import { siteLinks } from "../data/portfolio";
 
 const repoUrl = "https://github.com/thatbeautifuldream/portfolio-astro";
@@ -15,9 +16,18 @@ if (!commitHash) {
 const shortHash = commitHash.slice(0, 7);
 
 const links = [
-  { href: siteLinks.github.href, label: "GitHub" },
-  { href: siteLinks.linkedin.href, label: "LinkedIn" },
-  { href: siteLinks.x.href, label: "X" },
+  { href: siteLinks.github.href, label: "GitHub", icon: "ri:github-fill" },
+  {
+    href: siteLinks.linkedin.href,
+    label: "LinkedIn",
+    icon: "ri:linkedin-box-fill",
+  },
+  { href: siteLinks.x.href, label: "X", icon: "ri:twitter-x-fill" },
+  {
+    href: siteLinks.chatgpt.href,
+    label: siteLinks.chatgpt.label,
+    icon: "ri:openai-fill",
+  },
 ];
 ---
 
@@ -28,40 +38,52 @@ const links = [
       <p class="tabular-nums">
         <span data-local-time></span>Bengaluru, India
       </p>
+      <button
+        type="button"
+        id="theme-toggle"
+        class="hover:text-foreground flex cursor-pointer"
+      >
+        <Icon
+          name="ri:moon-line"
+          class="size-5 shrink-0 sm:size-4 dark:hidden"
+          role="img"
+          aria-label="Dark mode"
+        />
+        <Icon
+          name="ri:sun-line"
+          class="size-5 shrink-0 not-dark:hidden sm:size-4"
+          role="img"
+          aria-label="Light mode"
+        />
+      </button>
+    </div>
+    <div class="flex items-center justify-between gap-4">
       <ul role="list" class="flex items-center gap-x-4">
         {
-          links.map(({ href, label }) => (
+          links.map(({ href, label, icon }) => (
             <li>
               <a
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-footer-social={label}
-                class="hover:text-foreground font-normal no-underline"
+                aria-label={label}
+                class="hover:text-foreground flex font-normal no-underline"
               >
-                {label}
+                <Icon name={icon} class="size-5 shrink-0 sm:size-4" />
               </a>
             </li>
           ))
         }
       </ul>
-    </div>
-    <div class="flex items-center justify-between gap-4">
-      <button
-        type="button"
-        id="theme-toggle"
-        class="hover:text-foreground cursor-pointer"
-      >
-        <span class="dark:hidden">Dark mode</span>
-        <span class="not-dark:hidden">Light mode</span>
-      </button>
       <a
         href={shortHash ? `${repoUrl}/commit/${commitHash}` : repoUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={shortHash ? `Latest commit ${shortHash}` : undefined}
-        class="hover:text-foreground font-normal tabular-nums no-underline"
+        class="hover:text-foreground flex items-center gap-1.5 font-normal tabular-nums no-underline"
       >
+        <Icon name="ri:git-commit-line" class="size-5 shrink-0 sm:size-4" />
         {shortHash || "Source"}
       </a>
     </div>

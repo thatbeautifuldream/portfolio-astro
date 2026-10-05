@@ -10,6 +10,10 @@ export const siteLinks = {
     label: "LinkedIn",
   },
   x: { href: "https://x.com/milindmishra_", label: "X/Twitter" },
+  chatgpt: {
+    href: "https://chatgpt.com/?hints=search&prompt=Who%20is%20Milind%20Mishra%3F",
+    label: "ChatGPT",
+  },
 };
 
 export const roles = [
