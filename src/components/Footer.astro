@@ -2,6 +2,7 @@
 import { execSync } from "node:child_process";
 import { Icon } from "astro-icon/components";
 import { siteLinks } from "../data/portfolio";
+import Tooltip from "./Tooltip.astro";
 
 const repoUrl = "https://github.com/thatbeautifuldream/portfolio-astro";
 
@@ -14,6 +15,16 @@ if (!commitHash) {
   }
 }
 const shortHash = commitHash.slice(0, 7);
+
+let commitMessage = process.env.VERCEL_GIT_COMMIT_MESSAGE ?? "";
+if (!commitMessage) {
+  try {
+    commitMessage = execSync("git log -1 --format=%s").toString().trim();
+  } catch {
+    commitMessage = "";
+  }
+}
+commitMessage = commitMessage.split("\n")[0]!;
 
 const links = [
   { href: siteLinks.github.href, label: "GitHub", icon: "ri:github-fill" },
@@ -34,13 +45,48 @@ const links = [
 <footer class="grid gap-9 pb-20">
   <div aria-hidden="true" class="bg-rule h-px w-12.5"></div>
   <div class="text-faint grid gap-3">
-    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+    <Tooltip
+      class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
+    >
       <p class="tabular-nums">
         <span data-local-time></span>Bengaluru, India
       </p>
+      <a
+        href={shortHash ? `${repoUrl}/commit/${commitHash}` : repoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={shortHash ? `Latest commit ${shortHash}` : undefined}
+        data-tip={commitMessage || undefined}
+        class="hover:text-foreground flex items-center gap-1.5 font-normal tabular-nums no-underline"
+      >
+        <Icon name="ri:git-commit-line" class="size-5 shrink-0 sm:size-4" />
+        {shortHash || "Source"}
+      </a>
+    </Tooltip>
+    <Tooltip class="flex items-center justify-between gap-4">
+      <ul role="list" class="flex items-center gap-x-4">
+        {
+          links.map(({ href, label, icon }) => (
+            <li>
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-footer-social={label}
+                aria-label={label}
+                data-tip={label}
+                class="hover:text-foreground flex font-normal no-underline"
+              >
+                <Icon name={icon} class="size-5 shrink-0 sm:size-4" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
       <button
         type="button"
         id="theme-toggle"
+        data-tip="Toggle theme"
         class="hover:text-foreground flex cursor-pointer"
       >
         <Icon
@@ -56,37 +102,7 @@ const links = [
           aria-label="Light mode"
         />
       </button>
-    </div>
-    <div class="flex items-center justify-between gap-4">
-      <ul role="list" class="flex items-center gap-x-4">
-        {
-          links.map(({ href, label, icon }) => (
-            <li>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-footer-social={label}
-                aria-label={label}
-                class="hover:text-foreground flex font-normal no-underline"
-              >
-                <Icon name={icon} class="size-5 shrink-0 sm:size-4" />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <a
-        href={shortHash ? `${repoUrl}/commit/${commitHash}` : repoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={shortHash ? `Latest commit ${shortHash}` : undefined}
-        class="hover:text-foreground flex items-center gap-1.5 font-normal tabular-nums no-underline"
-      >
-        <Icon name="ri:git-commit-line" class="size-5 shrink-0 sm:size-4" />
-        {shortHash || "Source"}
-      </a>
-    </div>
+    </Tooltip>
   </div>
 </footer>
 
