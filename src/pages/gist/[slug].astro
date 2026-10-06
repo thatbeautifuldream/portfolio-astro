@@ -45,7 +45,7 @@ const jsonLd = {
   title={gist.data.title}
   description={gist.data.description ?? t.description}
   canonical={absoluteUrl(localizePath(`/gist/${gist.id}`, locale), Astro.site)}
-  image={`/og/gist/${gist.id}.png`}
+  image={`/og/gist${locale === "en" ? "" : `/${locale}`}/${gist.id}.png`}
   jsonLd={jsonLd}
 >
   <main>

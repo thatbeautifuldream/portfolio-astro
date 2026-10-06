@@ -1,4 +1,5 @@
 const en = {
+  name: "Milind Kumar Mishra",
   tagline: "Product engineer building AI-native interfaces",
   description:
     "Product engineer building AI-native interfaces, product systems, and tools people return to.",

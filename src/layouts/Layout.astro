@@ -41,7 +41,7 @@ const {
   description = t.description,
   canonical,
   keywords,
-  image = siteConfig.defaultImage,
+  image = locale === "en" ? siteConfig.defaultImage : `/og/${locale}.png`,
   jsonLd,
   back: backProp,
 } = Astro.props;

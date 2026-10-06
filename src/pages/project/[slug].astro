@@ -40,7 +40,7 @@ const jsonLd = {
     localizePath(`/project/${project.id}`, locale),
     Astro.site,
   )}
-  image={`/og/project/${project.id}.png`}
+  image={`/og${locale === "en" ? "" : `/${locale}`}/project/${project.id}.png`}
   jsonLd={jsonLd}
 >
   <main>

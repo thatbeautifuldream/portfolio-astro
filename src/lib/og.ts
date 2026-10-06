@@ -16,20 +16,23 @@ export function ogImageOptions(page: { title: string; description?: string }) {
         size: 44,
         weight: "Medium" as const,
         lineHeight: 1.35,
-        families: ["Inter"],
+        families: ["Inter", "Noto Sans Devanagari"],
       },
       description: {
         color: [152, 152, 151] as [number, number, number],
         size: 44,
         weight: "Normal" as const,
         lineHeight: 1.35,
-        families: ["Inter"],
+        families: ["Inter", "Noto Sans Devanagari"],
       },
     },
-    // CanvasKit can't read woff2, so OG cards use static TTF Inter instances.
+    // CanvasKit can't read woff2, so OG cards use static TTF instances.
+    // Noto Sans Devanagari covers the Hindi pages.
     fonts: [
       "./src/assets/fonts/Inter-400.ttf",
       "./src/assets/fonts/Inter-500.ttf",
+      "./src/assets/fonts/NotoSansDevanagari-400.ttf",
+      "./src/assets/fonts/NotoSansDevanagari-500.ttf",
     ],
   };
 }
