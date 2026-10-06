@@ -1,6 +1,11 @@
 ---
 import { siteLinks } from "../data/portfolio";
 import Tooltip from "./Tooltip.astro";
+import { getLocale, locales, useTranslations } from "../i18n";
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).github;
+const { dateLocale } = locales[locale];
 
 const opacity = [
   "fill-foreground/6",
@@ -64,7 +69,7 @@ for (const { row, col, ...day } of days.values()) {
 }
 
 const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString("en-US", {
+  new Date(date).toLocaleDateString(dateLocale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -79,7 +84,7 @@ const height = 7 * (cell + gap) - gap;
 {
   weeks.length > 0 && (
     <section class="@container grid min-w-0 gap-4">
-      <h2 class="section-title">GitHub</h2>
+      <h2 class="section-title">{t.title}</h2>
       <div class="gh-chart min-w-0">
         <Tooltip>
           <div class="flex justify-end overflow-hidden @max-[33.75rem]:block @max-[33.75rem]:overflow-x-auto">
@@ -87,7 +92,7 @@ const height = 7 * (cell + gap) - gap;
               viewBox={`0 0 ${weeks.length * (cell + gap) - gap} ${height}`}
               class="h-auto w-full min-w-135 shrink-0"
               role="img"
-              aria-label={`${total.toLocaleString("en-US")} contributions in the last year across personal and work accounts`}
+              aria-label={t.summary(total.toLocaleString(dateLocale))}
             >
               {weeks.map((week, col) =>
                 week.map(
@@ -101,7 +106,10 @@ const height = 7 * (cell + gap) - gap;
                         rx="2"
                         class={opacity[level(day.count)]}
                         style={`--i: ${col + row}`}
-                        data-tip={`${day.count ? day.count.toLocaleString("en-US") : "No"} contribution${day.count === 1 ? "" : "s"}`}
+                        data-tip={t.day(
+                          day.count,
+                          day.count.toLocaleString(dateLocale),
+                        )}
                         data-tip-meta={formatDate(day.date)}
                       />
                     ),
@@ -113,7 +121,7 @@ const height = 7 * (cell + gap) - gap;
       </div>
       <p class="text-faint flex items-baseline justify-between gap-4">
         <span class="tabular-nums">
-          {total.toLocaleString("en-US")} contributions in the last year
+          {t.total(total.toLocaleString(dateLocale))}
         </span>
         <span class="flex shrink-0 gap-3 max-sm:hidden">
           {handles.map((href) => (

@@ -4,6 +4,10 @@ import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import IndexList from "../../components/IndexList.astro";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
+import { getLocale, localizePath, useTranslations } from "../../i18n";
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).gist;
 
 function gistDate(data: { datePublished?: Date; date?: Date }): Date {
   return data.datePublished ?? data.date ?? new Date(0);
@@ -17,21 +21,17 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
   name: `${siteConfig.shortName} - Gists`,
-  description: "Code snippets and quick solutions.",
-  url: absoluteUrl("/gist", Astro.site),
+  description: t.description,
+  url: absoluteUrl(localizePath("/gist", locale), Astro.site),
   author: buildPersonRef(Astro.site),
 };
 ---
 
-<Layout
-  title="Gists"
-  description="Code snippets and quick solutions."
-  jsonLd={jsonLd}
->
+<Layout title={t.title} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
-    <PageHeader title="Gists" meta="Code snippets and quick solutions." />
+    <PageHeader title={t.title} meta={t.description} />
     <IndexList
-      title="Snippets"
+      title={t.snippets}
       items={gists.map((gist) => {
         const date = gist.data.datePublished ?? gist.data.date;
         return {

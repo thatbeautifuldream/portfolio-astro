@@ -8,6 +8,7 @@ import icon from "astro-icon";
 import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
 
 import { getSitePage } from "./src/lib/seo";
+import { stripLocale } from "./src/i18n";
 
 function rehypeWrapTables() {
   /** @param {{ children?: any[] }} node */
@@ -49,6 +50,12 @@ export default defineConfig({
     layout: "constrained",
   },
 
+  i18n: {
+    locales: ["en", "hi"],
+    defaultLocale: "en",
+    routing: { prefixDefaultLocale: false },
+  },
+
   redirects: {
     "/whatsapp": "https://wa.me/919631333128",
   },
@@ -64,6 +71,14 @@ export default defineConfig({
       cssVariable: "--font-inter",
       weights: ["100 900"],
       styles: ["normal", "italic"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Noto Sans Devanagari",
+      cssVariable: "--font-devanagari",
+      weights: ["100 900"],
+      styles: ["normal"],
+      subsets: ["devanagari"],
     },
   ],
 
@@ -83,12 +98,16 @@ export default defineConfig({
     mdx(),
     sitemap({
       serialize(item) {
-        const page = getSitePage(new URL(item.url).pathname);
+        const page = getSitePage(stripLocale(new URL(item.url).pathname));
         if (page) {
           item.changefreq = changefreqMap[page.changefreq];
           item.priority = page.priority;
         }
         return item;
+      },
+      i18n: {
+        defaultLocale: "en",
+        locales: { en: "en-US", hi: "hi-IN" },
       },
       namespaces: {
         news: false,

@@ -2,61 +2,43 @@
 import Layout from "../layouts/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { absoluteUrl, siteConfig } from "../lib/seo";
+import { getLocale, localizePath, useTranslations } from "../i18n";
 
-const pageUrl = absoluteUrl("/privacy", Astro.site);
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).privacy;
+const pageUrl = absoluteUrl(localizePath("/privacy", locale), Astro.site);
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: `Privacy · ${siteConfig.name}`,
-  description: "How this personal site handles information and analytics.",
+  name: `${t.title} · ${siteConfig.name}`,
+  description: t.description,
   url: pageUrl,
 };
 ---
 
-<Layout
-  title="Privacy"
-  description="How this personal site handles information and analytics."
-  jsonLd={jsonLd}
->
+<Layout title={t.title} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
-    <PageHeader
-      title="Privacy"
-      meta="A small site with a clear data boundary."
-    />
+    <PageHeader title={t.title} meta={t.meta} />
     <section class="grid gap-4">
-      <h2 class="section-title">What this site collects</h2>
+      <h2 class="section-title">{t.collects}</h2>
+      <p class="text-pretty">{t.collectsBody}</p>
+    </section>
+    <section class="grid gap-4">
+      <h2 class="section-title">{t.contactInfo}</h2>
       <p class="text-pretty">
-        The pages are primarily static content. When analytics are enabled,
-        Google Analytics and Microsoft Clarity load only after a visitor
-        interacts with the page or after the idle fallback. Those services may
-        receive page-view, device, browser, and interaction information
-        according to their own policies. The site does not ask visitors to
-        create an account or submit a password.
+        {t.contactInfoBody[0]}<a href={localizePath("/contact", locale)}
+          >{t.contactPage}</a
+        >{t.contactInfoBody[1]}
       </p>
     </section>
     <section class="grid gap-4">
-      <h2 class="section-title">Contact information</h2>
-      <p class="text-pretty">
-        If you email me, I receive the information you choose to include so I
-        can reply. I use it for the conversation you initiated and do not sell
-        personal information. For contact details, use the <a href="/contact"
-          >contact page</a
-        >.
-      </p>
-    </section>
-    <section class="grid gap-4">
-      <h2 class="section-title">Your choices</h2>
+      <h2 class="section-title">{t.choices}</h2>
       <p class="prose text-pretty">
-        You can browse without interacting with the page, block analytics in
-        your browser, or disable JavaScript. The public profile and developer
-        API are read-only and do not require cookies, login, API keys, or
-        personal data. The repository can also build the site with analytics
-        disabled using <code>PUBLIC_DISABLE_ANALYTICS=true</code>.
+        {t.choicesBody[0]}<code>PUBLIC_DISABLE_ANALYTICS=true</code>{
+          t.choicesBody[1]
+        }
       </p>
-      <p class="text-muted-foreground text-pretty">
-        This page describes the behavior of this personal site as currently
-        implemented and will be updated if that behavior changes.
-      </p>
+      <p class="text-muted-foreground text-pretty">{t.note}</p>
     </section>
   </main>
 </Layout>

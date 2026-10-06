@@ -25,6 +25,11 @@ import {
   buildWebsiteSchema,
   siteConfig,
 } from "../lib/seo";
+import { getLocale, locales, localizePath, useTranslations } from "../i18n";
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const home = t.home;
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
@@ -44,7 +49,7 @@ const dayMonth = (date: Date) =>
 const years = (period: string) => {
   const [from, to] = period.split(" to ");
   const start = from!.slice(-4);
-  const end = to === "present" ? "now" : to!.slice(-4);
+  const end = to === "present" ? home.now : to!.slice(-4);
   return start === end ? start : `${start} – ${end}`;
 };
 
@@ -59,80 +64,71 @@ const jsonLd = [
 ];
 ---
 
-<Layout
-  title={siteConfig.name}
-  description={siteConfig.description}
-  jsonLd={jsonLd}
->
+<Layout title={siteConfig.name} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
     <article class="grid gap-8">
       <header class="grid gap-4">
         <p class="text-faint">
-          Updated {
-            updated.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })
+          {
+            home.updated(
+              updated.toLocaleDateString(locales[locale].dateLocale, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }),
+            )
           }
         </p>
         <h1 class="text-3xl font-medium tracking-tight text-pretty sm:text-4xl">
-          <span class="text-faint">Hi</span>
+          <span class="text-faint">{home.hi}</span>
           <Image
             src={wavingHand}
             alt=""
             width={96}
             class="wave inline-block size-[0.9em] align-[-0.1em]"
           />
-          <span class="text-faint">I'm</span> Milind.
-          <span class="text-faint">I build the part of software</span> a person actually
-          feels.
+          <span class="text-faint">{home.im}</span>
+          {home.name}
+          <span class="text-faint">{home.build}</span>
+          {home.feels}
         </h1>
       </header>
       <div class="grid gap-4 text-base/7 sm:text-sm/6">
         <p class="text-pretty">
-          Product engineer at <a
-            href="https://www.getmerlin.in/chat"
-            class="chip"><Image src={merlin} alt="" width={40} />Merlin AI</a
-          > in <span class="chip"
-            ><Image src={cityscape} alt="" width={40} />{
-              siteConfig.location.city
-            }</span
-          >. 130+ releases across mobile, desktop and web, and a coding agent
-          from zero to v1.0 in two weeks.
+          {home.intro[0]}<a href="https://www.getmerlin.in/chat" class="chip"
+            ><Image src={merlin} alt="" width={40} />Merlin AI</a
+          >{home.intro[1]}<span class="chip"
+            ><Image src={cityscape} alt="" width={40} />{t.city}</span
+          >{home.intro[2]}
         </p>
         <p class="text-pretty">
-          My work has reached 2m+ people across five 0-to-1 products, and I
-          build tools I use every day, like <a
-            href="/project/json-visualiser"
-            class="chip"
+          {home.tools[0]}<a href="/project/json-visualiser" class="chip"
             ><Image src={jsonVisualiser} alt="" width={40} />JSON Visualiser</a
-          > and <a href="/project/markdown-visualizer" class="chip"
+          >{home.tools[1]}<a href="/project/markdown-visualizer" class="chip"
             ><Image src={markdownVisualizer} alt="" width={40} />Markdown
             Visualizer</a
-          >.
+          >{home.tools[2]}
         </p>
         <p class="text-pretty">
-          Next, I'm heading into design engineering. Find me on <a
-            href={siteLinks.github.href}
-            class="chip"><Icon name="ri:github-fill" />GitHub</a
-          >, <a href={siteLinks.linkedin.href} class="chip"
+          {home.next[0]}<a href={siteLinks.github.href} class="chip"
+            ><Icon name="ri:github-fill" />GitHub</a
+          >{home.next[1]}<a href={siteLinks.linkedin.href} class="chip"
             ><Icon name="ri:linkedin-box-fill" />LinkedIn</a
-          > and <a href={siteLinks.x.href} class="chip"
+          >{home.next[2]}<a href={siteLinks.x.href} class="chip"
             ><Icon name="ri:twitter-x-fill" />X</a
-          >, read my <a href={siteLinks.resume.pdf} class="chip"
-            ><Icon name="ri:file-text-line" />résumé</a
-          >, <a href="https://cal.com/milind/15min" class="chip"
-            ><Icon name="ri:calendar-line" />book 15 minutes</a
-          >, or <a href={`mailto:${contactEmail}`} class="chip"
-            ><Icon name="ri:mail-line" />email me</a
-          >.
+          >{home.next[3]}<a href={siteLinks.resume.pdf} class="chip"
+            ><Icon name="ri:file-text-line" />{home.resume}</a
+          >{home.next[4]}<a href="https://cal.com/milind/15min" class="chip"
+            ><Icon name="ri:calendar-line" />{home.book}</a
+          >{home.next[5]}<a href={`mailto:${contactEmail}`} class="chip"
+            ><Icon name="ri:mail-line" />{home.email}</a
+          >{home.next[6]}
         </p>
       </div>
     </article>
 
     <IndexList
-      title="Projects"
+      title={home.projects}
       items={projects.map((project) => ({
         href: `/project/${project.id}`,
         title: project.data.title,
@@ -141,7 +137,7 @@ const jsonLd = [
     />
 
     <IndexList
-      title="Writing"
+      title={home.writing}
       items={posts.map((post) => ({
         href: `/blog/${post.id}`,
         title: post.data.title,
@@ -151,9 +147,9 @@ const jsonLd = [
     />
 
     <IndexList
-      title="Work"
+      title={home.work}
       items={roles.map((role) => ({
-        href: "/work",
+        href: localizePath("/work", locale),
         title: role.company,
         meta: years(role.period),
       }))}
@@ -162,7 +158,7 @@ const jsonLd = [
     <GitHubChart />
 
     <IndexList
-      title="Talks"
+      title={home.talks}
       items={talks.map((talk) => ({
         href: talk.href,
         title: talk.title,
@@ -172,13 +168,25 @@ const jsonLd = [
     />
 
     <IndexList
-      title="More"
+      title={home.more}
       items={[
-        { href: "/gist", title: "Gists", meta: `${gists.length} snippets` },
-        { href: "/uses", title: "Uses", meta: "Tools I rely on" },
-        { href: "/contact", title: "Contact", meta: "Say hello" },
-        { href: "/docs", title: "API", meta: "OpenAPI docs" },
-        { href: "/llms.txt", title: "Agent context", meta: "llms.txt" },
+        {
+          href: localizePath("/gist", locale),
+          title: home.gists,
+          meta: home.snippets(gists.length),
+        },
+        {
+          href: localizePath("/uses", locale),
+          title: home.uses,
+          meta: home.usesMeta,
+        },
+        {
+          href: localizePath("/contact", locale),
+          title: home.contact,
+          meta: home.contactMeta,
+        },
+        { href: "/docs", title: home.api, meta: home.apiMeta },
+        { href: "/llms.txt", title: home.agent, meta: "llms.txt" },
       ]}
     />
   </main>

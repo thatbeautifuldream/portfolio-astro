@@ -12,6 +12,15 @@ import {
   defaultKeywords,
   siteConfig,
 } from "../lib/seo";
+import {
+  getLocale,
+  isTranslated,
+  locales,
+  localizePath,
+  stripLocale,
+  useTranslations,
+  type Locale,
+} from "../i18n";
 
 interface Props {
   title?: string;
@@ -23,9 +32,13 @@ interface Props {
   back?: { href: string; label: string } | false;
 }
 
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = stripLocale(Astro.url.pathname);
+
 const {
   title = siteConfig.name,
-  description = siteConfig.description,
+  description = t.description,
   canonical,
   keywords,
   image = siteConfig.defaultImage,
@@ -33,21 +46,29 @@ const {
   back: backProp,
 } = Astro.props;
 
-const segments = Astro.url.pathname.split("/").filter(Boolean);
+const segments = path.split("/").filter(Boolean);
 const parent = segments.at(-2);
 const back =
   backProp ??
   (segments.length > 0 && {
-    href: parent ? `/${segments.slice(0, -1).join("/")}` : "/",
-    label: parent ? parent[0]!.toUpperCase() + parent.slice(1) : "Index",
+    href: parent
+      ? `/${segments.slice(0, -1).join("/")}`
+      : localizePath("/", locale),
+    label: parent ? parent[0]!.toUpperCase() + parent.slice(1) : t.back.index,
   });
+const alternates = isTranslated(path)
+  ? (Object.keys(locales) as Locale[]).map((lang) => ({
+      lang,
+      href: new URL(localizePath(path, lang), Astro.site).href,
+    }))
+  : [];
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // Name-first so the installed PWA window doesn't repeat it: Chrome prefixes
 // the manifest app name unless the title already starts with it.
 const fullTitle =
   title === siteConfig.name
-    ? `${siteConfig.shortName} · ${siteConfig.tagline}`
+    ? `${siteConfig.shortName} · ${t.tagline}`
     : `${siteConfig.shortName} · ${title}`;
 const ogImage = absoluteUrl(image, Astro.site);
 const ogLogo = absoluteUrl("/icons/Icon-192.png", Astro.site);
@@ -62,7 +83,7 @@ const structuredData = jsonLd
 ---
 
 <!doctype html>
-<html lang="en" class="antialiased">
+<html lang={locale} class="antialiased">
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
@@ -87,6 +108,7 @@ const structuredData = jsonLd
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <Font cssVariable="--font-inter" />
+    {locale === "hi" && <Font cssVariable="--font-devanagari" />}
     <script
       type="speculationrules"
       is:inline
@@ -116,6 +138,16 @@ const structuredData = jsonLd
     <meta name="application-name" content={siteConfig.name} />
     <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href={canonicalUrl} />
+    {
+      alternates.map(({ lang, href }) => (
+        <link rel="alternate" hreflang={lang} href={href} />
+      ))
+    }
+    {
+      alternates.length > 0 && (
+        <link rel="alternate" hreflang="x-default" href={alternates[0]!.href} />
+      )
+    }
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="alternate"
@@ -126,14 +158,24 @@ const structuredData = jsonLd
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:locale" content={siteConfig.locale} />
+    <meta property="og:locale" content={locales[locale].ogLocale} />
+    {
+      alternates
+        .filter(({ lang }) => lang !== locale)
+        .map(({ lang }) => (
+          <meta
+            property="og:locale:alternate"
+            content={locales[lang].ogLocale}
+          />
+        ))
+    }
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
     <meta
       property="og:image:alt"
-      content={`${siteConfig.name}: ${siteConfig.tagline}`}
+      content={`${siteConfig.name}: ${t.tagline}`}
     />
     <meta property="og:logo" content={ogLogo} />
     <meta name="twitter:card" content="summary_large_image" />

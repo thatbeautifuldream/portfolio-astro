@@ -3,7 +3,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-inter), var(--font-devanagari, ui-sans-serif), ui-sans-serif,
+    system-ui, sans-serif;
   --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss03";
   --font-mono:
     "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
@@ -33,8 +35,8 @@
   --background: #fdfdfc;
   --foreground: #111111;
   --muted: rgba(0, 0, 0, 0.04);
-  --muted-foreground: rgba(0, 0, 0, 0.65);
-  --faint: rgba(0, 0, 0, 0.4);
+  --muted-foreground: color-mix(in srgb, #000 65%, var(--background));
+  --faint: color-mix(in srgb, #000 40%, var(--background));
   --accent: rgba(0, 0, 0, 0.06);
   --border: rgba(0, 0, 0, 0.05);
   --rule: rgba(0, 0, 0, 0.07);
@@ -49,8 +51,8 @@
   --background: #111111;
   --foreground: #fdfdfc;
   --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: rgba(255, 255, 255, 0.65);
-  --faint: rgba(255, 255, 255, 0.42);
+  --muted-foreground: color-mix(in srgb, #fff 65%, var(--background));
+  --faint: color-mix(in srgb, #fff 42%, var(--background));
   --accent: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.07);
   --rule: rgba(255, 255, 255, 0.1);

@@ -3,6 +3,19 @@ import { execSync } from "node:child_process";
 import { Icon } from "astro-icon/components";
 import { siteLinks } from "../data/portfolio";
 import Tooltip from "./Tooltip.astro";
+import {
+  getLocale,
+  isTranslated,
+  localizePath,
+  stripLocale,
+  useTranslations,
+} from "../i18n";
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = stripLocale(Astro.url.pathname);
+const otherLocale = locale === "hi" ? "en" : "hi";
+const otherHref = localizePath(isTranslated(path) ? path : "/", otherLocale);
 
 const repoUrl = "https://github.com/thatbeautifuldream/portfolio-astro";
 
@@ -49,18 +62,20 @@ const links = [
       class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
     >
       <p class="tabular-nums">
-        <span data-local-time></span>Bengaluru, India
+        <span data-local-time data-separator={t.footer.timeSeparator}></span>{
+          t.footer.location
+        }
       </p>
       <a
         href={shortHash ? `${repoUrl}/commit/${commitHash}` : repoUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={shortHash ? `Latest commit ${shortHash}` : undefined}
+        aria-label={shortHash ? t.footer.latestCommit(shortHash) : undefined}
         data-tip={commitMessage || undefined}
         class="hover:text-foreground flex items-center gap-1.5 font-normal tabular-nums no-underline"
       >
         <Icon name="ri:git-commit-line" class="size-5 shrink-0 sm:size-4" />
-        {shortHash || "Source"}
+        {shortHash || t.footer.source}
       </a>
     </Tooltip>
     <Tooltip class="flex items-center justify-between gap-4">
@@ -83,25 +98,37 @@ const links = [
           ))
         }
       </ul>
-      <button
-        type="button"
-        id="theme-toggle"
-        data-tip="Toggle theme"
-        class="hover:text-foreground flex cursor-pointer"
-      >
-        <Icon
-          name="ri:moon-line"
-          class="size-5 shrink-0 sm:size-4 dark:hidden"
-          role="img"
-          aria-label="Dark mode"
-        />
-        <Icon
-          name="ri:sun-line"
-          class="size-5 shrink-0 not-dark:hidden sm:size-4"
-          role="img"
-          aria-label="Light mode"
-        />
-      </button>
+      <div class="flex items-center gap-x-4">
+        <a
+          href={otherHref}
+          hreflang={otherLocale}
+          lang={otherLocale}
+          aria-label={t.footer.switchLanguage}
+          data-tip={t.footer.switchLanguage}
+          class="hover:text-foreground flex font-normal no-underline"
+        >
+          <Icon name="ri:translate-2" class="size-5 shrink-0 sm:size-4" />
+        </a>
+        <button
+          type="button"
+          id="theme-toggle"
+          data-tip={t.footer.toggleTheme}
+          class="hover:text-foreground flex cursor-pointer"
+        >
+          <Icon
+            name="ri:moon-line"
+            class="size-5 shrink-0 sm:size-4 dark:hidden"
+            role="img"
+            aria-label={t.footer.darkMode}
+          />
+          <Icon
+            name="ri:sun-line"
+            class="size-5 shrink-0 not-dark:hidden sm:size-4"
+            role="img"
+            aria-label={t.footer.lightMode}
+          />
+        </button>
+      </div>
     </Tooltip>
   </div>
 </footer>
@@ -124,7 +151,7 @@ const links = [
       timeZone: "Asia/Kolkata",
     });
     const tick = () => {
-      el.textContent = `${format.format(new Date()).replace(" ", "").toLowerCase()} in `;
+      el.textContent = `${format.format(new Date()).replace(" ", "").toLowerCase()}${el.dataset.separator}`;
     };
     tick();
     setInterval(tick, 30_000);

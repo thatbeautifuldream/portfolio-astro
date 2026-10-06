@@ -5,59 +5,49 @@ import IndexList from "../components/IndexList.astro";
 import EmailLink from "../components/EmailLink.astro";
 import { contactLinks } from "../data/portfolio";
 import { absoluteUrl, buildPersonSchema, siteConfig } from "../lib/seo";
+import { getLocale, localizePath, useTranslations } from "../i18n";
 
-const pageUrl = absoluteUrl("/contact", Astro.site);
+const locale = getLocale(Astro.currentLocale);
+const i18n = useTranslations(locale);
+const t = i18n.contact;
+const pageUrl = absoluteUrl(localizePath("/contact", locale), Astro.site);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: `Contact · ${siteConfig.name}`,
-  description: "Get in touch: email, GitHub, LinkedIn, or book a time.",
+  name: `${t.title} · ${siteConfig.name}`,
+  description: t.description,
   url: pageUrl,
   mainEntity: buildPersonSchema(Astro.site),
 };
 ---
 
-<Layout
-  title="Contact"
-  description="Get in touch: email, GitHub, LinkedIn, or book a time."
-  jsonLd={jsonLd}
->
+<Layout title={t.title} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
     <article class="grid gap-4">
-      <PageHeader
-        title="Contact"
-        meta="If the work needs product judgment and implementation discipline, I'd like to hear about it."
-      />
-      <p class="text-pretty">
-        I'm most responsive on email and LinkedIn. If you have something
-        interesting to discuss, I'd rather you send a detailed message than a
-        generic introduction.
-      </p>
+      <PageHeader title={t.title} meta={t.meta} />
+      <p class="text-pretty">{t.body}</p>
       <EmailLink />
       <p class="text-pretty">
-        Or <a href="https://cal.com/milind/15min">book 15 minutes</a> if a call is
-        easier.
+        {t.call[0]}<a href="https://cal.com/milind/15min">{t.book}</a>{
+          t.call[1]
+        }
       </p>
     </article>
 
     <section class="grid gap-4">
-      <h2 class="section-title">Working with teams abroad</h2>
+      <h2 class="section-title">{t.abroad}</h2>
       <p class="text-pretty">
-        Based in {siteConfig.location.city}, {siteConfig.location.country} ({
-          siteConfig.location.timezoneLabel
-        }). I keep a 3–4 hour overlap with US mornings and most of the European
-        workday, and I'm open to remote roles, B2B contractor, or EOR
-        arrangements. Fluent in English.
+        {t.abroadBody(i18n.city, t.country, siteConfig.location.timezoneLabel)}
       </p>
     </section>
 
     <IndexList
-      title="Elsewhere"
+      title={t.elsewhere}
       items={contactLinks.map((link) => ({
         href: link.href,
         title: link.label,
-        meta: link.copy,
+        meta: t.links[link.label] ?? link.copy,
         external: true,
         attrs: { "data-contact-label": link.label },
       }))}

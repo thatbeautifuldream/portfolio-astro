@@ -4,6 +4,10 @@ import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import IndexList from "../../components/IndexList.astro";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
+import { getLocale, localizePath, useTranslations } from "../../i18n";
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).blog;
 
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
@@ -13,25 +17,17 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
   name: `${siteConfig.shortName} - Blog`,
-  description:
-    "Notes on product engineering, AI interfaces, developer tools, and the journey of building products.",
-  url: absoluteUrl("/blog", Astro.site),
+  description: t.description,
+  url: absoluteUrl(localizePath("/blog", locale), Astro.site),
   author: buildPersonRef(Astro.site),
 };
 ---
 
-<Layout
-  title="Blog"
-  description="Notes on product engineering, AI interfaces, developer tools, and the journey of building products."
-  jsonLd={jsonLd}
->
+<Layout title={t.title} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
-    <PageHeader
-      title="Writing"
-      meta="Notes on the journey of building products."
-    />
+    <PageHeader title={t.heading} meta={t.meta} />
     <IndexList
-      title="Posts"
+      title={t.posts}
       items={posts.map((post) => ({
         href: `/blog/${post.id}`,
         title: post.data.title,

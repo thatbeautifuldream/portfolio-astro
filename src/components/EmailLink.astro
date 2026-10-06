@@ -1,12 +1,14 @@
 ---
 import { Icon } from "astro-icon/components";
 import { contactEmail } from "../data/portfolio";
+import { getLocale, useTranslations } from "../i18n";
 
 interface Props {
   class?: string;
 }
 
 const { class: className } = Astro.props;
+const t = useTranslations(getLocale(Astro.currentLocale));
 ---
 
 <p class:list={["flex flex-wrap items-center gap-x-2", className]}>
@@ -18,7 +20,9 @@ const { class: className } = Astro.props;
     data-email-copy
     class="text-faint hover:text-foreground inline-flex cursor-pointer items-center"
     data-email={contactEmail}
-    aria-label="Copy email address"
+    aria-label={t.copyEmail}
+    data-copy-label={t.copyEmail}
+    data-copied-label={t.copied}
   >
     <span class="t-icon-swap" data-state="a" data-email-swap>
       <Icon
@@ -55,12 +59,12 @@ const { class: className } = Astro.props;
           await navigator.clipboard.writeText(email);
           window.posthog?.capture("email_copied");
           swap?.setAttribute("data-state", "b");
-          button.setAttribute("aria-label", "Copied");
+          button.setAttribute("aria-label", button.dataset.copiedLabel);
           button.classList.add("text-foreground");
           clearTimeout(timer);
           timer = setTimeout(() => {
             swap?.setAttribute("data-state", "a");
-            button.setAttribute("aria-label", "Copy email address");
+            button.setAttribute("aria-label", button.dataset.copyLabel);
             button.classList.remove("text-foreground");
           }, 1500);
         } catch {}

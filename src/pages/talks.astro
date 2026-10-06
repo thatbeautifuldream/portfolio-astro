@@ -4,15 +4,17 @@ import PageHeader from "../components/PageHeader.astro";
 import IndexList from "../components/IndexList.astro";
 import { talks, contributions } from "../data/portfolio";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../lib/seo";
+import { getLocale, localizePath, useTranslations } from "../i18n";
 
-const pageUrl = absoluteUrl("/talks", Astro.site);
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).talks;
+const pageUrl = absoluteUrl(localizePath("/talks", locale), Astro.site);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: `Talks · ${siteConfig.name}`,
-  description:
-    "Talks on React, motion systems, interface architecture, and AI for frontend engineers.",
+  name: `${t.title} · ${siteConfig.name}`,
+  description: t.description,
   url: pageUrl,
   author: buildPersonRef(Astro.site),
   hasPart: talks.map((talk) => ({
@@ -27,27 +29,15 @@ const jsonLd = {
 };
 ---
 
-<Layout
-  title="Talks"
-  description="Talks on React, motion systems, interface architecture, and AI for frontend engineers."
-  jsonLd={jsonLd}
->
+<Layout title={t.title} description={t.description} jsonLd={jsonLd}>
   <main class="stagger grid gap-12">
     <article class="grid gap-4">
-      <PageHeader
-        title="Talks"
-        meta="I share what I learn because it forces me to learn it deeper."
-      />
-      <p class="text-pretty">
-        These talks come from things I ran into firsthand and couldn't stop
-        thinking about. Sharing them publicly keeps me honest, helps others
-        experiment sooner, and sharpens my own understanding in a way that
-        building alone never could.
-      </p>
+      <PageHeader title={t.title} meta={t.meta} />
+      <p class="text-pretty">{t.body}</p>
     </article>
 
     <IndexList
-      title="Talks"
+      title={t.title}
       items={talks.map((talk) => ({
         href: talk.href,
         title: talk.title,
@@ -59,18 +49,12 @@ const jsonLd = {
     />
 
     <section class="grid gap-4">
-      <h2 class="section-title">Open source</h2>
-      <p class="text-pretty">
-        While building AI chat interfaces at Merlin, the core challenge was
-        rendering streamed markdown responses cleanly. That led me to
-        Streamdown, Vercel's open source markdown renderer built for AI
-        streaming. These contributions came from real product gaps, not side
-        quests.
-      </p>
+      <h2 class="section-title">{t.openSource}</h2>
+      <p class="text-pretty">{t.openSourceBody}</p>
     </section>
 
     <IndexList
-      title="Contributions"
+      title={t.contributions}
       items={contributions.map((item) => ({
         href: item.href,
         title: item.title,
