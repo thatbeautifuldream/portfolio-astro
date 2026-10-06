@@ -202,11 +202,14 @@ const hi: Dictionary = {
     description:
       "प्रोडक्ट इंजीनियरिंग, AI इंटरफ़ेस, डेवलपर टूल्स और प्रोडक्ट बनाने के सफ़र पर नोट्स।",
     meta: "प्रोडक्ट बनाने के सफ़र पर नोट्स।",
+    share: "शेयर करें",
+    linkCopied: "लिंक कॉपी हो गया",
     posts: "पोस्ट्स",
   },
   gist: {
     title: "गिस्ट्स",
     description: "कोड स्निपेट्स और झटपट समाधान।",
+    viewOnGitHub: "GitHub पर देखें",
     snippets: "स्निपेट्स",
   },
   project: {

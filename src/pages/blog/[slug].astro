@@ -6,6 +6,7 @@ import Layout from "../../layouts/Layout.astro";
 import CodeCopy from "../../components/CodeCopy.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import { absoluteUrl, buildPersonRef } from "../../lib/seo";
+import { getLocale, locales, localizePath, useTranslations } from "../../i18n";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -17,9 +18,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale).blog;
 
 function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locales[locale].dateLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -40,7 +43,7 @@ const jsonLd = {
 <Layout
   title={post.data.title}
   description={post.data.description}
-  canonical={absoluteUrl(`/blog/${post.id}`, Astro.site)}
+  canonical={absoluteUrl(localizePath(`/blog/${post.id}`, locale), Astro.site)}
   image={`/og/${post.id}.png`}
   jsonLd={jsonLd}
 >
@@ -59,7 +62,7 @@ const jsonLd = {
             name="ri:share-forward-line"
             class="size-5 shrink-0 sm:size-4"
           />
-          <span data-share-label>Share</span>
+          <span data-share-label>{t.share}</span>
           <span
             class="absolute top-1/2 left-1/2 size-[max(100%,3rem)] -translate-1/2 pointer-fine:hidden"
             aria-hidden="true"></span>
@@ -82,7 +85,15 @@ const jsonLd = {
   <CodeCopy />
 </Layout>
 
-<script is:inline define:vars={{ slug: post.id, title: post.data.title }}>
+<script
+  is:inline
+  define:vars={{
+    slug: post.id,
+    title: post.data.title,
+    shareLabel: t.share,
+    copiedLabel: t.linkCopied,
+  }}
+>
   const milestones = [25, 50, 75, 100];
   const fired = new Set();
   function onScroll() {
@@ -142,8 +153,8 @@ const jsonLd = {
           post_slug: slug,
           method: "copy",
         });
-        label.textContent = "Link copied";
-        setTimeout(() => (label.textContent = "Share"), 2000);
+        label.textContent = copiedLabel;
+        setTimeout(() => (label.textContent = shareLabel), 2000);
       }
     } catch {}
   });

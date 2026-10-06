@@ -48,22 +48,31 @@ const {
 
 const segments = path.split("/").filter(Boolean);
 const parent = segments.at(-2);
+const sectionTitles: Record<string, string> = {
+  blog: t.blog.title,
+  gist: t.gist.title,
+};
 const back =
   backProp ??
   (segments.length > 0 && {
-    href: parent
-      ? `/${segments.slice(0, -1).join("/")}`
-      : localizePath("/", locale),
-    label: parent ? parent[0]!.toUpperCase() + parent.slice(1) : t.back.index,
+    href: localizePath(
+      parent ? `/${segments.slice(0, -1).join("/")}` : "/",
+      locale,
+    ),
+    label: parent
+      ? (locale !== "en" && sectionTitles[parent]) ||
+        parent[0]!.toUpperCase() + parent.slice(1)
+      : t.back.index,
   });
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+const canonicalPath = stripLocale(new URL(canonicalUrl).pathname);
 const alternates = isTranslated(path)
   ? (Object.keys(locales) as Locale[]).map((lang) => ({
       lang,
-      href: new URL(localizePath(path, lang), Astro.site).href,
+      href: new URL(localizePath(canonicalPath, lang), Astro.site).href,
     }))
   : [];
-
-const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 // Name-first so the installed PWA window doesn't repeat it: Chrome prefixes
 // the manifest app name unless the title already starts with it.
 const fullTitle =

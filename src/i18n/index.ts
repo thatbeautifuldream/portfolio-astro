@@ -12,8 +12,8 @@ export const defaultLocale: Locale = "en";
 
 const dictionaries = { en, hi };
 
-// Pages with a translated version. Everything else (posts, gists, project and
-// uses entries, API docs) stays English-only.
+// Pages with a translated version, plus every post and gist (see
+// isTranslated). Project and uses entries and the API docs stay English-only.
 export const translatedPaths = [
   "/",
   "/work",
@@ -43,7 +43,10 @@ export function stripLocale(path: string) {
 }
 
 export function isTranslated(path: string) {
-  return translatedPaths.includes(path.replace(/(.)\/$/, "$1"));
+  return (
+    translatedPaths.includes(path.replace(/(.)\/$/, "$1")) ||
+    /^\/(blog|gist)\/[^/]+\/?$/.test(path)
+  );
 }
 
 export function localizePath(path: string, locale: Locale) {

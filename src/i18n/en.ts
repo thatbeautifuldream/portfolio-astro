@@ -141,11 +141,14 @@ const en = {
     description:
       "Notes on product engineering, AI interfaces, developer tools, and the journey of building products.",
     meta: "Notes on the journey of building products.",
+    share: "Share",
+    linkCopied: "Link copied",
     posts: "Posts",
   },
   gist: {
     title: "Gists",
     description: "Code snippets and quick solutions.",
+    viewOnGitHub: "View on GitHub",
     snippets: "Snippets",
   },
   project: {

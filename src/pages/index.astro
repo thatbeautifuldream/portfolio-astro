@@ -26,6 +26,7 @@ import {
   siteConfig,
 } from "../lib/seo";
 import { getLocale, locales, localizePath, useTranslations } from "../i18n";
+import { getLocalizedCollection } from "../i18n/content";
 
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
@@ -34,7 +35,7 @@ const home = t.home;
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
-const posts = (await getCollection("posts")).sort(
+const posts = (await getLocalizedCollection("posts", locale)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 const gists = await getCollection("gists");
@@ -139,7 +140,7 @@ const jsonLd = [
     <IndexList
       title={home.writing}
       items={posts.map((post) => ({
-        href: `/blog/${post.id}`,
+        href: localizePath(`/blog/${post.id}`, locale),
         title: post.data.title,
         meta: dayMonth(post.data.date),
         group: String(post.data.date.getFullYear()),

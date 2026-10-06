@@ -1,15 +1,15 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import IndexList from "../../components/IndexList.astro";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 import { getLocale, localizePath, useTranslations } from "../../i18n";
+import { getLocalizedCollection } from "../../i18n/content";
 
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale).blog;
 
-const posts = (await getCollection("posts")).sort(
+const posts = (await getLocalizedCollection("posts", locale)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
@@ -29,7 +29,7 @@ const jsonLd = {
     <IndexList
       title={t.posts}
       items={posts.map((post) => ({
-        href: `/blog/${post.id}`,
+        href: localizePath(`/blog/${post.id}`, locale),
         title: post.data.title,
         meta: post.data.date.toLocaleDateString("en-GB", {
           day: "2-digit",

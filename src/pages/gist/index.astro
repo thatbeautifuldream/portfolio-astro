@@ -1,10 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import IndexList from "../../components/IndexList.astro";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 import { getLocale, localizePath, useTranslations } from "../../i18n";
+import { getLocalizedCollection } from "../../i18n/content";
 
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale).gist;
@@ -13,7 +13,7 @@ function gistDate(data: { datePublished?: Date; date?: Date }): Date {
   return data.datePublished ?? data.date ?? new Date(0);
 }
 
-const gists = (await getCollection("gists")).sort(
+const gists = (await getLocalizedCollection("gists", locale)).sort(
   (a, b) => gistDate(b.data).getTime() - gistDate(a.data).getTime(),
 );
 
@@ -35,7 +35,7 @@ const jsonLd = {
       items={gists.map((gist) => {
         const date = gist.data.datePublished ?? gist.data.date;
         return {
-          href: `/gist/${gist.id}`,
+          href: localizePath(`/gist/${gist.id}`, locale),
           title: gist.data.title,
           meta: date
             ? date.toLocaleDateString("en-GB", {
