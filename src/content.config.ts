@@ -43,27 +43,41 @@ const hiGists = defineCollection({
   schema: gistSchema,
 });
 
+const projectSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  url: z.string(),
+  date: z.coerce.date(),
+});
+
 const projects = defineCollection({
   loader: glob({ pattern: "*.mdx", base: "./src/content/projects" }),
-  schema: z.object({
+  schema: projectSchema,
+});
+
+const hiProjects = defineCollection({
+  loader: glob({ pattern: "*.mdx", base: "./src/content/projects/hi" }),
+  schema: projectSchema,
+});
+
+const useSchema = ({ image }: SchemaContext) =>
+  z.object({
     title: z.string(),
     description: z.string(),
-    url: z.string(),
+    category: z.string(),
+    url: z.string().optional(),
     date: z.coerce.date(),
-  }),
-});
+    coverImage: image().optional(),
+  });
 
 const uses = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/uses" }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      category: z.string(),
-      url: z.string().optional(),
-      date: z.coerce.date(),
-      coverImage: image().optional(),
-    }),
+  schema: useSchema,
+});
+
+const hiUses = defineCollection({
+  loader: glob({ pattern: "*.md", base: "./src/content/uses/hi" }),
+  schema: useSchema,
 });
 
 export const collections = {
@@ -72,5 +86,7 @@ export const collections = {
   gists,
   hiGists,
   projects,
+  hiProjects,
   uses,
+  hiUses,
 };

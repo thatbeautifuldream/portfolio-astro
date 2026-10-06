@@ -1,16 +1,16 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import IndexList from "../../components/IndexList.astro";
 import { hostname } from "../../data/portfolio";
 import { absoluteUrl, buildPersonRef, siteConfig } from "../../lib/seo";
 import { getLocale, localizePath, useTranslations } from "../../i18n";
+import { getLocalizedCollection } from "../../i18n/content";
 
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale).uses;
 
-const items = (await getCollection("uses")).sort((a, b) =>
+const items = (await getLocalizedCollection("uses", locale)).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
 
@@ -124,7 +124,7 @@ const jsonLd = {
         <IndexList
           title={t.categories[category] ?? category}
           items={categoryItems.map((item) => ({
-            href: `/uses/${item.id}`,
+            href: localizePath(`/uses/${item.id}`, locale),
             title: item.data.title,
             meta: item.data.url ? hostname(item.data.url) : undefined,
           }))}

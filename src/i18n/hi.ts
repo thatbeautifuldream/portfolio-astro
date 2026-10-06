@@ -52,6 +52,8 @@ const hi: Dictionary = {
       ", या ",
       "।",
     ],
+    jsonVisualiser: "JSON विज़ुअलाइज़र",
+    markdownVisualizer: "Markdown विज़ुअलाइज़र",
     resume: "रिज़्यूमे",
     book: "15 मिनट बुक करें",
     email: "ईमेल करें",
@@ -83,6 +85,7 @@ const hi: Dictionary = {
     ],
     roles: {
       "Merlin AI by Foyer": {
+        company: "फ़ॉयर का मर्लिन AI",
         role: "प्रोडक्ट इंजीनियर",
         period: "फ़रवरी 2025 से अब तक",
         location: "बेंगलुरु, भारत",
@@ -96,6 +99,7 @@ const hi: Dictionary = {
         ],
       },
       SARAL: {
+        company: "सरल",
         role: "सॉफ़्टवेयर इंजीनियर",
         period: "दिसंबर 2024 से फ़रवरी 2025",
         location: "बेंगलुरु, भारत",
@@ -108,6 +112,7 @@ const hi: Dictionary = {
         ],
       },
       "Proof-of-Skill Protocol": {
+        company: "प्रूफ़-ऑफ़-स्किल प्रोटोकॉल",
         role: "फ़ाउंडिंग प्रोडक्ट इंजीनियर",
         period: "जून 2024 से दिसंबर 2024",
         location: "बेंगलुरु, भारत",
@@ -121,6 +126,7 @@ const hi: Dictionary = {
         ],
       },
       StartupHire: {
+        company: "स्टार्टअपहायर",
         role: "फ़्रंटएंड इंजीनियर (लीड)",
         period: "अगस्त 2023 से जनवरी 2024",
         location: "रिमोट",
@@ -133,6 +139,7 @@ const hi: Dictionary = {
         ],
       },
       "Locus Connect (NYCU)": {
+        company: "लोकस कनेक्ट (NYCU)",
         role: "फ़्रंटएंड इंजीनियर",
         period: "जुलाई 2022 से जुलाई 2023",
         location: "शिनचू, ताइवान",

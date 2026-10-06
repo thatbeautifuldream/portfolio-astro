@@ -4,6 +4,8 @@ import type { Locale } from ".";
 const translations = {
   posts: { hi: "hiPosts" },
   gists: { hi: "hiGists" },
+  projects: { hi: "hiProjects" },
+  uses: { hi: "hiUses" },
 } as const;
 
 // English entries with each one swapped for its translation when one exists,

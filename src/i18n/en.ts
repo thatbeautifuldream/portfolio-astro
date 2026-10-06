@@ -50,6 +50,8 @@ const en = {
       ", or ",
       ".",
     ],
+    jsonVisualiser: "JSON Visualiser",
+    markdownVisualizer: "Markdown Visualizer",
     resume: "résumé",
     book: "book 15 minutes",
     email: "email me",
@@ -82,6 +84,7 @@ const en = {
     roles: {} as Record<
       string,
       {
+        company?: string;
         role: string;
         period: string;
         location: string;

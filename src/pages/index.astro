@@ -32,8 +32,8 @@ const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const home = t.home;
 
-const projects = (await getCollection("projects")).sort((a, b) =>
-  a.data.title.localeCompare(b.data.title),
+const projects = (await getLocalizedCollection("projects", locale)).sort(
+  (a, b) => a.data.title.localeCompare(b.data.title),
 );
 const posts = (await getLocalizedCollection("posts", locale)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
@@ -103,11 +103,18 @@ const jsonLd = [
           >{home.intro[2]}
         </p>
         <p class="text-pretty">
-          {home.tools[0]}<a href="/project/json-visualiser" class="chip"
-            ><Image src={jsonVisualiser} alt="" width={40} />JSON Visualiser</a
-          >{home.tools[1]}<a href="/project/markdown-visualizer" class="chip"
-            ><Image src={markdownVisualizer} alt="" width={40} />Markdown
-            Visualizer</a
+          {home.tools[0]}<a
+            href={localizePath("/project/json-visualiser", locale)}
+            class="chip"
+            ><Image src={jsonVisualiser} alt="" width={40} />{
+              home.jsonVisualiser
+            }</a
+          >{home.tools[1]}<a
+            href={localizePath("/project/markdown-visualizer", locale)}
+            class="chip"
+            ><Image src={markdownVisualizer} alt="" width={40} />{
+              home.markdownVisualizer
+            }</a
           >{home.tools[2]}
         </p>
         <p class="text-pretty">
@@ -131,7 +138,7 @@ const jsonLd = [
     <IndexList
       title={home.projects}
       items={projects.map((project) => ({
-        href: `/project/${project.id}`,
+        href: localizePath(`/project/${project.id}`, locale),
         title: project.data.title,
         meta: hostname(project.data.url),
       }))}
@@ -151,7 +158,7 @@ const jsonLd = [
       title={home.work}
       items={roles.map((role) => ({
         href: localizePath("/work", locale),
-        title: role.company,
+        title: t.work.roles[role.company]?.company ?? role.company,
         meta: years(role.period),
       }))}
     />
