@@ -104,6 +104,11 @@ const en = {
     openSourceBody:
       "While building AI chat interfaces at Merlin, the core challenge was rendering streamed markdown responses cleanly. That led me to Streamdown, Vercel's open source markdown renderer built for AI streaming. These contributions came from real product gaps, not side quests.",
     contributions: "Contributions",
+    items: {} as Record<
+      string,
+      { title: string; event: string; description: string }
+    >,
+    contributionTitles: {} as Record<string, string>,
   },
   contact: {
     title: "Contact",

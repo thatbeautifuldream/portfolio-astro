@@ -169,7 +169,7 @@ const jsonLd = [
       title={home.talks}
       items={talks.map((talk) => ({
         href: talk.href,
-        title: talk.title,
+        title: t.talks.items[talk.title]?.title ?? talk.title,
         meta: talk.date.slice(-4),
         external: true,
       }))}

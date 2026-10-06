@@ -9,6 +9,11 @@ import { getLocale, localizePath, useTranslations } from "../i18n";
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale).talks;
 const pageUrl = absoluteUrl(localizePath("/talks", locale), Astro.site);
+const localizedTalks = talks.map((talk) => ({
+  ...talk,
+  ...t.items[talk.title],
+  source: talk,
+}));
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -17,7 +22,7 @@ const jsonLd = {
   description: t.description,
   url: pageUrl,
   author: buildPersonRef(Astro.site),
-  hasPart: talks.map((talk) => ({
+  hasPart: localizedTalks.map((talk) => ({
     "@type": "Event",
     name: talk.title,
     description: talk.description,
@@ -38,13 +43,16 @@ const jsonLd = {
 
     <IndexList
       title={t.title}
-      items={talks.map((talk) => ({
+      items={localizedTalks.map((talk) => ({
         href: talk.href,
         title: talk.title,
         meta: talk.event,
         group: talk.date.slice(-4),
         external: true,
-        attrs: { "data-talk-title": talk.title, "data-talk-event": talk.event },
+        attrs: {
+          "data-talk-title": talk.source.title,
+          "data-talk-event": talk.source.event,
+        },
       }))}
     />
 
@@ -57,7 +65,7 @@ const jsonLd = {
       title={t.contributions}
       items={contributions.map((item) => ({
         href: item.href,
-        title: item.title,
+        title: t.contributionTitles[item.title] ?? item.title,
         external: true,
         attrs: { "data-contribution-title": item.title },
       }))}

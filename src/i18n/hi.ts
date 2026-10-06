@@ -165,6 +165,40 @@ const hi: Dictionary = {
     openSourceBody:
       "Merlin में AI चैट इंटरफ़ेस बनाते हुए सबसे बड़ी चुनौती थी स्ट्रीम होकर आने वाले markdown जवाबों को साफ़-सुथरे ढंग से रेंडर करना। इसी ने मुझे Streamdown तक पहुँचाया, जो AI स्ट्रीमिंग के लिए बना Vercel का ओपन सोर्स markdown रेंडरर है। ये योगदान असली प्रोडक्ट की कमियों से निकले, शौक़िया साइड क्वेस्ट से नहीं।",
     contributions: "योगदान",
+    items: {
+      "Building a Component Distribution System with shadcn Registry": {
+        title: "shadcn रजिस्ट्री से कंपोनेंट डिस्ट्रीब्यूशन सिस्टम बनाना",
+        event: "React बैंगलोर",
+        description:
+          "बेहतर डिस्ट्रीब्यूशन एर्गोनॉमिक्स के साथ कंपोनेंट्स शिप करने पर एक प्रैक्टिकल टॉक।",
+      },
+      "Mastering ViewTransition in React for Stunning UI Updates": {
+        title: "शानदार UI अपडेट्स के लिए React में ViewTransition पर महारत",
+        event: "React Play बेंगलुरु",
+        description:
+          "React में व्यू ट्रांज़िशन, UI की निरंतरता और इंटरैक्शन से चलने वाला मोशन।",
+      },
+      "Building Real-Time Applications with Reactive Databases": {
+        title: "रिएक्टिव डेटाबेस से रियल-टाइम ऐप्लिकेशन बनाना",
+        event: "React Play बेंगलुरु",
+        description:
+          "React में व्यू ट्रांज़िशन, UI की निरंतरता और इंटरैक्शन से चलने वाला मोशन।",
+      },
+      "AI for React Developers": {
+        title: "React डेवलपर्स के लिए AI",
+        event: "React बैंगलोर",
+        description:
+          "AI SDK वर्कफ़्लो और पैटर्न्स का प्रोडक्ट-केंद्रित फ़्रंटएंड परिचय।",
+      },
+    },
+    contributionTitles: {
+      "Streamdown table copy and CSV / markdown download options":
+        "Streamdown में टेबल कॉपी और CSV / markdown डाउनलोड के विकल्प",
+      "Streamdown code and image download affordances":
+        "Streamdown में कोड और इमेज डाउनलोड करने की सुविधा",
+      "AI Elements speech-to-text prompt input":
+        "AI Elements में स्पीच-टू-टेक्स्ट प्रॉम्प्ट इनपुट",
+    },
   },
   contact: {
     title: "संपर्क",
